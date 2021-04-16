@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 public class MyBucket extends ApplicationAdapter {
     public Texture bucketImage;
     public Rectangle bucket;
-    
+    public boolean isClicked =false ;
     public MyBucket(int x, int y, int w, int h){
         bucket = new Rectangle();
         bucket.x = x;
