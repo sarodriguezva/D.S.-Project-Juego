@@ -32,7 +32,7 @@ public class MainLogic extends ApplicationAdapter {
         // ESTA FUNCION ES MUY IMPORTANTE, SE LLAMA AL INICIO DEL JUEGO Y SE ENCARGA DE INICIALIZARLO TODO
         // SE CREA LA CAMARA  Y SE PONE EN ORTOGONAL Y LAS DIMENSIONES ED LA PANTALLA
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, 800, 480);
+        camera.setToOrtho(false, 800, 600);
         backgroundTexture = new Texture(Gdx.files.internal("parallax-mountain-bg.png"));
 
         // el batch es una cosa necesaria para renderizar el sprite

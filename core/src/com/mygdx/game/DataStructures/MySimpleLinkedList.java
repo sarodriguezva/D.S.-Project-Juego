@@ -7,11 +7,6 @@ package com.mygdx.game.DataStructures;
 
 import java.util.Objects;
 
-/**
- *
- * @author JUANS
- */
-
 /* NODO QUE SIRVE PARA MUCHAS ESTRUCTURAS DE DATOS
 PARA ESE NODO, E ES CUALQUIER TIPO DE DATO, NEXT
 ES A DONDE APUNTA EL SIGUIENTE NODO*/
@@ -143,6 +138,8 @@ public class MySimpleLinkedList<E> {
             return toList;
         }
     }
+  
+  // Solo faltaría en caso de ser necesario el find de un solo objeto.
 
     /// O(1)
   public  void makeEmpty() {
