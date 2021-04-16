@@ -35,6 +35,7 @@ public class MyGdxGame extends ApplicationAdapter {
     // un número grande
     private long lastDropTime;
 
+    //HOLA SOY UN CAMBIO
     
     //ESTA FUNCIÓN CREA LAS GOTITAS DE AGUA DE MANERA RANDOM EN LUGARES RANDOM EN EL EJE X
     private void spawnRaindrop() {
