@@ -21,6 +21,7 @@ public class MainLogic extends ApplicationAdapter {
     boolean leftPressed;
     Plank currentPick = null;
     GenericButton buttonRestart = null;
+    GenericButton buttonHelp = null;
     Vector3 touchPos = new Vector3();
     private final MySimpleLinkedList<Plank> plankList = new MySimpleLinkedList<>();
     int currentLevel=0;
@@ -135,8 +136,10 @@ public class MainLogic extends ApplicationAdapter {
         for (int i = 0; i < plankList.getSize(); i++) {
             batch.draw(plankList.getData(i).plankTexture, plankList.getData(i).plankCollision.x, plankList.getData(i).plankCollision.y);
         }
-        batch.draw(buttonRestart.buttonTexture,0,0);
+        batch.draw(buttonRestart.buttonTexture,0,0) ;
+        batch.draw(buttonHelp.buttonTexture,0,555);
         batch.end();
+       
         
         if (debug){
         // PARTE DE DEBUG
@@ -178,7 +181,9 @@ public class MainLogic extends ApplicationAdapter {
         batch = new SpriteBatch();
         createPlank(400,200,64,64);
         createPlank(0,0,64,64);
-        buttonRestart = new GenericButton(0, 0, 50, 50, "buttonRestart.png");
+        buttonHelp= new GenericButton(0,555,50,50,"buttonHelp.png");
+        buttonRestart = new GenericButton(0,0, 50,50, "buttonRestart.png");
+        
         backgroundTexture = new Texture(Gdx.files.internal("parallax-mountain-bg.png"));
         currentLevel=1;
         break;
