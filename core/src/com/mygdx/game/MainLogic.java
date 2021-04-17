@@ -62,7 +62,7 @@ public class MainLogic extends ApplicationAdapter {
         
         
         // PARTE DE LOGICA
-        
+        if (!info){
         
         //justTouched me dice si el mouse ha sido recientemente presionado, leftpressed si está continuamente presionado
         justTouched = Gdx.input.justTouched();
@@ -86,13 +86,17 @@ public class MainLogic extends ApplicationAdapter {
             }
             
             ///AQUI VA SI CLICKEA ALGO MIENTRAS NO ARRASTRA NADA
+            /////////////////   BOTONES  //////////////////////// 
+            
+            // boton restart
             if(touchPos.x > buttonRestart.buttonCollision.x - buttonRestart.buttonCollision.width && touchPos.x < buttonRestart.buttonCollision.x + buttonRestart.buttonCollision.width){
                 if (touchPos.y > buttonRestart.buttonCollision.y - buttonRestart.buttonCollision.height && touchPos.y < buttonRestart.buttonCollision.y + buttonRestart.buttonCollision.height){
                     clearLevel();
                     initiateLevel(currentLevel);
-                     
+                    
                 }
             }
+            
             
             
         }
@@ -128,9 +132,11 @@ public class MainLogic extends ApplicationAdapter {
             }
             //Gdx.app.log("MyTag", "MyMessage"); //ASI SE PRINTEA A CONSOla
         }
+        }
+        // boton cerrar: if (info) ... cosas
+            
     
-    
-        // PARTE DE RENDER
+        // PARTE DE RENDER mostrar imagenes.
         batch.begin();
         batch.draw(backgroundTexture, 0, 0);
         for (int i = 0; i < plankList.getSize(); i++) {
@@ -138,6 +144,9 @@ public class MainLogic extends ApplicationAdapter {
         }
         batch.draw(buttonRestart.buttonTexture,0,0) ;
         batch.draw(buttonHelp.buttonTexture,0,555);
+        // if juego está pausado, si juego info=TRUE{ batch.draw(textura del popup )
+        
+        
         batch.end();
        
         
