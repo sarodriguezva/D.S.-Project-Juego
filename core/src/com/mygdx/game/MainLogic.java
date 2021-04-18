@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.DataStructures.*;
 
 public class MainLogic extends ApplicationAdapter {
+    boolean debug = true;
     //AQUI SE CARGAN LAS TEXTURAS 
     private SpriteBatch batch;
     private Texture backgroundTexture;
