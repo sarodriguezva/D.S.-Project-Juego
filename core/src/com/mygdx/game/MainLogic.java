@@ -15,6 +15,7 @@ public class MainLogic extends ApplicationAdapter {
     //AQUI SE CARGAN LAS TEXTURAS 
     private SpriteBatch batch;
     private Texture backgroundTexture;
+    private Texture infoTexture;
     
     //AQUI SE CARGAN LAS VARIABLES
     boolean justTouched = false;
@@ -22,6 +23,9 @@ public class MainLogic extends ApplicationAdapter {
     Plank currentPick = null;
     GenericButton buttonRestart = null;
     GenericButton buttonHelp = null;
+    GenericButton buttonClose= null;
+    boolean Info = false;
+   
     Vector3 touchPos = new Vector3();
     private final MySimpleLinkedList<Plank> plankList = new MySimpleLinkedList<>();
     int currentLevel=0;
@@ -93,6 +97,20 @@ public class MainLogic extends ApplicationAdapter {
                      
                 }
             }
+            if(touchPos.x > buttonHelp.buttonCollision.x - buttonHelp.buttonCollision.width && touchPos.x < buttonHelp.buttonCollision.x + buttonHelp.buttonCollision.width){
+                if (touchPos.y > buttonHelp.buttonCollision.y - buttonHelp.buttonCollision.height && touchPos.y < buttonHelp.buttonCollision.y + buttonHelp.buttonCollision.height){
+                    Info=true;
+                    
+                     
+                }
+            }
+            if(touchPos.x > buttonClose.buttonCollision.x - buttonClose.buttonCollision.width && touchPos.x < buttonClose.buttonCollision.x + buttonClose.buttonCollision.width){
+                if (touchPos.y > buttonClose.buttonCollision.y - buttonClose.buttonCollision.height && touchPos.y < buttonClose.buttonCollision.y + buttonClose.buttonCollision.height){
+                    Info=false;
+                    
+                     
+                }
+            }
             
             
         }
@@ -138,6 +156,15 @@ public class MainLogic extends ApplicationAdapter {
         }
         batch.draw(buttonRestart.buttonTexture,0,0) ;
         batch.draw(buttonHelp.buttonTexture,0,555);
+        
+        //Aqui render Info
+        if (Info == true){
+            batch.draw(infoTexture, 0, 0);
+            batch.draw(buttonClose.buttonTexture,155,555);
+            
+        }
+        
+        
         batch.end();
        
         
@@ -162,6 +189,8 @@ public class MainLogic extends ApplicationAdapter {
        
     }
     
+    
+    
     public void clearLevel(){
         batch.dispose();
         for (int i = 0; i < plankList.getSize(); i++) {
@@ -182,8 +211,9 @@ public class MainLogic extends ApplicationAdapter {
         createPlank(400,200,64,64);
         createPlank(0,0,64,64);
         buttonHelp= new GenericButton(0,555,50,50,"buttonHelp.png");
+        buttonClose= new GenericButton(155,555,50,50,"buttonClose.png");
         buttonRestart = new GenericButton(0,0, 50,50, "buttonRestart.png");
-        
+        infoTexture = new Texture(Gdx.files.internal("Info.png"));
         backgroundTexture = new Texture(Gdx.files.internal("parallax-mountain-bg.png"));
         currentLevel=1;
         break;
