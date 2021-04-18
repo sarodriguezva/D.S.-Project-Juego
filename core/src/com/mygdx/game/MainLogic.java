@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.DataStructures.*;
 
 public class MainLogic extends ApplicationAdapter {
+    boolean debug = true;
     //AQUI SE CARGAN LAS TEXTURAS 
     private SpriteBatch batch;
     private Texture backgroundTexture;
@@ -21,7 +22,7 @@ public class MainLogic extends ApplicationAdapter {
     Plank currentPick = null;
     GenericButton buttonRestart = null;
     Vector3 touchPos = new Vector3();
-    private final MySimpleLinkedList<Plank> plankList = new MySimpleLinkedList<>();
+    private final MyDoubleLinkedList<Plank> plankList = new MyDoubleLinkedList<>();
     int currentLevel=0;
     
     // ESTA ES LA CAMARA, es una camara 3d pero que se proyecta ortogonalmente (2d)
