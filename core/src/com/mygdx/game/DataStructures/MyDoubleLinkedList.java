@@ -5,38 +5,37 @@
  */
 package com.mygdx.game.DataStructures;
 
-/*
+/**
 * Clase Lista reformada. Con métodos más claros, menos redundantes
-* y más óptimos.
+* y mas óptimos.
+* Es una lista ordenada y doblemente enlazada.
+* 
+* @author Sebastián
+* @author Santiago
+* @param <E> Tipo de objetos que almacenará la lista.
 */
-
-class Node<E> {
-    
-    private E data;
-    Node<E> next;
-    Node<E> previous;
-    
-    public Node(E data) {
-        this.data = data;
-        this.next = null;
-        this.previous = null;
-    }
-    
-    public E getData(){
-        return this.data;
-    }
-}
 
 public class MyDoubleLinkedList<E> {
 
     private Node<E> first;
     private Node<E> last;
     private int count;
-
+    
+    /**
+     * Constructor de MyDoubleLinkedList.
+     */
     public MyDoubleLinkedList() {
         this.makeEmpty();
     }
     
+    /**
+     * Constructor para crear una lista ordenada a partir
+     * de un arreglo.
+     * 
+     * @param array El constructor puede recibir
+     * un array de cualquier tipo y crear una lista 
+     * ordenada a partir de sus elementos.
+     */
     public MyDoubleLinkedList(E[] array){
         this.makeEmpty();
         for (int i = 0; i < array.length; i++){
@@ -44,14 +43,22 @@ public class MyDoubleLinkedList<E> {
         }
     }
     
+    /**
+     * Método para vaciar la lista.
+     */
     public void makeEmpty() {
         this.count = 0;
         this.first = null;
         this.last = null;
     }
     
+    /**
+     * Método que busca y obtiene un nodo de la lista.
+     * 
+     * @param k Posición o índice del nodo.
+     * @return Nodo de la lista.
+     */
     private Node<E> getNode(int k){
-        //Forma un poco optimizada de búsqueda de nodo.
         if (k < 0 || k >= this.count){
             System.out.println("Error al leer");
             return null;
@@ -69,10 +76,24 @@ public class MyDoubleLinkedList<E> {
         return aux;
     }
     
-    public E getData(Integer index){
+    /**
+     * Método que retorna el elemento guardado en un nodo de la lista.
+     * 
+     * @param index Posición o índice del nodo.
+     * @return Elemento guardado en el nodo.
+     */
+    public E getData(int index){
         return getNode(index).getData();
     }
     
+    /**
+     * Método que retorna la lista de posiciones de los nodos
+     * que guardan un elemento específico.
+     * 
+     * @param data Elemento a buscar en la lista.
+     * @return Arreglo de posiciones o índices 
+     * de los nodos en los que se encuentra el elemento.
+     */
     public int[] find(E data){
         int[] idxArray = new int[count];
         if (count > 0){
@@ -93,6 +114,14 @@ public class MyDoubleLinkedList<E> {
         return idxArray;
     }
     
+    /**
+     * Método que inserta un nuevo elemento en la lista
+     * en una posición dada.
+     * 
+     * @param k Posición o índice de la lista en la que se insertará
+     * un nodo con el elemento.
+     * @param data El elemento a insertar en la lista.
+     */
     public void insert(int k, E data){
         if (k < 0 || k > this.count){
             System.out.println("Error al insertar");
@@ -132,14 +161,31 @@ public class MyDoubleLinkedList<E> {
         this.count++;
     }
     
+    /**
+     * Método para insertar un elemento al inicio de la lista.
+     * 
+     * @param data Elemento a insertar.
+     */
     public void insertBegin(E data) {
          insert(0, data);
     }
     
+    /**
+     * Método para insertar un elemento al final de la lista.
+     * 
+     * @param data Elemento a insertar. 
+     */
     public void add(E data){
         insert(this.count, data);
     }
     
+    /**
+     * Método para eliminar un elemento de la lista
+     * en una posición dada.
+     * 
+     * @param k Posición o índice del nodo a eliminar.
+     * @return Elemento eliminado.
+     */
     public E delete(int k){
         if (k < 0 || k >= this.count){
             System.out.println("Error al eliminar");
@@ -172,32 +218,72 @@ public class MyDoubleLinkedList<E> {
         return data;
     }
     
-    public void deleteBegin() {
-         this.delete(0);
+    /**
+     * Método para eliminar el primer elemento de la lista.
+     * 
+     * @return Elemento eliminado.
+     */
+    public E deleteBegin() {
+         return this.delete(0);
     }
     
+    /**
+     * Método para eliminar el último elemento de la lista.
+     * @return Elemento eliminado.
+     */
     public E pop(){
          return delete(this.count-1);
     }
     
+    /**
+     * Método para obtener el primer elemento en la lista.
+     * 
+     * @return Primer elemento en la lista.
+     */
     public E getFirstData(){
         if (this.first != null) return this.first.getData();
         else return null;
     }
     
+    /**
+     * Método para obtener el último elemento en la lista.
+     * 
+     * @return Último elemento en la lista.
+     */
     public E getLastData(){
         if (this.last != null) return this.last.getData();
         else return null;
     }
     
+    /**
+     * Método para obtener el tamaño de la lista.
+     * 
+     * @return Tamaño de la lista.
+     */
     public int getSize(){
         return this.count;
     }
-
+    
+    /**
+     * Método que determina si la lista está vacía.
+     * 
+     * @return Valor booleano. Si es verdadero, la lista está vacía.
+     */
     public boolean isEmpty(){
         return this.count == 0;
     }
     
+    /**
+     * Método para obtener un formato en cadena de texto de todos
+     * los elementos en la lista.
+     * 
+     * @param reverse Valor booleano. Si es verdadero, el formato
+     * obtenido será el de las lista comenzando en su último elemento
+     * y terminando en el primero. Si es falso, el formato obtenido
+     * es el tradicional.
+     * @return La cadena de texto que representa los elementos en
+     * la lista.
+     */
     public String toString(boolean reverse) {
         StringBuilder sb = new StringBuilder();
         sb.append("[");
@@ -212,6 +298,9 @@ public class MyDoubleLinkedList<E> {
         return toReturn+"]";
     }
     
+    /**
+     * Método que imprime visualmente la lista.
+     */
     public void printList() {
         System.out.println(this.toString(false));
     }

@@ -1,0 +1,11 @@
+-classpath 'C:\\Users\\Santiago\\Desktop\\Recovery\\UNAL\\Materias\\Semestre IV\\Estructuras de Datos\\D.S.-Project-Juego\\core\\build\\classes\\java\\main;C:\\Users\\Santiago\\Desktop\\Recovery\\UNAL\\Materias\\Semestre IV\\Estructuras de Datos\\D.S.-Project-Juego\\core\\build\\resources\\main;C:\\Users\\Santiago\\.gradle\\caches\\modules-2\\files-2.1\\com.badlogicgames.gdx\\gdx-box2d\\1.9.14\\1c52434c5c7ad1a19e08dcc53047eb1cd79b5e62\\gdx-box2d-1.9.14.jar;C:\\Users\\Santiago\\.gradle\\caches\\modules-2\\files-2.1\\com.badlogicgames.gdx\\gdx\\1.9.14\\42b1ca02aabd2aa248dc0a6beb0ea0f9f003a44d\\gdx-1.9.14.jar'
+-d 'C:\\Users\\Santiago\\Desktop\\Recovery\\UNAL\\Materias\\Semestre IV\\Estructuras de Datos\\D.S.-Project-Juego\\core\\build\\docs\\javadoc'
+-doctitle 'core 1.0 API'
+-notimestamp 
+-quiet 
+-windowtitle 'core 1.0 API'
+'C:\\Users\\Santiago\\Desktop\\Recovery\\UNAL\\Materias\\Semestre IV\\Estructuras de Datos\\D.S.-Project-Juego\\core\\src\\com\\mygdx\\game\\DataStructures\\MyDoubleLinkedList.java'
+'C:\\Users\\Santiago\\Desktop\\Recovery\\UNAL\\Materias\\Semestre IV\\Estructuras de Datos\\D.S.-Project-Juego\\core\\src\\com\\mygdx\\game\\DataStructures\\MyStack.java'
+'C:\\Users\\Santiago\\Desktop\\Recovery\\UNAL\\Materias\\Semestre IV\\Estructuras de Datos\\D.S.-Project-Juego\\core\\src\\com\\mygdx\\game\\DataStructures\\Node.java'
+'C:\\Users\\Santiago\\Desktop\\Recovery\\UNAL\\Materias\\Semestre IV\\Estructuras de Datos\\D.S.-Project-Juego\\core\\src\\com\\mygdx\\game\\MainLogic.java'
+'C:\\Users\\Santiago\\Desktop\\Recovery\\UNAL\\Materias\\Semestre IV\\Estructuras de Datos\\D.S.-Project-Juego\\core\\src\\com\\mygdx\\game\\Plank.java'
