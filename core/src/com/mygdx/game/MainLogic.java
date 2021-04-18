@@ -27,6 +27,10 @@ public class MainLogic extends ApplicationAdapter {
     
     // ESTA ES LA CAMARA, es una camara 3d pero que se proyecta ortogonalmente (2d)
     private OrthographicCamera camera;
+
+    //ESTE ES EL OBJETO DE PRUEBA
+    private final MyDoubleLinkedList<Plank> plankList = new MyDoubleLinkedList<>();
+    MyStack<Integer> plankStack = new MyStack<>();
     
     @Override
     public void create() {
