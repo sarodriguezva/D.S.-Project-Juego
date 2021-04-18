@@ -24,7 +24,7 @@ public class MainLogic extends ApplicationAdapter {
     private OrthographicCamera camera;
 
     //ESTE ES EL OBJETO DE PRUEBA
-    private final MySimpleLinkedList<Plank> plankList = new MySimpleLinkedList<>();
+    private final MyDoubleLinkedList<Plank> plankList = new MyDoubleLinkedList<>();
 
     @Override
     public void create() {
