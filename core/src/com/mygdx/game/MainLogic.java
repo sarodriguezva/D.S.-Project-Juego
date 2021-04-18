@@ -25,7 +25,8 @@ public class MainLogic extends ApplicationAdapter {
 
     //ESTE ES EL OBJETO DE PRUEBA
     private final MyDoubleLinkedList<Plank> plankList = new MyDoubleLinkedList<>();
-
+    MyStack<Integer> plankStack = new MyStack<>();
+    
     @Override
     public void create() {
 

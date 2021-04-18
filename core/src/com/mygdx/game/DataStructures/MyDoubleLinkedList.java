@@ -17,9 +17,9 @@ package com.mygdx.game.DataStructures;
 
 public class MyDoubleLinkedList<E> {
 
-    private Node<E> first;
-    private Node<E> last;
-    private int count;
+    protected Node<E> first;
+    protected Node<E> last;
+    protected int count;
     
     /**
      * Constructor de MyDoubleLinkedList.
@@ -58,7 +58,7 @@ public class MyDoubleLinkedList<E> {
      * @param k Posición o índice del nodo.
      * @return Nodo de la lista.
      */
-    private Node<E> getNode(int k){
+    final private Node<E> getNode(int k){
         if (k < 0 || k >= this.count){
             System.out.println("Error al leer");
             return null;
@@ -83,7 +83,10 @@ public class MyDoubleLinkedList<E> {
      * @return Elemento guardado en el nodo.
      */
     public E getData(int index){
-        return getNode(index).getData();
+        Node<E> node = getNode(index);
+        
+        if (node == null) return null;
+        else return node.getData();
     }
     
     /**
@@ -94,7 +97,7 @@ public class MyDoubleLinkedList<E> {
      * @return Arreglo de posiciones o índices 
      * de los nodos en los que se encuentra el elemento.
      */
-    public int[] find(E data){
+    final public int[] find(E data){
         int[] idxArray = new int[count];
         if (count > 0){
             Node<E> head = this.first;
@@ -122,7 +125,7 @@ public class MyDoubleLinkedList<E> {
      * un nodo con el elemento.
      * @param data El elemento a insertar en la lista.
      */
-    public void insert(int k, E data){
+    final public void insert(int k, E data){
         if (k < 0 || k > this.count){
             System.out.println("Error al insertar");
             return;
@@ -166,8 +169,8 @@ public class MyDoubleLinkedList<E> {
      * 
      * @param data Elemento a insertar.
      */
-    public void insertBegin(E data) {
-         insert(0, data);
+    final public void insertBegin(E data) {
+        this.insert(0, data);
     }
     
     /**
@@ -176,7 +179,7 @@ public class MyDoubleLinkedList<E> {
      * @param data Elemento a insertar. 
      */
     public void add(E data){
-        insert(this.count, data);
+        this.insert(this.count, data);
     }
     
     /**
@@ -186,7 +189,7 @@ public class MyDoubleLinkedList<E> {
      * @param k Posición o índice del nodo a eliminar.
      * @return Elemento eliminado.
      */
-    public E delete(int k){
+    final public E delete(int k){
         if (k < 0 || k >= this.count){
             System.out.println("Error al eliminar");
             return null;
@@ -223,7 +226,7 @@ public class MyDoubleLinkedList<E> {
      * 
      * @return Elemento eliminado.
      */
-    public E deleteBegin() {
+    final public E deleteBegin() {
          return this.delete(0);
     }
     
@@ -241,8 +244,7 @@ public class MyDoubleLinkedList<E> {
      * @return Primer elemento en la lista.
      */
     public E getFirstData(){
-        if (this.first != null) return this.first.getData();
-        else return null;
+        return getData(0);
     }
     
     /**
@@ -251,8 +253,7 @@ public class MyDoubleLinkedList<E> {
      * @return Último elemento en la lista.
      */
     public E getLastData(){
-        if (this.last != null) return this.last.getData();
-        else return null;
+        return getData(this.count-1);
     }
     
     /**
@@ -284,7 +285,7 @@ public class MyDoubleLinkedList<E> {
      * @return La cadena de texto que representa los elementos en
      * la lista.
      */
-    public String toString(boolean reverse) {
+    private String toString(boolean reverse) {
         StringBuilder sb = new StringBuilder();
         sb.append("[");
         Node<E> aux = reverse ? this.last : this.first;
@@ -301,7 +302,7 @@ public class MyDoubleLinkedList<E> {
     /**
      * Método que imprime visualmente la lista.
      */
-    public void printList() {
+    public void print() {
         System.out.println(this.toString(false));
     }
 }

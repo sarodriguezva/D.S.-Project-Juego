@@ -9,8 +9,52 @@ package com.mygdx.game.DataStructures;
  * Implementación de una pila a partir de la Lista Doblemente Enlazada.
  * 
  * @author Santiago 
- * @param <E> Tipo de objetos que almacenará la pila.
+ * @param <T> Tipo de objetos que almacenará la pila.
  */
-public class MyStack<E> extends MyDoubleLinkedList{
+public class MyStack<T> extends MyDoubleLinkedList<T>{
+    private Node<T> top;
     
+    /**
+     * Constructor. Crea una pila vacía.
+     */
+    public MyStack(){
+        super();
+    }
+    
+    /**
+     * Constructor. Crea y llena una pila a partir de datos
+     * tomados de un arreglo.
+     * 
+     * @param array Arreglo de cualquier tipo.
+     */
+    public MyStack(T[] array){
+        super(array);
+    }
+    
+    /**
+     * Método para vaciar la pila.
+     */
+    @Override
+    final public void makeEmpty(){
+        super.makeEmpty();
+        this.top = super.last;
+    }
+    
+    /**
+     * Método para insertar un elemento en la cima de la pila.
+     * 
+     * @param data Elemento a insertar.
+     */
+    final public void push(T data){
+        super.add(data);
+        this.top = super.last;
+    }
+    
+    /**
+     * Método para revisar el elemento almacenado en la cima de la pila.
+     * @return Elemento que almacena el nodo top.
+     */
+    final public T peek(){
+        return this.top == null ? null : this.top.getData();
+    }
 }
