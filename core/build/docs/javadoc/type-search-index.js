@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes","url":"allclasses-index.html"},{"p":"com.mygdx.game","l":"MainLogic"},{"p":"com.mygdx.game.DataStructures","l":"MyDoubleLinkedList"},{"p":"com.mygdx.game.DataStructures","l":"MyStack"},{"p":"com.mygdx.game","l":"Plank"}]
