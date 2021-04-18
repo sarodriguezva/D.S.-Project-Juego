@@ -12,7 +12,7 @@ package com.mygdx.game.DataStructures;
 
 class Node<E> {
     
-    E data;
+    private E data;
     Node<E> next;
     Node<E> previous;
     
@@ -21,13 +21,17 @@ class Node<E> {
         this.next = null;
         this.previous = null;
     }
+    
+    public E getData(){
+        return this.data;
+    }
 }
 
 public class MyDoubleLinkedList<E> {
 
-    Node<E> first;
-    Node<E> last;
-    int count;
+    private Node<E> first;
+    private Node<E> last;
+    private int count;
 
     public MyDoubleLinkedList() {
         this.makeEmpty();
@@ -66,7 +70,7 @@ public class MyDoubleLinkedList<E> {
     }
     
     public E getData(Integer index){
-        return getNode(index).data;
+        return getNode(index).getData();
     }
     
     public int[] find(E data){
@@ -76,7 +80,7 @@ public class MyDoubleLinkedList<E> {
             int idx = 0;
             int pos = 0;
             while (head != null){
-                if (data.equals(head.data)){
+                if (data.equals(head.getData())){
                     idxArray[pos] = idx;
                     pos++;
                 }
@@ -146,7 +150,7 @@ public class MyDoubleLinkedList<E> {
         }
 
         if (k == 0){
-            E data = this.first.data;
+            E data = this.first.getData();
             this.first = this.first.next;
             this.first.previous = null;
             this.count--;
@@ -154,7 +158,7 @@ public class MyDoubleLinkedList<E> {
         } 
         
         if (k == this.count-1){
-            E data = this.last.data;
+            E data = this.last.getData();
             this.last = this.last.previous;
             this.last.next = null;
             this.count--;
@@ -162,7 +166,7 @@ public class MyDoubleLinkedList<E> {
         }
 
         Node<E> aux = this.getNode(k);
-        E data = aux.data;
+        E data = aux.getData();
         aux.previous.next = aux.next;
         aux.next.previous = aux.previous;
         return data;
@@ -177,12 +181,12 @@ public class MyDoubleLinkedList<E> {
     }
     
     public E getFirstData(){
-        if (this.first != null) return this.first.data;
+        if (this.first != null) return this.first.getData();
         else return null;
     }
     
     public E getLastData(){
-        if (this.last != null) return this.last.data;
+        if (this.last != null) return this.last.getData();
         else return null;
     }
     
@@ -199,7 +203,7 @@ public class MyDoubleLinkedList<E> {
         sb.append("[");
         Node<E> aux = reverse ? this.last : this.first;
         while (aux != null){
-            sb.append(aux.data);
+            sb.append(aux.getData());
             sb.append(", ");
             aux = reverse ? aux.previous : aux.next;
         }
