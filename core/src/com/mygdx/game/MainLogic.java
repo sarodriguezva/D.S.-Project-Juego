@@ -66,7 +66,7 @@ public class MainLogic extends ApplicationAdapter {
         
         
         // PARTE DE LOGICA
-        
+        if (!info){
         
         //justTouched me dice si el mouse ha sido recientemente presionado, leftpressed si está continuamente presionado
         justTouched = Gdx.input.justTouched();
@@ -90,11 +90,14 @@ public class MainLogic extends ApplicationAdapter {
             }
             
             ///AQUI VA SI CLICKEA ALGO MIENTRAS NO ARRASTRA NADA
+            /////////////////   BOTONES  //////////////////////// 
+            
+            // boton restart
             if(touchPos.x > buttonRestart.buttonCollision.x - buttonRestart.buttonCollision.width && touchPos.x < buttonRestart.buttonCollision.x + buttonRestart.buttonCollision.width){
                 if (touchPos.y > buttonRestart.buttonCollision.y - buttonRestart.buttonCollision.height && touchPos.y < buttonRestart.buttonCollision.y + buttonRestart.buttonCollision.height){
                     clearLevel();
                     initiateLevel(currentLevel);
-                     
+                    
                 }
             }
             if(touchPos.x > buttonHelp.buttonCollision.x - buttonHelp.buttonCollision.width && touchPos.x < buttonHelp.buttonCollision.x + buttonHelp.buttonCollision.width){
@@ -111,6 +114,7 @@ public class MainLogic extends ApplicationAdapter {
                      
                 }
             }
+            
             
             
         }
@@ -146,9 +150,11 @@ public class MainLogic extends ApplicationAdapter {
             }
             //Gdx.app.log("MyTag", "MyMessage"); //ASI SE PRINTEA A CONSOla
         }
+        }
+        // boton cerrar: if (info) ... cosas
+            
     
-    
-        // PARTE DE RENDER
+        // PARTE DE RENDER mostrar imagenes.
         batch.begin();
         batch.draw(backgroundTexture, 0, 0);
         for (int i = 0; i < plankList.getSize(); i++) {
@@ -156,6 +162,7 @@ public class MainLogic extends ApplicationAdapter {
         }
         batch.draw(buttonRestart.buttonTexture,0,0) ;
         batch.draw(buttonHelp.buttonTexture,0,555);
+<<<<<<< HEAD
         
         //Aqui render Info
         if (Info == true){
@@ -163,6 +170,9 @@ public class MainLogic extends ApplicationAdapter {
             batch.draw(buttonClose.buttonTexture,155,555);
             
         }
+=======
+        // if juego está pausado, si juego info=TRUE{ batch.draw(textura del popup )
+>>>>>>> 041262d826f7c38cbc4e77d44f75b487a2bd6423
         
         
         batch.end();
