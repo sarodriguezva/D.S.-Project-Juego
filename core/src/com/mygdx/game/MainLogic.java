@@ -41,7 +41,7 @@ public class MainLogic extends ApplicationAdapter {
     }
     
     
-    // Función para crear un plank y añadirlo a la lista automaticamente
+    // Funciï¿½n para crear un plank y aï¿½adirlo a la lista automaticamente
     public void createPlank(int x, int y, int w, int h) {
         // Creacion de buckets.
         Plank myPlank = new Plank(x, y, w, h);
@@ -51,11 +51,11 @@ public class MainLogic extends ApplicationAdapter {
     @Override
     public void render() {
 
-        // ESTA FUNCIÓN MUESTRA TODO EN PANTALLA, TAMBIÉN ES UNA FUNCIÓN QUE SE LLAMA REPETIDAMENTE, creo que a 60fps
+        // ESTA FUNCIï¿½N MUESTRA TODO EN PANTALLA, TAMBIï¿½N ES UNA FUNCIï¿½N QUE SE LLAMA REPETIDAMENTE, creo que a 60fps
         // clear es pa borrar todo en pantalla
         ScreenUtils.clear(0, 0, 0.2f, 1);
         
-        // acá se usa lo de batch de antes, en resumen es un objeto que se encarga de manejar el tema de opengl para renderizar todo de manera eficiente
+        // acï¿½ se usa lo de batch de antes, en resumen es un objeto que se encarga de manejar el tema de opengl para renderizar todo de manera eficiente
         camera.update();
         batch.setProjectionMatrix(camera.combined);
         
@@ -63,17 +63,17 @@ public class MainLogic extends ApplicationAdapter {
         // PARTE DE LOGICA
         
         
-        //justTouched me dice si el mouse ha sido recientemente presionado, leftpressed si está continuamente presionado
+        //justTouched me dice si el mouse ha sido recientemente presionado, leftpressed si estï¿½ continuamente presionado
         justTouched = Gdx.input.justTouched();
         leftPressed = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
 
-        // Si está continuamente presionado, guardeme las coordenadas del mouse
+        // Si estï¿½ continuamente presionado, guardeme las coordenadas del mouse
         if (leftPressed) {
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             camera.unproject(touchPos);
         }
 
-        // Si ha sido recientemente presionado compruebe si ya está arrastrando un objeto, si no hay objeto, busca el que el mouse presiona en esas coordenadas.
+        // Si ha sido recientemente presionado compruebe si ya estï¿½ arrastrando un objeto, si no hay objeto, busca el que el mouse presiona en esas coordenadas.
         if (justTouched && currentPick == null) {
             for (int i = 0; i < plankList.getSize(); i++) {
                 if (touchPos.x > plankList.getData(i).plankCollision.x - plankList.getData(i).plankCollision.width && touchPos.x < plankList.getData(i).plankCollision.x + plankList.getData(i).plankCollision.width) {
@@ -96,7 +96,7 @@ public class MainLogic extends ApplicationAdapter {
             
         }
 
-        // Si está siendo un objeto presionado:
+        // Si estï¿½ siendo un objeto presionado:
         if (currentPick != null) {
             // Movement
 
@@ -149,7 +149,7 @@ public class MainLogic extends ApplicationAdapter {
 
     @Override
     public void dispose() {
-        // esta función se llama al cerrar el juego, elimina los objetos manualmente (java lo hace solito, pero es como por seguridad)
+        // esta funciï¿½n se llama al cerrar el juego, elimina los objetos manualmente (java lo hace solito, pero es como por seguridad)
         batch.dispose();
         for (int i = 0; i < plankList.getSize(); i++) {
             plankList.getData(i).dispose();
@@ -172,7 +172,7 @@ public class MainLogic extends ApplicationAdapter {
     }
 
     public void initiateLevel(int level){
-    //ACÁ VA LA INFO DE NIVELES. 0=MENU;
+    //ACï¿½ VA LA INFO DE NIVELES. 0=MENU;
     switch (level){
         case 1:
         batch = new SpriteBatch();
