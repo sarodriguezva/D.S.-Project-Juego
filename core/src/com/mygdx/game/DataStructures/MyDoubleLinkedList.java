@@ -58,7 +58,7 @@ public class MyDoubleLinkedList<E> {
      * @param k Posición o índice del nodo.
      * @return Nodo de la lista.
      */
-    final private Node<E> getNode(int k){
+    private Node<E> getNode(int k){
         if (k < 0 || k >= this.count){
             System.out.println("Error al leer");
             return null;
@@ -97,7 +97,7 @@ public class MyDoubleLinkedList<E> {
      * @return Arreglo de posiciones o índices 
      * de los nodos en los que se encuentra el elemento.
      */
-    final public int[] find(E data){
+    public int[] find(E data){
         int[] idxArray = new int[count];
         if (count > 0){
             Node<E> head = this.first;
@@ -125,7 +125,7 @@ public class MyDoubleLinkedList<E> {
      * un nodo con el elemento.
      * @param data El elemento a insertar en la lista.
      */
-    final public void insert(int k, E data){
+    public void insert(int k, E data){
         if (k < 0 || k > this.count){
             System.out.println("Error al insertar");
             return;
@@ -169,12 +169,12 @@ public class MyDoubleLinkedList<E> {
      * 
      * @param data Elemento a insertar.
      */
-    final public void insertBegin(E data) {
+    public void insertBegin(E data) {
         this.insert(0, data);
     }
     
     /**
-     * Método para insertar un elemento al final de la lista.
+     * Método para insertar un elemento al de la lista.
      * 
      * @param data Elemento a insertar. 
      */
@@ -189,7 +189,7 @@ public class MyDoubleLinkedList<E> {
      * @param k Posición o índice del nodo a eliminar.
      * @return Elemento eliminado.
      */
-    final public E delete(int k){
+    public E delete(int k){
         if (k < 0 || k >= this.count){
             System.out.println("Error al eliminar");
             return null;
@@ -226,7 +226,7 @@ public class MyDoubleLinkedList<E> {
      * 
      * @return Elemento eliminado.
      */
-    final public E deleteBegin() {
+    public E deleteBegin() {
          return this.delete(0);
     }
     
