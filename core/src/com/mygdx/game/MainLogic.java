@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -149,6 +150,7 @@ public class MainLogic extends ApplicationAdapter {
     
     
         // PARTE DE RENDER
+        batch.enableBlending();
         batch.begin();
         batch.draw(backgroundTexture, 0, 0);
         for (int i = 0; i < plankList.getSize(); i++) {
@@ -159,7 +161,14 @@ public class MainLogic extends ApplicationAdapter {
         
         //Aqui render Info
         if (Info == true){
-            batch.draw(infoTexture, 0, 0);
+            // Sprite es un tipo de objeto que deja cambiar algunas caracteristicas ed las texturas x eso se crea un sprite con la textura
+            Sprite sprite = new Sprite(infoTexture);
+            //Aquí se le pone un color en RGB,A. osea color y opacidad.
+            sprite.setPosition(0,0);
+            sprite.setSize(400, 400);
+            sprite.setColor(1, 1, 1, 0.5f);
+            // Se llama la dibujación
+            sprite.draw(batch);
             batch.draw(buttonClose.buttonTexture,155,555);
             
         }
