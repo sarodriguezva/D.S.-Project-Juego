@@ -35,7 +35,7 @@ public class MyStack<T> extends MyDoubleLinkedList<T>{
      * Método para vaciar la pila.
      */
     @Override
-    final public void makeEmpty(){
+    public void makeEmpty(){
         super.makeEmpty();
         this.top = super.last;
     }
@@ -45,7 +45,7 @@ public class MyStack<T> extends MyDoubleLinkedList<T>{
      * 
      * @param data Elemento a insertar.
      */
-    final public void push(T data){
+    public void push(T data){
         super.add(data);
         this.top = super.last;
     }
@@ -54,7 +54,7 @@ public class MyStack<T> extends MyDoubleLinkedList<T>{
      * Método para revisar el elemento almacenado en la cima de la pila.
      * @return Elemento que almacena el nodo top.
      */
-    final public T peek(){
+    public T peek(){
         return this.top == null ? null : this.top.getData();
     }
 }
