@@ -25,7 +25,7 @@ public class MainLogic extends ApplicationAdapter {
     GenericButton buttonRestart = null;
     GenericButton buttonHelp = null;
     GenericButton buttonClose= null;
-    boolean Info = false;
+    boolean info = false;
    
     Vector3 touchPos = new Vector3();
     private final MySimpleLinkedList<Plank> plankList = new MySimpleLinkedList<>();
@@ -81,6 +81,9 @@ public class MainLogic extends ApplicationAdapter {
 
         // Si ha sido recientemente presionado compruebe si ya está arrastrando un objeto, si no hay objeto, busca el que el mouse presiona en esas coordenadas.
         if (justTouched && currentPick == null) {
+            
+            if (info == false ){
+            
             for (int i = 0; i < plankList.getSize(); i++) {
                 if (touchPos.x > plankList.getData(i).plankCollision.x - plankList.getData(i).plankCollision.width && touchPos.x < plankList.getData(i).plankCollision.x + plankList.getData(i).plankCollision.width) {
                     if (touchPos.y > plankList.getData(i).plankCollision.y - plankList.getData(i).plankCollision.height && touchPos.y < plankList.getData(i).plankCollision.y + plankList.getData(i).plankCollision.height) {
@@ -98,16 +101,21 @@ public class MainLogic extends ApplicationAdapter {
                      
                 }
             }
+            }
+            
+            // BOTON HELP ////
             if(touchPos.x > buttonHelp.buttonCollision.x - buttonHelp.buttonCollision.width && touchPos.x < buttonHelp.buttonCollision.x + buttonHelp.buttonCollision.width){
                 if (touchPos.y > buttonHelp.buttonCollision.y - buttonHelp.buttonCollision.height && touchPos.y < buttonHelp.buttonCollision.y + buttonHelp.buttonCollision.height){
-                    Info=true;
+                    info=true;
                     
                      
                 }
             }
+            
+            /// BOTON PARA CERRAR EL POPUP DE HELP ///
             if(touchPos.x > buttonClose.buttonCollision.x - buttonClose.buttonCollision.width && touchPos.x < buttonClose.buttonCollision.x + buttonClose.buttonCollision.width){
                 if (touchPos.y > buttonClose.buttonCollision.y - buttonClose.buttonCollision.height && touchPos.y < buttonClose.buttonCollision.y + buttonClose.buttonCollision.height){
-                    Info=false;
+                    info=false;
                     
                      
                 }
@@ -159,8 +167,8 @@ public class MainLogic extends ApplicationAdapter {
         batch.draw(buttonRestart.buttonTexture,0,0) ;
         batch.draw(buttonHelp.buttonTexture,0,555);
         
-        //Aqui render Info
-        if (Info == true){
+        //Aqui render info
+        if (info == true){
             // Sprite es un tipo de objeto que deja cambiar algunas caracteristicas ed las texturas x eso se crea un sprite con la textura
             Sprite sprite = new Sprite(infoTexture);
             //Aquí se le pone un color en RGB,A. osea color y opacidad.
