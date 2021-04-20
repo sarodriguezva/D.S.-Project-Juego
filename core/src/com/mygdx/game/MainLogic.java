@@ -115,7 +115,7 @@ public class MainLogic extends ApplicationAdapter {
             
             
         }
-
+        
         // Si está siendo un objeto presionado:
         if (currentPick != null) {
             // Movement
@@ -164,12 +164,12 @@ public class MainLogic extends ApplicationAdapter {
             // Sprite es un tipo de objeto que deja cambiar algunas caracteristicas ed las texturas x eso se crea un sprite con la textura
             Sprite sprite = new Sprite(infoTexture);
             //Aquí se le pone un color en RGB,A. osea color y opacidad.
-            sprite.setPosition(0,0);
-            sprite.setSize(400, 400);
+            sprite.setPosition(150,100);
+            sprite.setSize(500, 450);
             sprite.setColor(1, 1, 1, 0.5f);
             // Se llama la dibujación
             sprite.draw(batch);
-            batch.draw(buttonClose.buttonTexture,155,555);
+            batch.draw(buttonClose.buttonTexture,600,503);
             
         }
         
@@ -220,7 +220,7 @@ public class MainLogic extends ApplicationAdapter {
         createPlank(400,200,64,64);
         createPlank(0,0,64,64);
         buttonHelp= new GenericButton(0,555,50,50,"buttonHelp.png");
-        buttonClose= new GenericButton(155,555,50,50,"buttonClose.png");
+        buttonClose= new GenericButton(600,503,50,50,"buttonClose.png");
         buttonRestart = new GenericButton(0,0, 50,50, "buttonRestart.png");
         infoTexture = new Texture(Gdx.files.internal("Info.png"));
         backgroundTexture = new Texture(Gdx.files.internal("parallax-mountain-bg.png"));
