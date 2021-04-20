@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -15,12 +16,17 @@ public class MainLogic extends ApplicationAdapter {
     //AQUI SE CARGAN LAS TEXTURAS 
     private SpriteBatch batch;
     private Texture backgroundTexture;
+    private Texture infoTexture;
     
     //AQUI SE CARGAN LAS VARIABLES
     boolean justTouched = false;
     boolean leftPressed;
     Plank currentPick = null;
     GenericButton buttonRestart = null;
+    GenericButton buttonHelp = null;
+    GenericButton buttonClose= null;
+    boolean info = false;
+   
     Vector3 touchPos = new Vector3();
     private final MyDoubleLinkedList<Plank> plankList = new MyDoubleLinkedList<>();
     int currentLevel=0;
@@ -79,6 +85,9 @@ public class MainLogic extends ApplicationAdapter {
 
         // Si ha sido recientemente presionado compruebe si ya est� arrastrando un objeto, si no hay objeto, busca el que el mouse presiona en esas coordenadas.
         if (justTouched && currentPick == null) {
+            
+            if (info == false ){
+            
             for (int i = 0; i < plankList.getSize(); i++) {
                 if (touchPos.x > plankList.getData(i).plankCollision.x - plankList.getData(i).plankCollision.width && touchPos.x < plankList.getData(i).plankCollision.x + plankList.getData(i).plankCollision.width) {
                     if (touchPos.y > plankList.getData(i).plankCollision.y - plankList.getData(i).plankCollision.height && touchPos.y < plankList.getData(i).plankCollision.y + plankList.getData(i).plankCollision.height) {
@@ -96,10 +105,29 @@ public class MainLogic extends ApplicationAdapter {
                      
                 }
             }
+            }
+            
+            // BOTON HELP ////
+            if(touchPos.x > buttonHelp.buttonCollision.x - buttonHelp.buttonCollision.width && touchPos.x < buttonHelp.buttonCollision.x + buttonHelp.buttonCollision.width){
+                if (touchPos.y > buttonHelp.buttonCollision.y - buttonHelp.buttonCollision.height && touchPos.y < buttonHelp.buttonCollision.y + buttonHelp.buttonCollision.height){
+                    info=true;
+                    
+                     
+                }
+            }
+            
+            /// BOTON PARA CERRAR EL POPUP DE HELP ///
+            if(touchPos.x > buttonClose.buttonCollision.x - buttonClose.buttonCollision.width && touchPos.x < buttonClose.buttonCollision.x + buttonClose.buttonCollision.width){
+                if (touchPos.y > buttonClose.buttonCollision.y - buttonClose.buttonCollision.height && touchPos.y < buttonClose.buttonCollision.y + buttonClose.buttonCollision.height){
+                    info=false;
+                    
+                     
+                }
+            }
             
             
         }
-
+        
         // Si est� siendo un objeto presionado:
         if (currentPick != null) {
             // Movement
@@ -134,13 +162,32 @@ public class MainLogic extends ApplicationAdapter {
     
     
         // PARTE DE RENDER
+        batch.enableBlending();
         batch.begin();
         batch.draw(backgroundTexture, 0, 0);
         for (int i = 0; i < plankList.getSize(); i++) {
             batch.draw(plankList.getData(i).plankTexture, plankList.getData(i).plankCollision.x, plankList.getData(i).plankCollision.y);
         }
-        batch.draw(buttonRestart.buttonTexture,0,0);
+        batch.draw(buttonRestart.buttonTexture,0,0) ;
+        batch.draw(buttonHelp.buttonTexture,0,555);
+        
+        //Aqui render info
+        if (info == true){
+            // Sprite es un tipo de objeto que deja cambiar algunas caracteristicas ed las texturas x eso se crea un sprite con la textura
+            Sprite sprite = new Sprite(infoTexture);
+            //Aqu� se le pone un color en RGB,A. osea color y opacidad.
+            sprite.setPosition(150,100);
+            sprite.setSize(500, 450);
+            sprite.setColor(1, 1, 1, 0.5f);
+            // Se llama la dibujaci�n
+            sprite.draw(batch);
+            batch.draw(buttonClose.buttonTexture,600,503);
+            
+        }
+        
+        
         batch.end();
+       
         
         if (debug){
         // PARTE DE DEBUG
@@ -163,6 +210,8 @@ public class MainLogic extends ApplicationAdapter {
        
     }
     
+    
+    
     public void clearLevel(){
         batch.dispose();
         for (int i = 0; i < plankList.getSize(); i++) {
@@ -182,7 +231,10 @@ public class MainLogic extends ApplicationAdapter {
         batch = new SpriteBatch();
         createPlank(400,200,64,64);
         createPlank(0,0,64,64);
-        buttonRestart = new GenericButton(0, 0, 50, 50, "buttonRestart.png");
+        buttonHelp= new GenericButton(0,555,50,50,"buttonHelp.png");
+        buttonClose= new GenericButton(600,503,50,50,"buttonClose.png");
+        buttonRestart = new GenericButton(0,0, 50,50, "buttonRestart.png");
+        infoTexture = new Texture(Gdx.files.internal("Info.png"));
         backgroundTexture = new Texture(Gdx.files.internal("parallax-mountain-bg.png"));
         currentLevel=1;
         break;
