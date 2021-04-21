@@ -301,8 +301,11 @@ public class MyDoubleLinkedList<E> {
     
     /**
      * Método que imprime visualmente la lista.
+     * @param reverse Valor booleano. Si es verdadero, imprimirá la lista
+     * comenzando por el último elemento y terminando por el primero.
+     * Si es falso, imprimirá la lista de forma tradicional.
      */
-    public void print() {
-        System.out.println(this.toString(false));
+    public void print(boolean reverse) {
+        System.out.println(this.toString(reverse));
     }
 }
