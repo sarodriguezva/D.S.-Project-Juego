@@ -200,8 +200,8 @@ public class MyDoubleLinkedList<E> {
 
         if (k == 0){
             E data = this.first.getData();
-            this.first = this.first.next;
             this.first.previous = null;
+            this.first = this.first.next;
             this.count--;
             return data;
         } 
