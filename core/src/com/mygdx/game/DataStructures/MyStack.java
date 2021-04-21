@@ -18,7 +18,7 @@ public class MyStack<T> extends MyDoubleLinkedList<T>{
      * Constructor. Crea una pila vacía.
      */
     public MyStack(){
-        super();
+        this.makeEmpty();
     }
     
     /**
@@ -29,6 +29,7 @@ public class MyStack<T> extends MyDoubleLinkedList<T>{
      */
     public MyStack(T[] array){
         super(array);
+        this.top = super.last;
     }
     
     /**
@@ -51,10 +52,47 @@ public class MyStack<T> extends MyDoubleLinkedList<T>{
     }
     
     /**
+     * Método que retorna y elimina el elemento en la cima de la pila.
+     * @return Elemento actualmente en la cima de la pila.
+     */
+    @Override
+    public T pop(){
+        T toReturn = super.pop();
+        this.top = super.last;
+        return toReturn;
+    }
+    
+    /**
      * Método para revisar el elemento almacenado en la cima de la pila.
      * @return Elemento que almacena el nodo top.
      */
     public T peek(){
-        return this.top == null ? null : this.top.getData();
+        return this.top == null ? null: this.top.getData();
+    }
+    
+    /**
+     * Método que retorna el tamaño de la pila.
+     * @return Entero que representa el número de elementos en la pila.
+     */
+    @Override
+    public int getSize(){
+        return super.getSize();
+    }
+    
+    /**
+     * Método que determina si la pila está vacía.
+     * @return Valor booleano. Si es verdadero, la pila está vacía.
+     */
+    @Override
+    public boolean isEmpty(){
+        return super.isEmpty();
+    }
+    
+    /**
+     * Método que imprime visualmente los elementos en la pila.
+     * Comenzando desde la cima.
+     */
+    public void print(){
+        super.print(true);
     }
 }
