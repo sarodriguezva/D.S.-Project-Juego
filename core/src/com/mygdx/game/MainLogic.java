@@ -35,16 +35,7 @@ public class MainLogic extends ApplicationAdapter {
     
     // ESTA ES LA CAMARA, es una camara 3d pero que se proyecta ortogonalmente (2d)
     private OrthographicCamera camera;
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-=======
 
-    //ESTE ES EL OBJETO DE PRUEBA
-   // private final MyDoubleLinkedList<Plank> plankList = new MyDoubleLinkedList<>();
-    MyStack<Integer> plankStack = new MyStack<>();
->>>>>>> Experimental
-    
-=======
 
     //ESTE ES EL OBJETO DE PRUEBA
    // private final MyDoubleLinkedList<Plank> plankList = new MyDoubleLinkedList<>();
@@ -52,7 +43,6 @@ public class MainLogic extends ApplicationAdapter {
 //    Plank[] plankArray = new Plank[50000];
 //    MyDynamicArray<Plank> plankDynamic = new MyDynamicArray<>();
     int i=0;
->>>>>>> Stashed changes
     @Override
     public void create() {
 
@@ -278,32 +268,13 @@ public class MainLogic extends ApplicationAdapter {
     }
 
     public void initiateLevel(int level){
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-    //ACÁ VA LA INFO DE NIVELES. 0=MENU;
-=======
-    //ACï¿½ VA LA INFO DE NIVELES. 0=MENU;
->>>>>>> Experimental
-    switch (level){
-        case 1:
-        batch = new SpriteBatch();
-        createPlank(400,200,64,64);
-        createPlank(0,0,64,64);
-<<<<<<< HEAD
-        buttonRestart = new GenericButton(0, 0, 50, 50, "buttonRestart.png");
-=======
+
     //ACï¿½ VA LA INFO DE NIVELES. 0=MENU;
     if (level!=0){
-=======
->>>>>>> Experimental
         buttonHelp= new GenericButton(0,555,50,50,"buttonHelp.png");
         buttonClose= new GenericButton(600,503,50,50,"buttonClose.png");
         buttonRestart = new GenericButton(0,0, 50,50, "buttonRestart.png");
         infoTexture = new Texture(Gdx.files.internal("Info.png"));
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
->>>>>>> Experimental
         backgroundTexture = new Texture(Gdx.files.internal("parallax-mountain-bg.png"));
     }
     switch (level){
