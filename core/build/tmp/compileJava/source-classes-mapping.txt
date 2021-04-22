@@ -1,5 +1,6 @@
 com/mygdx/game/DataStructures/MyQueue.java
  com.mygdx.game.DataStructures.MyQueue
+<<<<<<< HEAD
 com/mygdx/game/Plank.java
  com.mygdx.game.Plank
 com/mygdx/game/DataStructures/MyStack.java
@@ -14,3 +15,17 @@ com/mygdx/game/DataStructures/MyDynamicArray.java
  com.mygdx.game.DataStructures.MyDynamicArray
 com/mygdx/game/MainLogic.java
  com.mygdx.game.MainLogic
+=======
+com/mygdx/game/DataStructures/MyDoubleLinkedList.java
+ com.mygdx.game.DataStructures.MyDoubleLinkedList
+com/mygdx/game/DataStructures/MyStack.java
+ com.mygdx.game.DataStructures.MyStack
+com/mygdx/game/DataStructures/Node.java
+ com.mygdx.game.DataStructures.Node
+com/mygdx/game/Plank.java
+ com.mygdx.game.Plank
+com/mygdx/game/MainLogic.java
+ com.mygdx.game.MainLogic
+com/mygdx/game/GenericButton.java
+ com.mygdx.game.GenericButton
+>>>>>>> Experimental

@@ -16,6 +16,4 @@ public class Plank extends ApplicationAdapter {
         plankCollision.height = h;
         plankTexture = new Texture(Gdx.files.internal("bucket.png"));
     }
-
-    
 }

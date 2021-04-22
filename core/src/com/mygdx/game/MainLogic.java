@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -17,19 +18,31 @@ public class MainLogic extends ApplicationAdapter {
     //AQUI SE CARGAN LAS TEXTURAS 
     private SpriteBatch batch;
     private Texture backgroundTexture;
+    private Texture infoTexture;
     
     //AQUI SE CARGAN LAS VARIABLES
     boolean justTouched = false;
     boolean leftPressed;
     Plank currentPick = null;
     GenericButton buttonRestart = null;
+    GenericButton buttonHelp = null;
+    GenericButton buttonClose= null;
+    boolean info = false;
+   
     Vector3 touchPos = new Vector3();
-    private final MySimpleLinkedList<Plank> plankList = new MySimpleLinkedList<>();
+    private final MyDoubleLinkedList<Plank> plankList = new MyDoubleLinkedList<>();
     int currentLevel=0;
     
     // ESTA ES LA CAMARA, es una camara 3d pero que se proyecta ortogonalmente (2d)
     private OrthographicCamera camera;
+<<<<<<< HEAD
 <<<<<<< Updated upstream
+=======
+
+    //ESTE ES EL OBJETO DE PRUEBA
+   // private final MyDoubleLinkedList<Plank> plankList = new MyDoubleLinkedList<>();
+    MyStack<Integer> plankStack = new MyStack<>();
+>>>>>>> Experimental
     
 =======
 
@@ -88,7 +101,7 @@ public class MainLogic extends ApplicationAdapter {
     }
     
     
-    // Función para crear un plank y añadirlo a la lista automaticamente
+    // Funciï¿½n para crear un plank y aï¿½adirlo a la lista automaticamente
     public void createPlank(int x, int y, int w, int h) {
         // Creacion de buckets.
         Plank myPlank = new Plank(x, y, w, h);
@@ -101,11 +114,11 @@ public class MainLogic extends ApplicationAdapter {
     @Override
     public void render() {
 
-        // ESTA FUNCIÓN MUESTRA TODO EN PANTALLA, TAMBIÉN ES UNA FUNCIÓN QUE SE LLAMA REPETIDAMENTE, creo que a 60fps
+        // ESTA FUNCIï¿½N MUESTRA TODO EN PANTALLA, TAMBIï¿½N ES UNA FUNCIï¿½N QUE SE LLAMA REPETIDAMENTE, creo que a 60fps
         // clear es pa borrar todo en pantalla
         ScreenUtils.clear(0, 0, 0.2f, 1);
         
-        // acá se usa lo de batch de antes, en resumen es un objeto que se encarga de manejar el tema de opengl para renderizar todo de manera eficiente
+        // acï¿½ se usa lo de batch de antes, en resumen es un objeto que se encarga de manejar el tema de opengl para renderizar todo de manera eficiente
         camera.update();
         batch.setProjectionMatrix(camera.combined);
         
@@ -113,18 +126,21 @@ public class MainLogic extends ApplicationAdapter {
         // PARTE DE LOGICA
         
         
-        //justTouched me dice si el mouse ha sido recientemente presionado, leftpressed si está continuamente presionado
+        //justTouched me dice si el mouse ha sido recientemente presionado, leftpressed si estï¿½ continuamente presionado
         justTouched = Gdx.input.justTouched();
         leftPressed = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
 
-        // Si está continuamente presionado, guardeme las coordenadas del mouse
+        // Si estï¿½ continuamente presionado, guardeme las coordenadas del mouse
         if (leftPressed) {
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             camera.unproject(touchPos);
         }
 
-        // Si ha sido recientemente presionado compruebe si ya está arrastrando un objeto, si no hay objeto, busca el que el mouse presiona en esas coordenadas.
+        // Si ha sido recientemente presionado compruebe si ya estï¿½ arrastrando un objeto, si no hay objeto, busca el que el mouse presiona en esas coordenadas.
         if (justTouched && currentPick == null) {
+            
+            if (info == false ){
+            
             for (int i = 0; i < plankList.getSize(); i++) {
                 if (touchPos.x > plankList.getData(i).plankCollision.x - plankList.getData(i).plankCollision.width && touchPos.x < plankList.getData(i).plankCollision.x + plankList.getData(i).plankCollision.width) {
                     if (touchPos.y > plankList.getData(i).plankCollision.y - plankList.getData(i).plankCollision.height && touchPos.y < plankList.getData(i).plankCollision.y + plankList.getData(i).plankCollision.height) {
@@ -142,11 +158,30 @@ public class MainLogic extends ApplicationAdapter {
                      
                 }
             }
+            }
+            
+            // BOTON HELP ////
+            if(touchPos.x > buttonHelp.buttonCollision.x - buttonHelp.buttonCollision.width && touchPos.x < buttonHelp.buttonCollision.x + buttonHelp.buttonCollision.width){
+                if (touchPos.y > buttonHelp.buttonCollision.y - buttonHelp.buttonCollision.height && touchPos.y < buttonHelp.buttonCollision.y + buttonHelp.buttonCollision.height){
+                    info=true;
+                    
+                     
+                }
+            }
+            
+            /// BOTON PARA CERRAR EL POPUP DE HELP ///
+            if(touchPos.x > buttonClose.buttonCollision.x - buttonClose.buttonCollision.width && touchPos.x < buttonClose.buttonCollision.x + buttonClose.buttonCollision.width){
+                if (touchPos.y > buttonClose.buttonCollision.y - buttonClose.buttonCollision.height && touchPos.y < buttonClose.buttonCollision.y + buttonClose.buttonCollision.height){
+                    info=false;
+                    
+                     
+                }
+            }
             
             
         }
-
-        // Si está siendo un objeto presionado:
+        
+        // Si estï¿½ siendo un objeto presionado:
         if (currentPick != null) {
             // Movement
 
@@ -180,13 +215,32 @@ public class MainLogic extends ApplicationAdapter {
     
     
         // PARTE DE RENDER
+        batch.enableBlending();
         batch.begin();
         batch.draw(backgroundTexture, 0, 0);
         for (int i = 0; i < plankList.getSize(); i++) {
             batch.draw(plankList.getData(i).plankTexture, plankList.getData(i).plankCollision.x, plankList.getData(i).plankCollision.y);
         }
-        batch.draw(buttonRestart.buttonTexture,0,0);
+        batch.draw(buttonRestart.buttonTexture,0,0) ;
+        batch.draw(buttonHelp.buttonTexture,0,555);
+        
+        //Aqui render info
+        if (info == true){
+            // Sprite es un tipo de objeto que deja cambiar algunas caracteristicas ed las texturas x eso se crea un sprite con la textura
+            Sprite sprite = new Sprite(infoTexture);
+            //Aquï¿½ se le pone un color en RGB,A. osea color y opacidad.
+            sprite.setPosition(150,100);
+            sprite.setSize(500, 450);
+            sprite.setColor(1, 1, 1, 0.5f);
+            // Se llama la dibujaciï¿½n
+            sprite.draw(batch);
+            batch.draw(buttonClose.buttonTexture,600,503);
+            
+        }
+        
+        
         batch.end();
+       
         
         if (debug){
         // PARTE DE DEBUG
@@ -199,7 +253,7 @@ public class MainLogic extends ApplicationAdapter {
 
     @Override
     public void dispose() {
-        // esta función se llama al cerrar el juego, elimina los objetos manualmente (java lo hace solito, pero es como por seguridad)
+        // esta funciï¿½n se llama al cerrar el juego, elimina los objetos manualmente (java lo hace solito, pero es como por seguridad)
         batch.dispose();
         for (int i = 0; i < plankList.getSize(); i++) {
             plankList.getData(i).dispose();
@@ -208,6 +262,8 @@ public class MainLogic extends ApplicationAdapter {
         backgroundTexture.dispose();
        
     }
+    
+    
     
     public void clearLevel(){
         batch.dispose();
@@ -222,22 +278,32 @@ public class MainLogic extends ApplicationAdapter {
     }
 
     public void initiateLevel(int level){
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     //ACÁ VA LA INFO DE NIVELES. 0=MENU;
+=======
+    //ACï¿½ VA LA INFO DE NIVELES. 0=MENU;
+>>>>>>> Experimental
     switch (level){
         case 1:
         batch = new SpriteBatch();
         createPlank(400,200,64,64);
         createPlank(0,0,64,64);
+<<<<<<< HEAD
         buttonRestart = new GenericButton(0, 0, 50, 50, "buttonRestart.png");
 =======
     //ACï¿½ VA LA INFO DE NIVELES. 0=MENU;
     if (level!=0){
+=======
+>>>>>>> Experimental
         buttonHelp= new GenericButton(0,555,50,50,"buttonHelp.png");
         buttonClose= new GenericButton(600,503,50,50,"buttonClose.png");
         buttonRestart = new GenericButton(0,0, 50,50, "buttonRestart.png");
         infoTexture = new Texture(Gdx.files.internal("Info.png"));
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> Experimental
         backgroundTexture = new Texture(Gdx.files.internal("parallax-mountain-bg.png"));
     }
     switch (level){
