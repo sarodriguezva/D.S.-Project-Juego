@@ -9,9 +9,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.DataStructures.*;
+import com.sun.tools.javac.resources.compiler;
 
 public class MainLogic extends ApplicationAdapter {
-    boolean debug = true;
+    boolean debug = false;
+    boolean testData = true;
     //AQUI SE CARGAN LAS TEXTURAS 
     private SpriteBatch batch;
     private Texture backgroundTexture;
@@ -27,7 +29,17 @@ public class MainLogic extends ApplicationAdapter {
     
     // ESTA ES LA CAMARA, es una camara 3d pero que se proyecta ortogonalmente (2d)
     private OrthographicCamera camera;
+<<<<<<< Updated upstream
     
+=======
+
+    //ESTE ES EL OBJETO DE PRUEBA
+   // private final MyDoubleLinkedList<Plank> plankList = new MyDoubleLinkedList<>();
+    MyStack<Integer> plankStack = new MyStack<>();
+//    Plank[] plankArray = new Plank[50000];
+//    MyDynamicArray<Plank> plankDynamic = new MyDynamicArray<>();
+    int i=0;
+>>>>>>> Stashed changes
     @Override
     public void create() {
 
@@ -36,8 +48,43 @@ public class MainLogic extends ApplicationAdapter {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 600);
         // el batch es una cosa necesaria para renderizar el sprite
-        initiateLevel(1);
-
+        
+        if (testData = true ){
+        
+        long currentms= System.currentTimeMillis();
+        initiateLevel(1000);
+        long finalms = System.currentTimeMillis();
+        Gdx.app.log("TIME", "Para 1000 datos: " + (finalms-currentms) + " tiempo en ms ");
+        clearLevel();
+        
+        currentms= System.currentTimeMillis();
+        initiateLevel(5000);
+        finalms = System.currentTimeMillis();
+        Gdx.app.log("TIME", "Para 5000 datos: " + (finalms-currentms) + " tiempo en ms ");
+        clearLevel();
+        
+        currentms= System.currentTimeMillis();
+        initiateLevel(10000);
+        finalms = System.currentTimeMillis();
+        Gdx.app.log("TIME", "Para 10000 datos: " + (finalms-currentms) + " tiempo en ms ");
+        clearLevel();
+        
+        currentms= System.currentTimeMillis();
+        initiateLevel(20000);
+        finalms = System.currentTimeMillis();
+        Gdx.app.log("TIME", "Para 20000 datos: " + (finalms-currentms) + " tiempo en ms ");
+        clearLevel();
+        
+        currentms= System.currentTimeMillis();
+        initiateLevel(50000);
+        finalms = System.currentTimeMillis();
+        Gdx.app.log("TIME", "Para 50000 datos: " + (finalms-currentms) + " tiempo en ms ");
+        clearLevel();
+        }
+        else{
+            initiateLevel(1);
+        }
+        
     }
     
     
@@ -45,6 +92,9 @@ public class MainLogic extends ApplicationAdapter {
     public void createPlank(int x, int y, int w, int h) {
         // Creacion de buckets.
         Plank myPlank = new Plank(x, y, w, h);
+ //       plankArray[i] = myPlank;
+ //           plankDynamic.pushBack(myPlank);
+//            i++;
         plankList.add(myPlank);
     }
 
@@ -172,6 +222,7 @@ public class MainLogic extends ApplicationAdapter {
     }
 
     public void initiateLevel(int level){
+<<<<<<< Updated upstream
     //ACÁ VA LA INFO DE NIVELES. 0=MENU;
     switch (level){
         case 1:
@@ -179,9 +230,58 @@ public class MainLogic extends ApplicationAdapter {
         createPlank(400,200,64,64);
         createPlank(0,0,64,64);
         buttonRestart = new GenericButton(0, 0, 50, 50, "buttonRestart.png");
+=======
+    //ACï¿½ VA LA INFO DE NIVELES. 0=MENU;
+    if (level!=0){
+        buttonHelp= new GenericButton(0,555,50,50,"buttonHelp.png");
+        buttonClose= new GenericButton(600,503,50,50,"buttonClose.png");
+        buttonRestart = new GenericButton(0,0, 50,50, "buttonRestart.png");
+        infoTexture = new Texture(Gdx.files.internal("Info.png"));
+>>>>>>> Stashed changes
         backgroundTexture = new Texture(Gdx.files.internal("parallax-mountain-bg.png"));
+    }
+    switch (level){
+        case 1:
+        batch = new SpriteBatch();
+        createPlank(400,200,64,64);
+        createPlank(0,0,64,64);
         currentLevel=1;
         break;
+        
+        case 1000:
+        batch = new SpriteBatch();
+        for (int i=0 ; i<1000;i++){
+           createPlank(i,i+1,64,64);
+        }   
+        break;
+        
+        case 5000:
+        batch = new SpriteBatch();
+        for (int i=0 ; i<5000;i++){
+           createPlank(i,i+1,64,64);
+        }   
+        break;
+        case 10000:
+        batch = new SpriteBatch();
+        for (int i=0 ; i<10000;i++){
+           createPlank(i,i+1,64,64);
+        }   
+        break;
+        
+        case 20000:
+        batch = new SpriteBatch();
+        for (int i=0 ; i<20000;i++){
+           createPlank(i,i+1,64,64);
+        }   
+        break;
+        
+        case 50000:
+        batch = new SpriteBatch();
+        for (int i=0 ; i<50000;i++){
+           createPlank(i,i+1,64,64);
+        }   
+        break;
+        
     }
     
     }
