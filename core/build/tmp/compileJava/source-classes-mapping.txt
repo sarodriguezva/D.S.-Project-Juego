@@ -6,9 +6,9 @@ com/mygdx/game/DataStructures/MyStack.java
  com.mygdx.game.DataStructures.MyStack
 com/mygdx/game/DataStructures/Node.java
  com.mygdx.game.DataStructures.Node
+com/mygdx/game/GenericButton.java
+ com.mygdx.game.GenericButton
 com/mygdx/game/Plank.java
  com.mygdx.game.Plank
 com/mygdx/game/MainLogic.java
  com.mygdx.game.MainLogic
-com/mygdx/game/GenericButton.java
- com.mygdx.game.GenericButton

@@ -12,7 +12,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.DataStructures.*;
 
 public class MainLogic extends ApplicationAdapter {
-    boolean debug = true;
+    boolean debug = false;
     //AQUI SE CARGAN LAS TEXTURAS 
     private SpriteBatch batch;
     private Texture backgroundTexture;
@@ -25,7 +25,10 @@ public class MainLogic extends ApplicationAdapter {
     GenericButton buttonRestart = null;
     GenericButton buttonHelp = null;
     GenericButton buttonClose= null;
+    Texture Cannon;
+    Sprite Cannonsprite;
     boolean info = false;
+    float Shootingtime = 0;
    
     Vector3 touchPos = new Vector3();
     private final MyDoubleLinkedList<Plank> plankList = new MyDoubleLinkedList<>();
@@ -45,6 +48,10 @@ public class MainLogic extends ApplicationAdapter {
         // SE CREA LA CAMARA  Y SE PONE EN ORTOGONAL Y LAS DIMENSIONES ED LA PANTALLA
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 600);
+        this.Cannon = new Texture(Gdx.files.internal("Canon_1.png"));
+        this.Cannonsprite = new Sprite(Cannon, 0, 0, 32, 32);
+        Cannonsprite.setPosition(20, 30);
+        Cannonsprite.setScale(4);
         // el batch es una cosa necesaria para renderizar el sprite
         initiateLevel(1);
 
@@ -59,8 +66,8 @@ public class MainLogic extends ApplicationAdapter {
     }
 
     @Override
-    public void render() {
-
+    public void render() { 
+        
         // ESTA FUNCI�N MUESTRA TODO EN PANTALLA, TAMBI�N ES UNA FUNCI�N QUE SE LLAMA REPETIDAMENTE, creo que a 60fps
         // clear es pa borrar todo en pantalla
         ScreenUtils.clear(0, 0, 0.2f, 1);
@@ -102,7 +109,6 @@ public class MainLogic extends ApplicationAdapter {
                 if (touchPos.y > buttonRestart.buttonCollision.y - buttonRestart.buttonCollision.height && touchPos.y < buttonRestart.buttonCollision.y + buttonRestart.buttonCollision.height){
                     clearLevel();
                     initiateLevel(currentLevel);
-                     
                 }
             }
             }
@@ -168,11 +174,17 @@ public class MainLogic extends ApplicationAdapter {
         for (int i = 0; i < plankList.getSize(); i++) {
             batch.draw(plankList.getData(i).plankTexture, plankList.getData(i).plankCollision.x, plankList.getData(i).plankCollision.y);
         }
-        batch.draw(buttonRestart.buttonTexture,0,0) ;
+        Cannonsprite.draw(batch);
+        batch.draw(buttonRestart.buttonTexture,0,0);
         batch.draw(buttonHelp.buttonTexture,0,555);
+        
         
         //Aqui render info
         if (info == true){
+            if (Math.abs(plankList.getData(1).plankCollision.x - plankList.getData(0).plankCollision.x) > 10 || Math.abs(plankList.getData(1).plankCollision.y - plankList.getData(0).plankCollision.y) > 10){
+            ShootPlankto((int) plankList.getData(0).plankCollision.x, (int) plankList.getData(0).plankCollision.y, Cannonsprite.getX(), Cannonsprite.getY(), Shootingtime, plankList.getData(1));
+            }
+            Shootingtime += Gdx.graphics.getDeltaTime();
             // Sprite es un tipo de objeto que deja cambiar algunas caracteristicas ed las texturas x eso se crea un sprite con la textura
             Sprite sprite = new Sprite(infoTexture);
             //Aqu� se le pone un color en RGB,A. osea color y opacidad.
@@ -182,7 +194,7 @@ public class MainLogic extends ApplicationAdapter {
             // Se llama la dibujaci�n
             sprite.draw(batch);
             batch.draw(buttonClose.buttonTexture,600,503);
-            
+     
         }
         
         
@@ -217,6 +229,7 @@ public class MainLogic extends ApplicationAdapter {
         for (int i = 0; i < plankList.getSize(); i++) {
             plankList.getData(i).dispose();
         }
+        Shootingtime = 0;
         plankList.makeEmpty();
         buttonRestart.dispose();
         backgroundTexture.dispose();
@@ -229,7 +242,7 @@ public class MainLogic extends ApplicationAdapter {
     switch (level){
         case 1:
         batch = new SpriteBatch();
-        createPlank(400,200,64,64);
+        createPlank(400,00,64,64);
         createPlank(0,0,64,64);
         buttonHelp= new GenericButton(0,555,50,50,"buttonHelp.png");
         buttonClose= new GenericButton(600,503,50,50,"buttonClose.png");
@@ -240,5 +253,20 @@ public class MainLogic extends ApplicationAdapter {
         break;
     }
     
+    }
+    
+    public void ShootPlankto(int objX, int objY, float initx, float inity, float Shoottime, Plank proyectile){
+        float velx,vely,accel;
+        Double angle;
+        System.out.println("objY-inity = " + (objY-inity));
+        velx = (objX - initx)/3;
+        vely = (objY-inity)/3 + 120f;
+        accel = 73f;
+        vely -= accel * Shoottime;
+        proyectile.plankCollision.x += velx * Gdx.graphics.getDeltaTime();;
+        proyectile.plankCollision.y += vely * Gdx.graphics.getDeltaTime();
+        
+       
+        
     }
 }
