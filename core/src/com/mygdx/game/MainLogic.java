@@ -169,9 +169,6 @@ public class MainLogic extends ApplicationAdapter {
         batch.enableBlending();
         batch.begin();
         batch.draw(backgroundTexture, 0, 0);
-        for (int i = 0; i < listPlank.getSize(); i++) {
-            batch.draw(listPlank.getData(i).plankTexture, listPlank.getData(i).plankCollision.x, listPlank.getData(i).plankCollision.y);
-        }
         
         for (int i = 0; i < listPlankBridge.getSize(); i++) {
             Sprite sprPlankBridge = new Sprite(listPlankBridge.getData(i).plankTexture);
@@ -181,6 +178,15 @@ public class MainLogic extends ApplicationAdapter {
             font.draw(batch, Integer.toString(listPlankBridge.getData(i).plankNumber) ,listPlankBridge.getData(i).plankCollision.x+10, listPlankBridge.getData(i).plankCollision.y+70); 
          
         }
+        
+        for (int i = 0; i < listPlank.getSize(); i++) {
+           
+            batch.draw(listPlank.getData(i).plankTexture, listPlank.getData(i).plankCollision.x, listPlank.getData(i).plankCollision.y);
+             font.draw(batch, Integer.toString(listPlank.getData(i).plankNumber) ,listPlank.getData(i).plankCollision.x+10, listPlank.getData(i).plankCollision.y+70); 
+         
+           
+        }
+        
         
         batch.draw(buttonRestart.buttonTexture,0,0) ;
         batch.draw(buttonHelp.buttonTexture,0,555);
@@ -243,7 +249,7 @@ public class MainLogic extends ApplicationAdapter {
     switch (level){
         case 1:
         batch = new SpriteBatch();
-//        createPlank(400,200,44,117);
+        createPlank(400,200,44,117,listPlank,1);
         
         buttonHelp= new GenericButton(0,555,50,50,"buttonHelp.png");
         buttonClose= new GenericButton(600,503,50,50,"buttonClose.png");
