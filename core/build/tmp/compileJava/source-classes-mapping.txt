@@ -14,3 +14,5 @@ com/mygdx/game/Plank.java
  com.mygdx.game.Plank
 com/mygdx/game/MainLogic.java
  com.mygdx.game.MainLogic
+com/mygdx/game/DataStructures/MyDynamicArray.java
+ com.mygdx.game.DataStructures.MyDynamicArray
