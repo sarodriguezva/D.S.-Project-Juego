@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
@@ -28,14 +29,16 @@ public class MainLogic extends ApplicationAdapter {
     boolean info = false;
    
     Vector3 touchPos = new Vector3();
-    private final MyDoubleLinkedList<Plank> plankList = new MyDoubleLinkedList<>();
+    private final MyDoubleLinkedList<Plank> listPlank = new MyDoubleLinkedList<>();
+    private final MyDoubleLinkedList<Plank> listPlankBridge = new MyDoubleLinkedList<>();
     int currentLevel=0;
-    
+//    private BitmapFont font = new BitmapFont(Gdx.files.internal("KenneyBlocks.ttf"), false);
+
     // ESTA ES LA CAMARA, es una camara 3d pero que se proyecta ortogonalmente (2d)
     private OrthographicCamera camera;
 
     //ESTE ES EL OBJETO DE PRUEBA
-   // private final MyDoubleLinkedList<Plank> plankList = new MyDoubleLinkedList<>();
+   // private final MyDoubleLinkedList<Plank> listPlank = new MyDoubleLinkedList<>();
     MyStack<Integer> plankStack = new MyStack<>();
     
     @Override
@@ -52,10 +55,10 @@ public class MainLogic extends ApplicationAdapter {
     
     
     // Funci�n para crear un plank y a�adirlo a la lista automaticamente
-    public void createPlank(int x, int y, int w, int h) {
+    public void createPlank(int x, int y, int w, int h,MyDoubleLinkedList list) {
         // Creacion de buckets.
         Plank myPlank = new Plank(x, y, w, h);
-        plankList.add(myPlank);
+        list.add(myPlank);
     }
 
     @Override
@@ -88,10 +91,10 @@ public class MainLogic extends ApplicationAdapter {
             
             if (info == false ){
             
-            for (int i = 0; i < plankList.getSize(); i++) {
-                if (touchPos.x > plankList.getData(i).plankCollision.x - plankList.getData(i).plankCollision.width && touchPos.x < plankList.getData(i).plankCollision.x + plankList.getData(i).plankCollision.width) {
-                    if (touchPos.y > plankList.getData(i).plankCollision.y - plankList.getData(i).plankCollision.height && touchPos.y < plankList.getData(i).plankCollision.y + plankList.getData(i).plankCollision.height) {
-                        currentPick = plankList.getData(i);
+            for (int i = 0; i < listPlank.getSize(); i++) {
+                if (touchPos.x > listPlank.getData(i).plankCollision.x - listPlank.getData(i).plankCollision.width && touchPos.x < listPlank.getData(i).plankCollision.x + listPlank.getData(i).plankCollision.width) {
+                    if (touchPos.y > listPlank.getData(i).plankCollision.y - listPlank.getData(i).plankCollision.height && touchPos.y < listPlank.getData(i).plankCollision.y + listPlank.getData(i).plankCollision.height) {
+                        currentPick = listPlank.getData(i);
 
                     }
                 }
@@ -165,9 +168,18 @@ public class MainLogic extends ApplicationAdapter {
         batch.enableBlending();
         batch.begin();
         batch.draw(backgroundTexture, 0, 0);
-        for (int i = 0; i < plankList.getSize(); i++) {
-            batch.draw(plankList.getData(i).plankTexture, plankList.getData(i).plankCollision.x, plankList.getData(i).plankCollision.y);
+        for (int i = 0; i < listPlank.getSize(); i++) {
+            batch.draw(listPlank.getData(i).plankTexture, listPlank.getData(i).plankCollision.x, listPlank.getData(i).plankCollision.y);
         }
+        
+        for (int i = 0; i < listPlankBridge.getSize(); i++) {
+            Sprite sprPlankBridge = new Sprite(listPlankBridge.getData(i).plankTexture);
+            sprPlankBridge.setPosition(listPlankBridge.getData(i).plankCollision.x, listPlankBridge.getData(i).plankCollision.y);
+            sprPlankBridge.setColor(1, 1, 1, 0.4f);
+            sprPlankBridge.draw(batch);
+         
+        }
+        
         batch.draw(buttonRestart.buttonTexture,0,0) ;
         batch.draw(buttonHelp.buttonTexture,0,555);
         
@@ -178,13 +190,13 @@ public class MainLogic extends ApplicationAdapter {
             //Aqu� se le pone un color en RGB,A. osea color y opacidad.
             sprite.setPosition(150,100);
             sprite.setSize(500, 450);
-            sprite.setColor(1, 1, 1, 0.5f);
+            sprite.setColor(1, 1, 1, 0.8f);
             // Se llama la dibujaci�n
             sprite.draw(batch);
-            batch.draw(buttonClose.buttonTexture,600,503);
             
         }
         
+        //font.draw(batch, "Hello World!", 10, 10);
         
         batch.end();
        
@@ -202,8 +214,8 @@ public class MainLogic extends ApplicationAdapter {
     public void dispose() {
         // esta funci�n se llama al cerrar el juego, elimina los objetos manualmente (java lo hace solito, pero es como por seguridad)
         batch.dispose();
-        for (int i = 0; i < plankList.getSize(); i++) {
-            plankList.getData(i).dispose();
+        for (int i = 0; i < listPlank.getSize(); i++) {
+            listPlank.getData(i).dispose();
         }
         buttonRestart.dispose();
         backgroundTexture.dispose();
@@ -214,10 +226,10 @@ public class MainLogic extends ApplicationAdapter {
     
     public void clearLevel(){
         batch.dispose();
-        for (int i = 0; i < plankList.getSize(); i++) {
-            plankList.getData(i).dispose();
+        for (int i = 0; i < listPlank.getSize(); i++) {
+            listPlank.getData(i).dispose();
         }
-        plankList.makeEmpty();
+        listPlank.makeEmpty();
         buttonRestart.dispose();
         backgroundTexture.dispose();
         System.gc();
@@ -229,14 +241,19 @@ public class MainLogic extends ApplicationAdapter {
     switch (level){
         case 1:
         batch = new SpriteBatch();
-        createPlank(400,200,64,64);
-        createPlank(0,0,64,64);
+//        createPlank(400,200,44,117);
+        
         buttonHelp= new GenericButton(0,555,50,50,"buttonHelp.png");
         buttonClose= new GenericButton(600,503,50,50,"buttonClose.png");
         buttonRestart = new GenericButton(0,0, 50,50, "buttonRestart.png");
         infoTexture = new Texture(Gdx.files.internal("Info.png"));
         backgroundTexture = new Texture(Gdx.files.internal("parallax-mountain-bg.png"));
         currentLevel=1;
+        Integer[] myArr = {1,2,3};
+        Bridge<Integer> OrderBridge = new Bridge<>(myArr);
+        for (int i=0 ; i<OrderBridge.getSize() ; i++){
+            createPlank(100+i*45,400,44,117,listPlankBridge);
+        }
         break;
     }
     

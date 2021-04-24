@@ -13,6 +13,7 @@ import com.mygdx.game.DataStructures.*;
  * @author Santiago
  */
 public class Bridge<T> extends MyDoubleLinkedList {
+    
     Bridge (T[] array){
         super(array);
     }
@@ -32,4 +33,5 @@ public class Bridge<T> extends MyDoubleLinkedList {
         }
         return true;
     }
+    
 }
