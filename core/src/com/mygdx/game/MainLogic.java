@@ -148,8 +148,8 @@ public class MainLogic extends ApplicationAdapter {
                 currentPick.plankCollision.x = 0;
             }
             // Limites en y
-            if (currentPick.plankCollision.y > 500 - 64) {
-                currentPick.plankCollision.y = 500 - 64;
+            if (currentPick.plankCollision.y > 80 - 64) {
+                currentPick.plankCollision.y = 80 - 64;
 
             }
             if (currentPick.plankCollision.y < 0) {
@@ -249,8 +249,6 @@ public class MainLogic extends ApplicationAdapter {
     switch (level){
         case 1:
         batch = new SpriteBatch();
-        createPlank(400,200,44,117,listPlank,1);
-        
         buttonHelp= new GenericButton(0,555,50,50,"buttonHelp.png");
         buttonClose= new GenericButton(600,503,50,50,"buttonClose.png");
         buttonRestart = new GenericButton(0,0, 50,50, "buttonRestart.png");
@@ -261,6 +259,10 @@ public class MainLogic extends ApplicationAdapter {
         Bridge<Integer> OrderBridge = new Bridge<>(myArr);
         for (int i=0 ; i<OrderBridge.getSize() ; i++){
             createPlank(100+i*45,400,44,117,listPlankBridge,myArr[i]);
+        }
+        Integer[] myArr2 = {2,44,3,0,9,4,3,8};
+        for (int i=0 ; i<myArr2.length ; i++){
+            createPlank(300+i*45,0,44,117,listPlank,myArr2[i]);
         }
         break;
     }
