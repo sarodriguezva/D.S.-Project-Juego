@@ -25,9 +25,11 @@ public class MainLogic extends ApplicationAdapter {
     GenericButton buttonRestart = null;
     GenericButton buttonHelp = null;
     GenericButton buttonClose= null;
+    GenericButton buttonFire = null;
     Texture Cannon;
     Sprite Cannonsprite;
     boolean info = false;
+    boolean Shooting = false;
     float Shootingtime = 0;
    
     Vector3 touchPos = new Vector3();
@@ -122,6 +124,13 @@ public class MainLogic extends ApplicationAdapter {
                 }
             }
             
+            //BOTON FUEGO//
+            if(touchPos.x > buttonFire.buttonCollision.x - buttonFire.buttonCollision.width && touchPos.x < buttonFire.buttonCollision.x + buttonFire.buttonCollision.width){
+                if (touchPos.y > buttonFire.buttonCollision.y - buttonFire.buttonCollision.height && touchPos.y < buttonFire.buttonCollision.y + buttonFire.buttonCollision.height){
+                   Shooting = true;
+                }
+            }
+            
             /// BOTON PARA CERRAR EL POPUP DE HELP ///
             if(touchPos.x > buttonClose.buttonCollision.x - buttonClose.buttonCollision.width && touchPos.x < buttonClose.buttonCollision.x + buttonClose.buttonCollision.width){
                 if (touchPos.y > buttonClose.buttonCollision.y - buttonClose.buttonCollision.height && touchPos.y < buttonClose.buttonCollision.y + buttonClose.buttonCollision.height){
@@ -177,14 +186,11 @@ public class MainLogic extends ApplicationAdapter {
         Cannonsprite.draw(batch);
         batch.draw(buttonRestart.buttonTexture,0,0);
         batch.draw(buttonHelp.buttonTexture,0,555);
+        batch.draw(buttonFire.buttonTexture,750,0);
         
         
         //Aqui render info
         if (info == true){
-            if (Math.abs(plankList.getData(1).plankCollision.x - plankList.getData(0).plankCollision.x) > 10 || Math.abs(plankList.getData(1).plankCollision.y - plankList.getData(0).plankCollision.y) > 10){
-            ShootPlankto((int) plankList.getData(0).plankCollision.x, (int) plankList.getData(0).plankCollision.y, Cannonsprite.getX(), Cannonsprite.getY(), Shootingtime, plankList.getData(1));
-            }
-            Shootingtime += Gdx.graphics.getDeltaTime();
             // Sprite es un tipo de objeto que deja cambiar algunas caracteristicas ed las texturas x eso se crea un sprite con la textura
             Sprite sprite = new Sprite(infoTexture);
             //Aqu� se le pone un color en RGB,A. osea color y opacidad.
@@ -196,6 +202,15 @@ public class MainLogic extends ApplicationAdapter {
             batch.draw(buttonClose.buttonTexture,600,503);
      
         }
+        
+        if (Shooting == true){
+           if (Math.abs(plankList.getData(1).plankCollision.x - plankList.getData(0).plankCollision.x) > 10 || Math.abs(plankList.getData(1).plankCollision.y - plankList.getData(0).plankCollision.y) > 10){
+                        ShootPlankto((int) plankList.getData(0).plankCollision.x, (int) plankList.getData(0).plankCollision.y, Cannonsprite.getX(), Cannonsprite.getY(), Shootingtime, plankList.getData(1));
+                        Shootingtime += Gdx.graphics.getDeltaTime();
+                    }
+     
+        }
+        
         
         
         batch.end();
@@ -229,6 +244,7 @@ public class MainLogic extends ApplicationAdapter {
         for (int i = 0; i < plankList.getSize(); i++) {
             plankList.getData(i).dispose();
         }
+        Shooting = false;
         Shootingtime = 0;
         plankList.makeEmpty();
         buttonRestart.dispose();
@@ -247,6 +263,7 @@ public class MainLogic extends ApplicationAdapter {
         buttonHelp= new GenericButton(0,555,50,50,"buttonHelp.png");
         buttonClose= new GenericButton(600,503,50,50,"buttonClose.png");
         buttonRestart = new GenericButton(0,0, 50,50, "buttonRestart.png");
+        buttonFire = new GenericButton(750,0, 50,50, "buttonFire.png");
         infoTexture = new Texture(Gdx.files.internal("Info.png"));
         backgroundTexture = new Texture(Gdx.files.internal("parallax-mountain-bg.png"));
         currentLevel=1;
@@ -258,7 +275,6 @@ public class MainLogic extends ApplicationAdapter {
     public void ShootPlankto(int objX, int objY, float initx, float inity, float Shoottime, Plank proyectile){
         float velx,vely,accel;
         Double angle;
-        System.out.println("objY-inity = " + (objY-inity));
         velx = (objX - initx)/3;
         vely = (objY-inity)/3 + 120f;
         accel = 73f;
