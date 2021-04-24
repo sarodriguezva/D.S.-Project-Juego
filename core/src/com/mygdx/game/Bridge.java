@@ -11,12 +11,28 @@ import com.mygdx.game.DataStructures.*;
  * Funciona como una lista doblemente encadenada.
  * 
  * @author Santiago
+ * @param <T> Tipo de elementos que guardan los nodos (tablas) del puente.
  */
 public class Bridge<T> extends MyDoubleLinkedList {
+    /**
+     * Constructor para crear el puente a partir
+     * de un arreglo.
+     * 
+     * @param array Arreglo que contiene el orden en el que el usuario debe
+     * acomodar las tablas.
+     */
     Bridge (T[] array){
         super(array);
     }
     
+    /**
+     * Método que verifica si la lista enviada por el usuario
+     * a través del cañón concuerda con el orden requerido del puente.
+     * 
+     * @param userList Lista que envía el usuario.
+     * @return Valor booleano. Si es falso, la lista enviada por el usuario
+     * no concuerda con la lista requerida por el puente.
+     */
     public boolean commit(MyDoubleLinkedList<T> userList){
         Node<T> userListPointer = userList.getFirst();
         Node<T> bridgePointer = this.getFirst();
