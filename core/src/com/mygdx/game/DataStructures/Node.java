@@ -11,7 +11,7 @@ package com.mygdx.game.DataStructures;
  * @author Santiago
  * @param <E> Tipo de objeto que almacena el nodo.
  */
-class Node<E> {
+public class Node<E> {
     
     private E data;
     Node<E> next;
@@ -35,5 +35,23 @@ class Node<E> {
      */
     public E getData(){
         return this.data;
+    }
+    
+    /**
+     * Método que retorna el nodo siguiente al nodo actual.
+     * 
+     * @return Nodo siguiente al actual.
+     */
+    public Node<E> getNext(){
+        return this.next;
+    }
+    
+    /**
+     * Método que retorna el nodo anterior al nodo actual.
+     * 
+     * @return Nodo anterior al actual.
+     */
+    public Node<E> getPrevious(){
+        return this.previous;
     }
 }
