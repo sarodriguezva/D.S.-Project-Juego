@@ -27,6 +27,8 @@ public class MainLogic extends ApplicationAdapter {
     GenericButton buttonHelp = null;
     GenericButton buttonClose= null;
     boolean info = false;
+    cannon buttonCannon= null;
+    GenericButton buttonShooting=null;
    
     Vector3 touchPos = new Vector3();
     private final MyDoubleLinkedList<Plank> listPlank = new MyDoubleLinkedList<>();
@@ -128,7 +130,17 @@ public class MainLogic extends ApplicationAdapter {
                      
                 }
             }
-            
+            /// BOTON PARA CERRAR DISPARAR EL CAÑON ///
+            if(touchPos.x > buttonShooting.buttonCollision.x - buttonShooting.buttonCollision.width && touchPos.x < buttonShooting.buttonCollision.x + buttonShooting.buttonCollision.width){
+                if (touchPos.y > buttonShooting.buttonCollision.y - buttonShooting.buttonCollision.height && touchPos.y < buttonShooting.buttonCollision.y + buttonShooting.buttonCollision.height){
+                    //aqui se hace lo que pasa despues de darle click al disparo
+                    clearLevel();
+                    initiateLevel(currentLevel);
+                    
+                     
+                }
+            }
+          
             
         }
         
@@ -190,7 +202,8 @@ public class MainLogic extends ApplicationAdapter {
         
         batch.draw(buttonRestart.buttonTexture,0,0) ;
         batch.draw(buttonHelp.buttonTexture,0,555);
-        
+        batch.draw(buttonCannon.cannonTexture,90,70);
+        batch.draw(buttonShooting.buttonTexture,10,80);
         //Aqui render info
         if (info == true){
             // Sprite es un tipo de objeto que deja cambiar algunas caracteristicas ed las texturas x eso se crea un sprite con la textura
@@ -253,8 +266,10 @@ public class MainLogic extends ApplicationAdapter {
         buttonClose= new GenericButton(600,503,50,50,"buttonClose.png");
         buttonRestart = new GenericButton(0,0, 50,50, "buttonRestart.png");
         infoTexture = new Texture(Gdx.files.internal("Info.png"));
+        buttonCannon =new cannon(90,70,100,100,"Canon_1.png");
         backgroundTexture = new Texture(Gdx.files.internal("parallax-mountain-bg.png"));
         currentLevel=1;
+        buttonShooting=new GenericButton(10,80,50,50,"shooting.png");
         Integer[] myArr = {44,2,3,0,9,8,4,3};
         Bridge<Integer> OrderBridge = new Bridge<>(myArr);
         for (int i=0 ; i<OrderBridge.getSize() ; i++){
