@@ -32,8 +32,8 @@ public class MainLogic extends ApplicationAdapter {
     private final MyDoubleLinkedList<Plank> listPlank = new MyDoubleLinkedList<>();
     private final MyDoubleLinkedList<Plank> listPlankBridge = new MyDoubleLinkedList<>();
     int currentLevel=0;
-//    private BitmapFont font = new BitmapFont(Gdx.files.internal("KenneyBlocks.ttf"), false);
-
+    
+    private BitmapFont font;
     // ESTA ES LA CAMARA, es una camara 3d pero que se proyecta ortogonalmente (2d)
     private OrthographicCamera camera;
 
@@ -50,14 +50,15 @@ public class MainLogic extends ApplicationAdapter {
         camera.setToOrtho(false, 800, 600);
         // el batch es una cosa necesaria para renderizar el sprite
         initiateLevel(1);
+        font =  new BitmapFont(Gdx.files.internal("asd.fnt"));
 
     }
     
     
     // Funci�n para crear un plank y a�adirlo a la lista automaticamente
-    public void createPlank(int x, int y, int w, int h,MyDoubleLinkedList list) {
+    public void createPlank(int x, int y, int w, int h,MyDoubleLinkedList list, int num) {
         // Creacion de buckets.
-        Plank myPlank = new Plank(x, y, w, h);
+        Plank myPlank = new Plank(x, y, w, h, num);
         list.add(myPlank);
     }
 
@@ -177,6 +178,7 @@ public class MainLogic extends ApplicationAdapter {
             sprPlankBridge.setPosition(listPlankBridge.getData(i).plankCollision.x, listPlankBridge.getData(i).plankCollision.y);
             sprPlankBridge.setColor(1, 1, 1, 0.4f);
             sprPlankBridge.draw(batch);
+            font.draw(batch, Integer.toString(listPlankBridge.getData(i).plankNumber) ,listPlankBridge.getData(i).plankCollision.x+10, listPlankBridge.getData(i).plankCollision.y+70); 
          
         }
         
@@ -196,7 +198,7 @@ public class MainLogic extends ApplicationAdapter {
             
         }
         
-        //font.draw(batch, "Hello World!", 10, 10);
+
         
         batch.end();
        
@@ -249,10 +251,10 @@ public class MainLogic extends ApplicationAdapter {
         infoTexture = new Texture(Gdx.files.internal("Info.png"));
         backgroundTexture = new Texture(Gdx.files.internal("parallax-mountain-bg.png"));
         currentLevel=1;
-        Integer[] myArr = {1,2,3};
+        Integer[] myArr = {44,2,3,0,9,8,4,3};
         Bridge<Integer> OrderBridge = new Bridge<>(myArr);
         for (int i=0 ; i<OrderBridge.getSize() ; i++){
-            createPlank(100+i*45,400,44,117,listPlankBridge);
+            createPlank(100+i*45,400,44,117,listPlankBridge,myArr[i]);
         }
         break;
     }

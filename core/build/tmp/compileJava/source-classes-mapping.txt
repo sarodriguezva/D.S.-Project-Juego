@@ -10,6 +10,8 @@ com/mygdx/game/Bridge.java
  com.mygdx.game.Bridge
 com/mygdx/game/GenericButton.java
  com.mygdx.game.GenericButton
+com/mygdx/game/DataStructures/MyDynamicArray.java
+ com.mygdx.game.DataStructures.MyDynamicArray
 com/mygdx/game/Plank.java
  com.mygdx.game.Plank
 com/mygdx/game/MainLogic.java

@@ -9,12 +9,13 @@ public class Plank extends ApplicationAdapter {
     public Texture plankTexture;
     public Rectangle plankCollision;
     public Integer plankNumber;
-    public Plank(int x, int y, int w, int h){
+    public Plank(int x, int y, int w, int h, int num){
         plankCollision = new Rectangle();
         plankCollision.x = x;
         plankCollision.y = y;
         plankCollision.width = w;
         plankCollision.height = h;
+        plankNumber=num;
         plankTexture = new Texture(Gdx.files.internal("plank.jpg"));
     }
 }
