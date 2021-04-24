@@ -239,6 +239,23 @@ public class MyDoubleLinkedList<E> {
     }
     
     /**
+     * Método que retorna el primer nodo de la lista.
+     * 
+     * @return Primer nodo de la lista.
+     */
+    public Node<E> getFirst(){
+        return this.first;
+    }
+    
+    /**
+     * Método que retorna el último nodo de la lista.
+     * 
+     * @return Último nodo de la lista.
+     */
+    public Node<E> getLast(){
+        return this.last;
+    }
+    /**
      * Método para obtener el primer elemento en la lista.
      * 
      * @return Primer elemento en la lista.
