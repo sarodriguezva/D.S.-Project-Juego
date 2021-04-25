@@ -8,12 +8,14 @@ import com.badlogic.gdx.math.Rectangle;
 public class Plank extends ApplicationAdapter {
     public Texture plankTexture;
     public Rectangle plankCollision;
-    public Plank(int x, int y, int w, int h){
+    public Integer plankNumber;
+    public Plank(int x, int y, int w, int h, int num){
         plankCollision = new Rectangle();
         plankCollision.x = x;
         plankCollision.y = y;
         plankCollision.width = w;
         plankCollision.height = h;
-        plankTexture = new Texture(Gdx.files.internal("bucket.png"));
+        plankNumber=num;
+        plankTexture = new Texture(Gdx.files.internal("plank.jpg"));
     }
 }

@@ -218,6 +218,7 @@ public class MyDoubleLinkedList<E> {
         E data = aux.getData();
         aux.previous.next = aux.next;
         aux.next.previous = aux.previous;
+        this.count--;
         return data;
     }
     
@@ -238,6 +239,23 @@ public class MyDoubleLinkedList<E> {
          return delete(this.count-1);
     }
     
+    /**
+     * Método que retorna el primer nodo de la lista.
+     * 
+     * @return Primer nodo de la lista.
+     */
+    public Node<E> getFirst(){
+        return this.first;
+    }
+    
+    /**
+     * Método que retorna el último nodo de la lista.
+     * 
+     * @return Último nodo de la lista.
+     */
+    public Node<E> getLast(){
+        return this.last;
+    }
     /**
      * Método para obtener el primer elemento en la lista.
      * 
