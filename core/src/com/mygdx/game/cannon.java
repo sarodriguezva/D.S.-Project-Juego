@@ -14,11 +14,11 @@ import com.badlogic.gdx.math.Rectangle;
  *
  * @author judir
  */
-public class cannon extends ApplicationAdapter {
+public class Cannon extends ApplicationAdapter {
     public Texture cannonTexture;
     public Rectangle cannonCollision;
     public Integer cannonNumber;
-    public cannon(int x, int y, int w, int h, String pathTexture ){
+    public Cannon(int x, int y, int w, int h, String pathTexture ){
         cannonCollision = new Rectangle();
         cannonCollision.x = x;
         cannonCollision.y = y;
@@ -35,8 +35,6 @@ public class cannon extends ApplicationAdapter {
         vely -= accel * Shoottime;
         proyectile.plankCollision.x += velx * Gdx.graphics.getDeltaTime();;
         proyectile.plankCollision.y += vely * Gdx.graphics.getDeltaTime();
-        
-       
         
     }
     

@@ -49,4 +49,5 @@ public class Bridge<T> extends MyDoubleLinkedList {
         return true;
     }
     
+    
 }
