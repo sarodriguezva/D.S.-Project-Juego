@@ -38,7 +38,7 @@ public class MainLogic extends ApplicationAdapter {
     Vector3 touchPos = new Vector3();
 
     // CANNON
-    Cannon buttonCannon = null;
+    Canon buttonCannon = null;
     boolean Shooting = false;
     float Shootingtime = 0;
     int Shootingindex = 0;
@@ -251,7 +251,7 @@ public class MainLogic extends ApplicationAdapter {
             } else {
                 if (Shootingindex < listPlankCannon.getSize()) {
                     if (Math.abs(listPlankBridge.getData(Shootingindex).plankCollision.x - listPlankCannon.getData(Shootingindex).plankCollision.x) > 30 || Math.abs(listPlankBridge.getData(Shootingindex).plankCollision.y - listPlankCannon.getData(Shootingindex).plankCollision.y) > 30) {
-                        Cannon.ShootPlankto((int) listPlankBridge.getData(Shootingindex).plankCollision.x, (int) listPlankBridge.getData(Shootingindex).plankCollision.y, buttonCannon.cannonCollision.x, buttonCannon.cannonCollision.y, Shootingtime, listPlankCannon.getData(Shootingindex));
+                        Canon.ShootPlankto((int) listPlankBridge.getData(Shootingindex).plankCollision.x, (int) listPlankBridge.getData(Shootingindex).plankCollision.y, buttonCannon.cannonCollision.x, buttonCannon.cannonCollision.y, Shootingtime, listPlankCannon.getData(Shootingindex));
                         batch.draw(listPlankCannon.getData(Shootingindex).plankTexture, listPlankCannon.getData(Shootingindex).plankCollision.x, listPlankCannon.getData(Shootingindex).plankCollision.y);
                         font.draw(batch, Integer.toString(listPlankCannon.getData(Shootingindex).plankNumber), listPlankCannon.getData(Shootingindex).plankCollision.x + 10, listPlankCannon.getData(Shootingindex).plankCollision.y + 70);
                         Shootingtime += Gdx.graphics.getDeltaTime();
@@ -316,7 +316,7 @@ public class MainLogic extends ApplicationAdapter {
                 buttonClose = new GenericButton(600, 503, 50, 50, "buttonClose.png");
                 buttonRestart = new GenericButton(0, 0, 50, 50, "buttonRestart.png");
                 infoTexture = new Texture(Gdx.files.internal("Info.png"));
-                buttonCannon = new Cannon(90, 70, 100, 100, "Canon_1.png");
+                buttonCannon = new Canon(90, 70, 100, 100, "Canon_1.png");
                 backgroundTexture = new Texture(Gdx.files.internal("parallax-mountain-bg.png"));
                 currentLevel = 1;
                 buttonShooting = new GenericButton(10, 80, 50, 50, "shooting.png");

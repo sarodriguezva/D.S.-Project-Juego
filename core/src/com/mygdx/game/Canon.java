@@ -14,11 +14,11 @@ import com.badlogic.gdx.math.Rectangle;
  *
  * @author judir
  */
-public class Cannon extends ApplicationAdapter {
+public class Canon extends ApplicationAdapter {
     public Texture cannonTexture;
     public Rectangle cannonCollision;
     public Integer cannonNumber;
-    public Cannon(int x, int y, int w, int h, String pathTexture ){
+    public Canon(int x, int y, int w, int h, String pathTexture ){
         cannonCollision = new Rectangle();
         cannonCollision.x = x;
         cannonCollision.y = y;
