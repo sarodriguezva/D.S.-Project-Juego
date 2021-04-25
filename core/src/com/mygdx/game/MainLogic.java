@@ -174,6 +174,8 @@ public class MainLogic extends ApplicationAdapter {
             // Si deja de presionar el mouse, se quita el objeto arrastrable.
             if (!leftPressed) {
                 if (Math.abs(currentPick.plankCollision.x - buttonCannon.cannonCollision.x) < 60) {
+                    currentPick.plankCollision.x = buttonCannon.cannonCollision.x + 20;
+                    currentPick.plankCollision.y = buttonCannon.cannonCollision.y - 20;
                     listPlankCannon.add(currentPick);
                     int[] Pos = listPlank.find(currentPick);
                     if (listPlank.getData(Pos[0]) != null) {
@@ -237,15 +239,16 @@ public class MainLogic extends ApplicationAdapter {
 
         // Funcion de disparo
         if (Shooting == true) {
-            if (listPlankCannon.isEmpty() || listPlankFired.getSize() == listPlankBridge.getSize()) {
+            if (Shootingindex >= listPlankCannon.getSize()) {
                 Shooting = false;
                 MyDoubleLinkedList<Integer> listNumber = convertPlankToNumber(listPlankFired);
-                
+                if(Shootingindex >= listPlankBridge.getSize()){
                 //Aca se sabe si el usuario gana o pierde
                 if (OrderBridge.commit(listNumber)) {
                     Gdx.app.log("E", "Ganar");
                 } else {
                     Gdx.app.log("E", "Perder");
+                }
                 }
 
             } else {
