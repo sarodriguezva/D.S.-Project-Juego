@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.DataStructures.*;
 
 public class MainLogic extends ApplicationAdapter {
-    boolean debug = true;
+    boolean debug = false;
     //AQUI SE CARGAN LAS TEXTURAS 
     private SpriteBatch batch;
     private Texture backgroundTexture;
@@ -29,10 +29,15 @@ public class MainLogic extends ApplicationAdapter {
     boolean info = false;
     cannon buttonCannon= null;
     GenericButton buttonShooting=null;
+    boolean Shooting = false;
+    float Shootingtime = 0;
+    int Shootingindex = 0;
    
     Vector3 touchPos = new Vector3();
     private final MyDoubleLinkedList<Plank> listPlank = new MyDoubleLinkedList<>();
     private final MyDoubleLinkedList<Plank> listPlankBridge = new MyDoubleLinkedList<>();
+    private final MyDoubleLinkedList<Plank> listPlankCannon = new MyDoubleLinkedList<>();
+    private final MyDoubleLinkedList<Plank> listPlankFired = new MyDoubleLinkedList<>();
     int currentLevel=0;
     
     private BitmapFont font;
@@ -65,8 +70,8 @@ public class MainLogic extends ApplicationAdapter {
     }
 
     @Override
-    public void render() {
-
+    public void render() { 
+        
         // ESTA FUNCIï¿½N MUESTRA TODO EN PANTALLA, TAMBIï¿½N ES UNA FUNCIï¿½N QUE SE LLAMA REPETIDAMENTE, creo que a 60fps
         // clear es pa borrar todo en pantalla
         ScreenUtils.clear(0, 0, 0.2f, 1);
@@ -93,13 +98,14 @@ public class MainLogic extends ApplicationAdapter {
         if (justTouched && currentPick == null) {
             
             if (info == false ){
-            
             for (int i = 0; i < listPlank.getSize(); i++) {
+                if(listPlank.getData(i) != null){
                 if (touchPos.x > listPlank.getData(i).plankCollision.x - listPlank.getData(i).plankCollision.width && touchPos.x < listPlank.getData(i).plankCollision.x + listPlank.getData(i).plankCollision.width) {
                     if (touchPos.y > listPlank.getData(i).plankCollision.y - listPlank.getData(i).plankCollision.height && touchPos.y < listPlank.getData(i).plankCollision.y + listPlank.getData(i).plankCollision.height) {
                         currentPick = listPlank.getData(i);
 
                     }
+                }
                 }
             }
             
@@ -108,7 +114,6 @@ public class MainLogic extends ApplicationAdapter {
                 if (touchPos.y > buttonRestart.buttonCollision.y - buttonRestart.buttonCollision.height && touchPos.y < buttonRestart.buttonCollision.y + buttonRestart.buttonCollision.height){
                     clearLevel();
                     initiateLevel(currentLevel);
-                     
                 }
             }
             }
@@ -122,20 +127,17 @@ public class MainLogic extends ApplicationAdapter {
                 }
             }
             
+            //BOTON FUEGO//
+            if(touchPos.x > buttonShooting.buttonCollision.x - buttonShooting.buttonCollision.width && touchPos.x < buttonShooting.buttonCollision.x + buttonShooting.buttonCollision.width){
+                if (touchPos.y > buttonShooting.buttonCollision.y - buttonShooting.buttonCollision.height && touchPos.y < buttonShooting.buttonCollision.y + buttonShooting.buttonCollision.height){
+                   Shooting = true;
+                }
+            }
+            
             /// BOTON PARA CERRAR EL POPUP DE HELP ///
             if(touchPos.x > buttonClose.buttonCollision.x - buttonClose.buttonCollision.width && touchPos.x < buttonClose.buttonCollision.x + buttonClose.buttonCollision.width){
                 if (touchPos.y > buttonClose.buttonCollision.y - buttonClose.buttonCollision.height && touchPos.y < buttonClose.buttonCollision.y + buttonClose.buttonCollision.height){
                     info=false;
-                    
-                     
-                }
-            }
-            /// BOTON PARA CERRAR DISPARAR EL CAÑON ///
-            if(touchPos.x > buttonShooting.buttonCollision.x - buttonShooting.buttonCollision.width && touchPos.x < buttonShooting.buttonCollision.x + buttonShooting.buttonCollision.width){
-                if (touchPos.y > buttonShooting.buttonCollision.y - buttonShooting.buttonCollision.height && touchPos.y < buttonShooting.buttonCollision.y + buttonShooting.buttonCollision.height){
-                    //aqui se hace lo que pasa despues de darle click al disparo
-                    clearLevel();
-                    initiateLevel(currentLevel);
                     
                      
                 }
@@ -171,6 +173,13 @@ public class MainLogic extends ApplicationAdapter {
 
             // Si deja de presionar el mouse, se quita el objeto arrastrable.
             if (!leftPressed) {
+                if(Math.abs(currentPick.plankCollision.x-buttonCannon.cannonCollision.x)<60){
+                    listPlankCannon.add(currentPick);
+                    int[] Pos = listPlank.find(currentPick);
+                    if(listPlank.getData(Pos[0]) != null){
+                        listPlank.delete(Pos[0]);
+                    }
+                }
                 currentPick = null;
             }
             //Gdx.app.log("MyTag", "MyMessage"); //ASI SE PRINTEA A CONSOla
@@ -191,19 +200,31 @@ public class MainLogic extends ApplicationAdapter {
          
         }
         
+        
         for (int i = 0; i < listPlank.getSize(); i++) {
-           
+            if(listPlank.getData(i) != null){
             batch.draw(listPlank.getData(i).plankTexture, listPlank.getData(i).plankCollision.x, listPlank.getData(i).plankCollision.y);
              font.draw(batch, Integer.toString(listPlank.getData(i).plankNumber) ,listPlank.getData(i).plankCollision.x+10, listPlank.getData(i).plankCollision.y+70); 
          
-           
+        }
         }
         
         
+        for (int i = 0; i < listPlankFired.getSize(); i++) {
+           
+            batch.draw(listPlankFired.getData(i).plankTexture, listPlankFired.getData(i).plankCollision.x, listPlankFired.getData(i).plankCollision.y);
+             font.draw(batch, Integer.toString(listPlankFired.getData(i).plankNumber) ,listPlankFired.getData(i).plankCollision.x+10, listPlankFired.getData(i).plankCollision.y+70); 
+         
+        }
+        
+        
+        batch.draw(buttonRestart.buttonTexture,0,0);
         batch.draw(buttonRestart.buttonTexture,0,0) ;
         batch.draw(buttonHelp.buttonTexture,0,555);
         batch.draw(buttonCannon.cannonTexture,90,70);
         batch.draw(buttonShooting.buttonTexture,10,80);
+        
+        
         //Aqui render info
         if (info == true){
             // Sprite es un tipo de objeto que deja cambiar algunas caracteristicas ed las texturas x eso se crea un sprite con la textura
@@ -214,10 +235,33 @@ public class MainLogic extends ApplicationAdapter {
             sprite.setColor(1, 1, 1, 0.8f);
             // Se llama la dibujaciï¿½n
             sprite.draw(batch);
-            
+            batch.draw(buttonClose.buttonTexture,600,503);
+     
+        }
+        
+        if (Shooting == true){
+            if(listPlankCannon.isEmpty()|| listPlankFired.getSize()==listPlankBridge.getSize()){
+                Shooting = false;
+            } else{
+             if(Shootingindex < listPlankCannon.getSize()){
+                    if (Math.abs(listPlankBridge.getData(Shootingindex).plankCollision.x - listPlankCannon.getData(Shootingindex).plankCollision.x) > 30 || Math.abs(listPlankBridge.getData(Shootingindex).plankCollision.y - listPlankCannon.getData(Shootingindex).plankCollision.y) > 30){
+                        cannon.ShootPlankto((int) listPlankBridge.getData(Shootingindex).plankCollision.x, (int) listPlankBridge.getData(Shootingindex).plankCollision.y, buttonCannon.cannonCollision.x, buttonCannon.cannonCollision.y, Shootingtime, listPlankCannon.getData(Shootingindex));
+                        batch.draw(listPlankCannon.getData(Shootingindex).plankTexture, listPlankCannon.getData(Shootingindex).plankCollision.x, listPlankCannon.getData(Shootingindex).plankCollision.y);
+                        font.draw(batch, Integer.toString(listPlankCannon.getData(Shootingindex).plankNumber) ,listPlankCannon.getData(Shootingindex).plankCollision.x+10, listPlankCannon.getData(Shootingindex).plankCollision.y+70);
+                        Shootingtime += Gdx.graphics.getDeltaTime();
+                    } else if(Shootingindex < listPlankBridge.getSize()){
+                        listPlankCannon.getData(Shootingindex).plankCollision.x = listPlankBridge.getData(Shootingindex).plankCollision.x;
+                        listPlankCannon.getData(Shootingindex).plankCollision.y = listPlankBridge.getData(Shootingindex).plankCollision.y;
+                        listPlankFired.add(listPlankCannon.getData(Shootingindex));
+                        Shootingindex++;
+                        Shootingtime = 0;
+                    }
+             }
+            }
         }
         
 
+        
         
         batch.end();
        
@@ -250,7 +294,13 @@ public class MainLogic extends ApplicationAdapter {
         for (int i = 0; i < listPlank.getSize(); i++) {
             listPlank.getData(i).dispose();
         }
+        Shooting = false;
+        Shootingtime = 0;
+        Shootingindex = 0;
         listPlank.makeEmpty();
+        listPlankCannon.makeEmpty();
+        listPlankBridge.makeEmpty();
+        listPlankFired.makeEmpty();
         buttonRestart.dispose();
         backgroundTexture.dispose();
         System.gc();
@@ -262,6 +312,8 @@ public class MainLogic extends ApplicationAdapter {
     switch (level){
         case 1:
         batch = new SpriteBatch();
+        //createPlank(400,00,64,64);
+        //createPlank(0,0,64,64);
         buttonHelp= new GenericButton(0,555,50,50,"buttonHelp.png");
         buttonClose= new GenericButton(600,503,50,50,"buttonClose.png");
         buttonRestart = new GenericButton(0,0, 50,50, "buttonRestart.png");
@@ -283,4 +335,6 @@ public class MainLogic extends ApplicationAdapter {
     }
     
     }
+    
+    
 }

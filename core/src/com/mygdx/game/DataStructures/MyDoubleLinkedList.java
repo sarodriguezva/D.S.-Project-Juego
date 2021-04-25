@@ -218,6 +218,7 @@ public class MyDoubleLinkedList<E> {
         E data = aux.getData();
         aux.previous.next = aux.next;
         aux.next.previous = aux.previous;
+        this.count--;
         return data;
     }
     

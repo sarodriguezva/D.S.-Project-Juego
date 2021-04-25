@@ -27,4 +27,17 @@ public class cannon extends ApplicationAdapter {
         cannonTexture = new Texture(Gdx.files.internal(pathTexture));
     }
     
+    public static void ShootPlankto(int objX, int objY, float initx, float inity, float Shoottime, Plank proyectile){
+        float velx,vely,accel;
+        velx = (objX - (initx+30))/3;
+        vely = ((objY+10)-inity)/3 + 120f;
+        accel = 73f;
+        vely -= accel * Shoottime;
+        proyectile.plankCollision.x += velx * Gdx.graphics.getDeltaTime();;
+        proyectile.plankCollision.y += vely * Gdx.graphics.getDeltaTime();
+        
+       
+        
+    }
+    
 }
