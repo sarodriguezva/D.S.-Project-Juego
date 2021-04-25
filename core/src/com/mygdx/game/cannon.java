@@ -33,7 +33,7 @@ public class Cannon extends ApplicationAdapter {
         vely = ((objY+10)-inity)/3 + 120f;
         accel = 73f;
         vely -= accel * Shoottime;
-        proyectile.plankCollision.x += velx * Gdx.graphics.getDeltaTime();;
+        proyectile.plankCollision.x += velx * Gdx.graphics.getDeltaTime();
         proyectile.plankCollision.y += vely * Gdx.graphics.getDeltaTime();
         
     }
