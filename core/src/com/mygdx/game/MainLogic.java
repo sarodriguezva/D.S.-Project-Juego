@@ -25,6 +25,12 @@ public class MainLogic extends ApplicationAdapter {
     private Texture infoTexture;
     boolean info = false;
     GenericButton buttonShooting = null;
+    //GANAR O PERDER
+    GenericButton buttonWin=null;
+    GenericButton buttonLose=null;
+    boolean win= false;
+    boolean lose=false;
+    
 
     // TEXTURAS DE FONDO
     private SpriteBatch batch;
@@ -141,7 +147,14 @@ public class MainLogic extends ApplicationAdapter {
             if (touchPos.x > buttonClose.buttonCollision.x - buttonClose.buttonCollision.width && touchPos.x < buttonClose.buttonCollision.x + buttonClose.buttonCollision.width) {
                 if (touchPos.y > buttonClose.buttonCollision.y - buttonClose.buttonCollision.height && touchPos.y < buttonClose.buttonCollision.y + buttonClose.buttonCollision.height) {
                     info = false;
-
+                    win = false;
+                    lose = false;
+                    if (lose==false){
+                        clearLevel();
+                        initiateLevel(currentLevel);
+                        
+                    }
+                    
                 }
             }
 
@@ -236,6 +249,16 @@ public class MainLogic extends ApplicationAdapter {
             batch.draw(buttonClose.buttonTexture, 600, 503);
 
         }
+        if (win==true){
+            batch.draw(buttonWin.buttonTexture,53,249);
+            batch.draw(buttonClose.buttonTexture, 600, 503);
+            
+        }
+        if (lose==true){
+            batch.draw(buttonLose.buttonTexture, 53, 249);
+            batch.draw(buttonClose.buttonTexture, 600, 503);
+            
+        }
 
         // Funcion de disparo
         if (Shooting == true) {
@@ -246,8 +269,10 @@ public class MainLogic extends ApplicationAdapter {
                 //Aca se sabe si el usuario gana o pierde
                 if (OrderBridge.commit(listNumber)) {
                     Gdx.app.log("E", "Ganar");
+                    win=true;  
                 } else {
                     Gdx.app.log("E", "Perder");
+                    lose=true; 
                 }
                 }
 
@@ -322,6 +347,8 @@ public class MainLogic extends ApplicationAdapter {
                 buttonCannon = new Canon(90, 70, 100, 100, "Canon_1.png");
                 backgroundTexture = new Texture(Gdx.files.internal("parallax-mountain-bg.png"));
                 currentLevel = 1;
+                buttonWin= new GenericButton(100,100,100,100,"Win.png");
+                buttonLose=new GenericButton(0,0,50,50,"Lose.png");
                 buttonShooting = new GenericButton(10, 80, 50, 50, "shooting.png");
                 Integer[] myArr = {44, 2, 3, 0, 9, 8, 4, 3};
                 OrderBridge = new Bridge<>(myArr);
