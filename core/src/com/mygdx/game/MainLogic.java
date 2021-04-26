@@ -146,14 +146,21 @@ public class MainLogic extends ApplicationAdapter {
             /// BOTON PARA CERRAR EL POPUP DE HELP ///
             if (touchPos.x > buttonClose.buttonCollision.x - buttonClose.buttonCollision.width && touchPos.x < buttonClose.buttonCollision.x + buttonClose.buttonCollision.width) {
                 if (touchPos.y > buttonClose.buttonCollision.y - buttonClose.buttonCollision.height && touchPos.y < buttonClose.buttonCollision.y + buttonClose.buttonCollision.height) {
-                    info = false;
-                    win = false;
-                    lose = false;
-                    if (lose==false){
+                    if (info){
+                    info = false;}
+                    
+                    if (win){
+                          clearLevel();
+                        initiateLevel(currentLevel+1);
+                    }
+
+                    if (lose){
                         clearLevel();
                         initiateLevel(currentLevel);
                         
                     }
+                    win = false;
+                    lose = false;
                     
                 }
             }
@@ -337,15 +344,18 @@ public class MainLogic extends ApplicationAdapter {
 
     public void initiateLevel(int level) {
         //AC� VA LA INFO DE NIVELES. 0=MENU;
-        switch (level) {
-            case 1:
+        if (level!=0){
+            
                 batch = new SpriteBatch();
                 buttonHelp = new GenericButton(0, 555, 50, 50, "buttonHelp.png");
                 buttonClose = new GenericButton(600, 503, 50, 50, "buttonClose.png");
                 buttonRestart = new GenericButton(0, 0, 50, 50, "buttonRestart.png");
+                backgroundTexture = new Texture(Gdx.files.internal("parallax-mountain-bg.png"));
+        }
+        switch (level) {
+            case 1:
                 infoTexture = new Texture(Gdx.files.internal("Info.png"));
                 buttonCannon = new Canon(90, 70, 100, 100, "Canon_1.png");
-                backgroundTexture = new Texture(Gdx.files.internal("parallax-mountain-bg.png"));
                 currentLevel = 1;
                 buttonWin= new GenericButton(100,100,100,100,"Win.png");
                 buttonLose=new GenericButton(0,0,50,50,"Lose.png");
@@ -358,6 +368,24 @@ public class MainLogic extends ApplicationAdapter {
                 Integer[] myArr2 = {2, 44, 3, 0, 9, 4, 3, 8};
                 for (int i = 0; i < myArr2.length; i++) {
                     createPlank(300 + i * 45, 0, 44, 117, listPlank, myArr2[i]);
+                }
+                break;
+                
+            case 2:
+                infoTexture = new Texture(Gdx.files.internal("Info.png"));
+                buttonCannon = new Canon(90, 70, 100, 100, "Canon_1.png");
+                currentLevel = 1;
+                buttonWin= new GenericButton(100,100,100,100,"Win.png");
+                buttonLose=new GenericButton(0,0,50,50,"Lose.png");
+                buttonShooting = new GenericButton(10, 80, 50, 50, "shooting.png");
+                Integer[] myArr3 = {3, 4, 1, 0, 1, 8, 4, 3};
+                OrderBridge = new Bridge<>(myArr3);
+                for (int i = 0; i < OrderBridge.getSize(); i++) {
+                    createPlank(100 + i * 45, 400, 44, 117, listPlankBridge, myArr3[i]);
+                }
+                Integer[] myArr4 = {4, 3, 0, 1, 1, 3, 4, 8};
+                for (int i = 0; i < myArr4.length; i++) {
+                    createPlank(300 + i * 45, 0, 44, 117, listPlank, myArr4[i]);
                 }
                 break;
         }
