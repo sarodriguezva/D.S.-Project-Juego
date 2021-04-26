@@ -343,6 +343,8 @@ public class MainLogic extends ApplicationAdapter {
     }
 
     public void initiateLevel(int level) {
+        Integer[] myArr;
+        Integer[] myArr2;
         //AC� VA LA INFO DE NIVELES. 0=MENU;
         if (level!=0){
             
@@ -351,21 +353,24 @@ public class MainLogic extends ApplicationAdapter {
                 buttonClose = new GenericButton(600, 503, 50, 50, "buttonClose.png");
                 buttonRestart = new GenericButton(0, 0, 50, 50, "buttonRestart.png");
                 backgroundTexture = new Texture(Gdx.files.internal("parallax-mountain-bg.png"));
+                buttonWin= new GenericButton(100,100,100,100,"Win.png");
+                buttonLose=new GenericButton(0,0,50,50,"Lose.png");
+
+                
         }
         switch (level) {
+            
             case 1:
                 infoTexture = new Texture(Gdx.files.internal("Info.png"));
                 buttonCannon = new Canon(90, 70, 100, 100, "Canon_1.png");
                 currentLevel = 1;
-                buttonWin= new GenericButton(100,100,100,100,"Win.png");
-                buttonLose=new GenericButton(0,0,50,50,"Lose.png");
                 buttonShooting = new GenericButton(10, 80, 50, 50, "shooting.png");
-                Integer[] myArr = {44, 2, 3, 0, 9, 8, 4, 3};
+                myArr = strToArr("44,2,3,0,9,4,3,8");
                 OrderBridge = new Bridge<>(myArr);
                 for (int i = 0; i < OrderBridge.getSize(); i++) {
                     createPlank(100 + i * 45, 400, 44, 117, listPlankBridge, myArr[i]);
                 }
-                Integer[] myArr2 = {2, 44, 3, 0, 9, 4, 3, 8};
+                myArr2 = strToArr("2,44,0,3,9,4,3,8");
                 for (int i = 0; i < myArr2.length; i++) {
                     createPlank(300 + i * 45, 0, 44, 117, listPlank, myArr2[i]);
                 }
@@ -375,17 +380,30 @@ public class MainLogic extends ApplicationAdapter {
                 infoTexture = new Texture(Gdx.files.internal("Info.png"));
                 buttonCannon = new Canon(90, 70, 100, 100, "Canon_1.png");
                 currentLevel = 1;
-                buttonWin= new GenericButton(100,100,100,100,"Win.png");
-                buttonLose=new GenericButton(0,0,50,50,"Lose.png");
                 buttonShooting = new GenericButton(10, 80, 50, 50, "shooting.png");
-                Integer[] myArr3 = {3, 4, 1, 0, 1, 8, 4, 3};
-                OrderBridge = new Bridge<>(myArr3);
+                myArr = strToArr("4,1,2,3,9,4,3,8");
+                OrderBridge = new Bridge<>(myArr);
                 for (int i = 0; i < OrderBridge.getSize(); i++) {
-                    createPlank(100 + i * 45, 400, 44, 117, listPlankBridge, myArr3[i]);
+                    createPlank(100 + i * 45, 400, 44, 117, listPlankBridge, myArr[i]);
                 }
-                Integer[] myArr4 = {4, 3, 0, 1, 1, 3, 4, 8};
-                for (int i = 0; i < myArr4.length; i++) {
-                    createPlank(300 + i * 45, 0, 44, 117, listPlank, myArr4[i]);
+                myArr2 = strToArr("8,3,4,9,3,2,1,4");
+                for (int i = 0; i < myArr2.length; i++) {
+                    createPlank(300 + i * 45, 0, 44, 117, listPlank, myArr2[i]);
+                }
+                break;
+                            case 3:
+                infoTexture = new Texture(Gdx.files.internal("Info.png"));
+                buttonCannon = new Canon(90, 70, 100, 100, "Canon_1.png");
+                currentLevel = 1;
+                buttonShooting = new GenericButton(10, 80, 50, 50, "shooting.png");
+                myArr = strToArr("0,0,0,1,2,3,4,5");
+                OrderBridge = new Bridge<>(myArr);
+                for (int i = 0; i < OrderBridge.getSize(); i++) {
+                    createPlank(100 + i * 45, 400, 44, 117, listPlankBridge, myArr[i]);
+                }
+                myArr2 = strToArr("4,2,1,0,3,0,1,0");
+                for (int i = 0; i < myArr2.length; i++) {
+                    createPlank(300 + i * 45, 0, 44, 117, listPlank, myArr2[i]);
                 }
                 break;
         }
@@ -396,6 +414,16 @@ public class MainLogic extends ApplicationAdapter {
         MyDoubleLinkedList<Integer> toReturn = new MyDoubleLinkedList<>();
         for (int i = 0; i < toConvert.getSize(); i++) {
             toReturn.add(toConvert.getData(i).plankNumber);
+        }
+        return toReturn;
+    }
+    
+    Integer[] strToArr(String str){
+        String[] myarr = str.split(",");
+        Integer[] toReturn = new Integer[myarr.length];
+        
+        for (int i=0 ; i<myarr.length;i++){
+            toReturn[i] = Integer.parseInt(myarr[i] ) ;
         }
         return toReturn;
     }
