@@ -36,6 +36,8 @@ public class MainLogic extends ApplicationAdapter {
     GenericButton buttonLose=null;
     boolean win= false;
     boolean lose=false;
+    String mode;
+    int Lastfilled;
     
 
     // TEXTURAS DE FONDO
@@ -314,6 +316,7 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
         // Funcion de disparo
         if (Shooting == true) {
             if (Shootingindex >= listPlankCannon.getSize()) {
+                Lastfilled = Shootingindex;
                 Shooting = false;
                 MyDoubleLinkedList<Integer> listNumber = convertPlankToNumber(listPlankFired);
                 if(Shootingindex >= listPlankBridge.getSize()){
@@ -328,6 +331,7 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
                 }
 
             } else {
+                if(mode.equals("fifo")){
                 if (Shootingindex < listPlankCannon.getSize()) {
                     if (Math.abs(listPlankBridge.getData(Shootingindex).plankCollision.x - listPlankCannon.getData(Shootingindex).plankCollision.x) > 30 || Math.abs(listPlankBridge.getData(Shootingindex).plankCollision.y - listPlankCannon.getData(Shootingindex).plankCollision.y) > 30) {
                         Canon.ShootPlankto((int) listPlankBridge.getData(Shootingindex).plankCollision.x, (int) listPlankBridge.getData(Shootingindex).plankCollision.y, buttonCannon.cannonCollision.x, buttonCannon.cannonCollision.y, Shootingtime, listPlankCannon.getData(Shootingindex));
@@ -342,6 +346,26 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
                         Shootingtime = 0;
                     }
                 }
+            } else if(mode.equals("lifo")){
+
+               
+               
+            if(listPlankBridge.getSize() - Shootingindex >=0){
+            if (Math.abs(listPlankBridge.getData(Shootingindex).plankCollision.x - listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled -1) - Shootingindex ).plankCollision.x) > 30 || Math.abs(listPlankBridge.getData(Shootingindex).plankCollision.y - listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled -1) - Shootingindex ).plankCollision.y) > 30) {
+                        Canon.ShootPlankto((int) listPlankBridge.getData(Shootingindex).plankCollision.x, (int) listPlankBridge.getData(Shootingindex).plankCollision.y, buttonCannon.cannonCollision.x, buttonCannon.cannonCollision.y, Shootingtime, listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled -1) - Shootingindex ));
+                        batch.draw(listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled -1) - Shootingindex ).plankTexture, listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled -1) - Shootingindex ).plankCollision.x, listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled -1) - Shootingindex ).plankCollision.y);
+                        font.draw(batch, Integer.toString(listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled -1) - Shootingindex ).plankNumber), listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled -1) - Shootingindex ).plankCollision.x + 10, listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled -1) - Shootingindex ).plankCollision.y + 70);
+                        Shootingtime += Gdx.graphics.getDeltaTime();
+                       
+                    } else if ((listPlankCannon.getSize() + Lastfilled -1) - Shootingindex >= 0) {
+                        listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled -1) - Shootingindex).plankCollision.x = listPlankBridge.getData(Shootingindex).plankCollision.x;
+                        listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled -1) - Shootingindex).plankCollision.y = listPlankBridge.getData(Shootingindex).plankCollision.y;
+                        listPlankFired.add(listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled -1) - Shootingindex));
+                        Shootingindex++;
+                        Shootingtime = 0;
+                    } 
+            }
+            }
             }
         }
 
@@ -376,6 +400,7 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
         Shooting = false;
         Shootingtime = 0;
         Shootingindex = 0;
+        Lastfilled = 0;
         listPlank.makeEmpty();
         listPlankCannon.makeEmpty();
         listPlankBridge.makeEmpty();
@@ -405,6 +430,7 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
         switch (level) {
             
             case 1:
+                mode = "fifo";
                 infoTexture = new Texture(Gdx.files.internal("Info.png"));
                 buttonCannon = new Canon(90, 70, 100, 100, "Canon_1.png");
                 currentLevel = 1;
@@ -414,38 +440,63 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
                 for (int i = 0; i < OrderBridge.getSize(); i++) {
                     createPlank(100 + i * 45, 400, 44, 117, listPlankBridge, myArr[i]);
                 }
+<<<<<<< HEAD
                 myArr2 = strToArr("2,1,3");
+=======
+                myArr2 = strToArr("1,2,3");
+>>>>>>> Experimental
                 for (int i = 0; i < myArr2.length; i++) {
                     createPlank(300 + i * 45, 0, 44, 117, listPlank, myArr2[i]);
                 }
                 break;
                 
             case 2:
+                mode = "lifo";
                 infoTexture = new Texture(Gdx.files.internal("Info.png"));
+<<<<<<< HEAD
                 buttonCannon = new Canon(90, 70, 100, 100, "Canon_1.png");
                 currentLevel = 2;
                 buttonShooting = new GenericButton(10, 80, 50, 50, "shooting.png");
                 myArr = strToArr("4,1,2,3,9");
+=======
+                buttonCannon = new Canon(90, 70, 100, 100, "Canon_2.png");
+                currentLevel = 2;
+                buttonShooting = new GenericButton(10, 80, 50, 50, "shooting.png");
+                myArr = strToArr("3,4,5");
+>>>>>>> Experimental
                 OrderBridge = new Bridge<>(myArr);
                 for (int i = 0; i < OrderBridge.getSize(); i++) {
                     createPlank(100 + i * 45, 400, 44, 117, listPlankBridge, myArr[i]);
                 }
+<<<<<<< HEAD
                 myArr2 = strToArr("4,9,2,3,1");
+=======
+                myArr2 = strToArr("3,4,5");
+>>>>>>> Experimental
                 for (int i = 0; i < myArr2.length; i++) {
                     createPlank(300 + i * 45, 0, 44, 117, listPlank, myArr2[i]);
                 }
                 break;
-                            case 3:
+            case 3:
+                mode = "fifo";
                 infoTexture = new Texture(Gdx.files.internal("Info.png"));
                 buttonCannon = new Canon(90, 70, 100, 100, "Canon_1.png");
                 currentLevel = 3;
                 buttonShooting = new GenericButton(10, 80, 50, 50, "shooting.png");
+<<<<<<< HEAD
                 myArr = strToArr("7,8,9,1,2,3,4,5");
+=======
+                myArr = strToArr("1,2,3,4,5");
+>>>>>>> Experimental
                 OrderBridge = new Bridge<>(myArr);
                 for (int i = 0; i < OrderBridge.getSize(); i++) {
                     createPlank(100 + i * 45, 400, 44, 117, listPlankBridge, myArr[i]);
                 }
+<<<<<<< HEAD
                 myArr2 = strToArr("4,2,1,9,3,8,1,7");
+=======
+                myArr2 = strToArr("4,2,1,3,5");
+>>>>>>> Experimental
                 for (int i = 0; i < myArr2.length; i++) {
                     createPlank(300 + i * 45, 0, 44, 117, listPlank, myArr2[i]);
                 }
