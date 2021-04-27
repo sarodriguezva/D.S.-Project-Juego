@@ -436,15 +436,12 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
                 currentLevel = 1;
                 buttonShooting = new GenericButton(10, 80, 50, 50, "shooting.png");
                 myArr = strToArr("1,2,3");
+                myArr2 = strToArr("1,2,3");
+                
                 OrderBridge = new Bridge<>(myArr);
                 for (int i = 0; i < OrderBridge.getSize(); i++) {
                     createPlank(100 + i * 45, 400, 44, 117, listPlankBridge, myArr[i]);
                 }
-<<<<<<< HEAD
-                myArr2 = strToArr("2,1,3");
-=======
-                myArr2 = strToArr("1,2,3");
->>>>>>> Experimental
                 for (int i = 0; i < myArr2.length; i++) {
                     createPlank(300 + i * 45, 0, 44, 117, listPlank, myArr2[i]);
                 }
@@ -453,26 +450,15 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
             case 2:
                 mode = "lifo";
                 infoTexture = new Texture(Gdx.files.internal("Info.png"));
-<<<<<<< HEAD
-                buttonCannon = new Canon(90, 70, 100, 100, "Canon_1.png");
-                currentLevel = 2;
-                buttonShooting = new GenericButton(10, 80, 50, 50, "shooting.png");
-                myArr = strToArr("4,1,2,3,9");
-=======
                 buttonCannon = new Canon(90, 70, 100, 100, "Canon_2.png");
                 currentLevel = 2;
                 buttonShooting = new GenericButton(10, 80, 50, 50, "shooting.png");
-                myArr = strToArr("3,4,5");
->>>>>>> Experimental
+                myArr = strToArr("4,1,2,3,9");
+                myArr2 = strToArr("4,1,2,3,9");
                 OrderBridge = new Bridge<>(myArr);
                 for (int i = 0; i < OrderBridge.getSize(); i++) {
                     createPlank(100 + i * 45, 400, 44, 117, listPlankBridge, myArr[i]);
                 }
-<<<<<<< HEAD
-                myArr2 = strToArr("4,9,2,3,1");
-=======
-                myArr2 = strToArr("3,4,5");
->>>>>>> Experimental
                 for (int i = 0; i < myArr2.length; i++) {
                     createPlank(300 + i * 45, 0, 44, 117, listPlank, myArr2[i]);
                 }
@@ -483,20 +469,13 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
                 buttonCannon = new Canon(90, 70, 100, 100, "Canon_1.png");
                 currentLevel = 3;
                 buttonShooting = new GenericButton(10, 80, 50, 50, "shooting.png");
-<<<<<<< HEAD
-                myArr = strToArr("7,8,9,1,2,3,4,5");
-=======
                 myArr = strToArr("1,2,3,4,5");
->>>>>>> Experimental
                 OrderBridge = new Bridge<>(myArr);
                 for (int i = 0; i < OrderBridge.getSize(); i++) {
                     createPlank(100 + i * 45, 400, 44, 117, listPlankBridge, myArr[i]);
                 }
-<<<<<<< HEAD
-                myArr2 = strToArr("4,2,1,9,3,8,1,7");
-=======
+
                 myArr2 = strToArr("4,2,1,3,5");
->>>>>>> Experimental
                 for (int i = 0; i < myArr2.length; i++) {
                     createPlank(300 + i * 45, 0, 44, 117, listPlank, myArr2[i]);
                 }
