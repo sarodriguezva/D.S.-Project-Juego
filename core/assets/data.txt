@@ -1,0 +1,67 @@
+ARRAYS:
+
+10.000
+MEMORY PRE DATAtotal: 224MB used: 9MB
+ MEMORY POST DATAtotal: 224MB used: 35MB
+ Time in miliseconds: 1656
+
+
+
+100.000
+MEMORY PRE DATAtotal: 224MB used: 9MB
+ MEMORY POST DATAtotal: 224MB used: 112MB
+ Time in miliseconds: 15644
+
+
+
+
+
+1.000.000
+MEMORY PRE DATAtotal: 224MB used: 9MB
+ MEMORY POST DATAtotal: 400MB used: 234MB
+ Time in miliseconds: 184567
+
+
+DOUBLE LINKED LIST:
+
+10.000
+
+MEMORY PRE DATAtotal: 224MB used: 9MB
+ MEMORY POST DATAtotal: 224MB used: 35MB
+ Time in miliseconds: 1812
+
+
+
+100.000
+MEMORY PRE DATAtotal: 224MB used: 9MB
+ MEMORY POST DATAtotal: 224MB used: 113MB
+ Time in miliseconds: 16954
+
+
+
+1.000.000
+MEMORY PRE DATAtotal: 224MB used: 9MB
+ MEMORY POST DATAtotal: 428MB used: 362MB
+ Time in miliseconds: 195782
+
+
+DYNAMIC ARRAY:
+
+10.000
+MEMORY PRE DATAtotal: 224MB used: 9MB
+ MEMORY POST DATAtotal: 224MB used: 35MB
+ Time in miliseconds: 1736
+
+
+100.000
+MEMORY PRE DATAtotal: 224MB used: 9MB
+ MEMORY POST DATAtotal: 224MB used: 113MB
+ Time in miliseconds: 16479
+
+
+
+1.000.000
+MEMORY PRE DATAtotal: 224MB used: 9MB
+ MEMORY POST DATAtotal: 400MB used: 324MB
+ Time in miliseconds: 192770
+

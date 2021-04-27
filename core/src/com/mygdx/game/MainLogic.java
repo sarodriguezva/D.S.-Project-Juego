@@ -11,6 +11,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.DataStructures.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import static java.lang.System.currentTimeMillis;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MainLogic extends ApplicationAdapter {
 
@@ -60,19 +66,57 @@ public class MainLogic extends ApplicationAdapter {
     private final MyDoubleLinkedList<Plank> listPlankFired = new MyDoubleLinkedList<>();
     MyStack<Integer> plankStack = new MyStack<>();
     private BitmapFont font;
-
+    
+public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(String str) 
+  throws IOException {
+    BufferedWriter writer = new BufferedWriter(new FileWriter("data.txt", true));
+    writer.append("\n\n\n\n\n");
+    writer.append(str);
+    
+    writer.close();
+}
     @Override
     public void create() {
+       
+        
 
         // ESTA FUNCION ES MUY IMPORTANTE, SE LLAMA AL INICIO DEL JUEGO Y SE ENCARGA DE INICIALIZARLO TODO
         // SE CREA LA CAMARA  Y SE PONE EN ORTOGONAL Y LAS DIMENSIONES DE LA PANTALLA
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 600);
-
+        
         //Se inicia el nivel y se pone la fuente que se va a usar
-        initiateLevel(1);
         font = new BitmapFont(Gdx.files.internal("asd.fnt"));
-
+        if (debug==false){
+        initiateLevel(1);}
+        else{
+        
+         try {
+             long m = 1000000;
+            String str="";
+            long total = Runtime.getRuntime().totalMemory();
+            long used = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+            str+="MEMORY PRE DATA" + "total: " + total / 1048576 + "MB used: " + used / 1048576 + "MB";
+            long pretm = System.currentTimeMillis();
+            MyDynamicArray<Plank> plankTry= new MyDynamicArray<>();
+            for (int i=0 ; i<m ; i++){
+                plankTry.pushBack(new Plank(i, i, i, i, i));
+            }
+            long posttm = System.currentTimeMillis();
+            total = Runtime.getRuntime().totalMemory();
+            used = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+            str+="\n MEMORY POST DATA" + "total: " + total / 1048576 + "MB used: " + used / 1048576 + "MB";
+            str+="\n Time in miliseconds: "+ ( posttm - pretm) ;
+            whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(str);
+                        
+            
+            
+            
+            
+        } catch (IOException ex) {
+            Logger.getLogger(MainLogic.class.getName()).log(Level.SEVERE, null, ex);
+        }
+}
     }
 
     // Funcion para crear un plank y anadirlo a la lista automaticamente
