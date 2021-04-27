@@ -1,6 +1,6 @@
 # D.S.-Project-Juego
 El proyecto es desarrollado y presentado por:
-
+Grupo 2 de trabajo.
 Juan Sebastian Cabezas Mateus
 Raúl Mauricio Peña Losada
 Juan Diego Ramírez Lemos
