@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 public class MainLogic extends ApplicationAdapter {
 
     boolean debug = false;
-
+    String tema;
     //////// **** VARIABLES **** ////////
     // BOTONES
     // TEXTURA Y OBJETOS PARA BOTONES
@@ -191,11 +191,13 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
                 }
             }
             
+            // ELEGIR TEMATICA DE NIVEES
             if(currentLevel == 0){
             if (touchPos.x > buttonLevelLinearDS.buttonCollision.x - buttonLevelLinearDS.buttonCollision.width && touchPos.x < buttonLevelLinearDS.buttonCollision.x + buttonLevelLinearDS.buttonCollision.width) {
                 if (touchPos.y > buttonLevelLinearDS.buttonCollision.y - buttonLevelLinearDS.buttonCollision.height && touchPos.y < buttonLevelLinearDS.buttonCollision.y + buttonLevelLinearDS.buttonCollision.height) {
                     clearLevel();
                     initiateLevel(1);
+                    tema="list";
                 }
             }
             
@@ -203,10 +205,9 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
                 if (touchPos.y > buttonLevelTrees.buttonCollision.y - buttonLevelTrees.buttonCollision.height && touchPos.y < buttonLevelTrees.buttonCollision.y + buttonLevelTrees.buttonCollision.height) {
                     //CUANDO HAYA NIVEL DE ARBOLES (DEBERIA SER EL NIVEL 4)
                     //PONER:
-                    //clearLevel();
-                    //initiateLevel(4);
-                    Gdx.app.log("E",Integer.toString(currentLevel));
-                    Gdx.app.log("E",String.valueOf(buttonShooting.buttonTexture != null));
+                    clearLevel();
+                    initiateLevel(4);
+                    tema="tree";
                     
                 }
             }
@@ -311,8 +312,9 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
         if(currentLevel != 0){
             batch.draw(buttonRestart.buttonTexture, 0, 0);
             batch.draw(buttonHelp.buttonTexture, 0, 555);
+            if (tema=="list"){
             batch.draw(buttonCannon.cannonTexture, 90, 70);
-            batch.draw(buttonShooting.buttonTexture, 10, 80);
+            batch.draw(buttonShooting.buttonTexture, 10, 80);}
         } else {
         batch.draw(buttonLevelLinearDS.buttonTexture,210, 270);
         font.draw(batch, "Linear Data Structures", 250, 300);
@@ -343,6 +345,9 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
         }
 
         // Funcion de disparo
+        if (tema=="list"){
+            
+        
         if(currentLevel != 0) {
         if (Shooting == true) {
             if (Shootingindex >= listPlankCannon.getSize()) {
@@ -399,6 +404,20 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
             }
         }
     }
+        }
+        if (tema=="tree"){
+            
+            double rotx = -(double) Gdx.input.getX()/4.5;
+            
+            // RENDER CANON ROTANDO
+            Sprite sprite = new Sprite(buttonCannon.cannonTexture);
+            sprite.setPosition(buttonCannon.cannonCollision.x, buttonCannon.cannonCollision.y);
+            sprite.setSize(buttonCannon.cannonCollision.height,buttonCannon.cannonCollision.width);
+            sprite.setRotation((float) rotx);
+            sprite.draw(batch);  
+        
+        
+        }
         batch.end();
 
         if (debug) {
@@ -527,6 +546,11 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
                 for (int i = 0; i < myArr2.length; i++) {
                     createPlank(300 + i * 45, 0, 44, 117, listPlank, myArr2[i]);
                 }
+                break;
+                case 4:
+                infoTexture = new Texture(Gdx.files.internal("Info.png"));
+                buttonCannon = new Canon(300, 70, 100, 100, "CanonTree.png");
+                currentLevel = 4;
                 break;
         }
 
