@@ -10,7 +10,7 @@ public class BinarySearchTree<T extends Comparable <? super T>> extends BinaryTr
 
     private BinaryTreeNode<T> insert(T data, BinaryTreeNode<T> aux){
         /*
-        * Cuando se llegue a la posici√≥n deseada a insertar, aux ser√° nulo, por lo que retornar√° un nuevo
+        * Cuando se llegue a la posiciÛn deseada a insertar, aux ser· nulo, por lo que retornar· un nuevo
         * nodo con el dato.
         */
         if (aux == null){
@@ -29,7 +29,7 @@ public class BinarySearchTree<T extends Comparable <? super T>> extends BinaryTr
         */
         if(compareResult < 0) aux.leftSon = insert(data, aux.leftSon);
         else if(compareResult > 0) aux.rightSon = insert(data, aux.rightSon);
-        else System.out.println("No est√° permitida la inserci√≥n de valores repetidos.");
+        else System.out.println("No est· permitida la inserciÛn de valores repetidos.");
         return aux;
     }
 
@@ -50,7 +50,7 @@ public class BinarySearchTree<T extends Comparable <? super T>> extends BinaryTr
     /*
     public T findMin(){
         if (isEmpty()){
-            System.out.println("El √°rbol est√° vac√≠o.");
+            System.out.println("El ·rbol est· vacÌ≠o.");
             return null;
         }
 
@@ -64,7 +64,7 @@ public class BinarySearchTree<T extends Comparable <? super T>> extends BinaryTr
 
     public T findMax(){
         if (isEmpty()){
-            System.out.println("El √°rbol est√° vac√≠o.");
+            System.out.println("El ·rbol est· vacÌ≠o.");
             return null;
         }
 
@@ -81,7 +81,7 @@ public class BinarySearchTree<T extends Comparable <? super T>> extends BinaryTr
 
     private T findMin(BinaryTreeNode<T> aux){
         if (aux == null){
-            System.out.println("El √°rbol est√° vac√≠o");
+            System.out.println("El ·rbol est· vacÌ≠o");
         }
 
         if (aux.leftSon == null){
@@ -94,7 +94,7 @@ public class BinarySearchTree<T extends Comparable <? super T>> extends BinaryTr
 
     private T findMax(BinaryTreeNode<T> aux){
         if (aux == null){
-            System.out.println("El √°rbol est√° vac√≠o");
+            System.out.println("El ·rbol est· vacÌ≠o");
         }
 
         if (aux.rightSon == null){
@@ -107,7 +107,7 @@ public class BinarySearchTree<T extends Comparable <? super T>> extends BinaryTr
 
     private BinaryTreeNode<T> remove(T data, BinaryTreeNode<T> aux){
         if (aux == null){
-            //No se encontr√≥ el dato.
+            //No se encontrÛ el dato.
             return null;
         }
 
