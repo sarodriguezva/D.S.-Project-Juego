@@ -28,6 +28,8 @@ public class MainLogic extends ApplicationAdapter {
     GenericButton buttonRestart = null;
     GenericButton buttonHelp = null;
     GenericButton buttonClose = null;
+    GenericButton buttonLevelTrees = null;
+    GenericButton buttonLevelLinearDS = null;
     private Texture infoTexture;
     boolean info = false;
     GenericButton buttonShooting = null;
@@ -90,7 +92,7 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
         //Se inicia el nivel y se pone la fuente que se va a usar
         font = new BitmapFont(Gdx.files.internal("asd.fnt"));
         if (debug==false){
-        initiateLevel(1);}
+        initiateLevel(0);}
         else{
         
          try {
@@ -188,7 +190,27 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
                     Shooting = true;
                 }
             }
-
+            
+            if(currentLevel == 0){
+            if (touchPos.x > buttonLevelLinearDS.buttonCollision.x - buttonLevelLinearDS.buttonCollision.width && touchPos.x < buttonLevelLinearDS.buttonCollision.x + buttonLevelLinearDS.buttonCollision.width) {
+                if (touchPos.y > buttonLevelLinearDS.buttonCollision.y - buttonLevelLinearDS.buttonCollision.height && touchPos.y < buttonLevelLinearDS.buttonCollision.y + buttonLevelLinearDS.buttonCollision.height) {
+                    clearLevel();
+                    initiateLevel(1);
+                }
+            }
+            
+            if (touchPos.x > buttonLevelTrees.buttonCollision.x - buttonLevelTrees.buttonCollision.width && touchPos.x < buttonLevelTrees.buttonCollision.x + buttonLevelTrees.buttonCollision.width) {
+                if (touchPos.y > buttonLevelTrees.buttonCollision.y - buttonLevelTrees.buttonCollision.height && touchPos.y < buttonLevelTrees.buttonCollision.y + buttonLevelTrees.buttonCollision.height) {
+                    //CUANDO HAYA NIVEL DE ARBOLES (DEBERIA SER EL NIVEL 4)
+                    //PONER:
+                    //clearLevel();
+                    //initiateLevel(4);
+                    Gdx.app.log("E",Integer.toString(currentLevel));
+                    Gdx.app.log("E",String.valueOf(buttonShooting.buttonTexture != null));
+                    
+                }
+            }
+            }
             /// BOTON PARA CERRAR EL POPUP DE HELP ///
             if (touchPos.x > buttonClose.buttonCollision.x - buttonClose.buttonCollision.width && touchPos.x < buttonClose.buttonCollision.x + buttonClose.buttonCollision.width) {
                 if (touchPos.y > buttonClose.buttonCollision.y - buttonClose.buttonCollision.height && touchPos.y < buttonClose.buttonCollision.y + buttonClose.buttonCollision.height) {
@@ -259,6 +281,7 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
         batch.draw(backgroundTexture, 0, 0);
 
         //RENDERIZADO DE TABLAS
+        if(currentLevel != 0){
         for (int i = 0; i < listPlankBridge.getSize(); i++) {
             Sprite sprPlankBridge = new Sprite(listPlankBridge.getData(i).plankTexture);
             sprPlankBridge.setPosition(listPlankBridge.getData(i).plankCollision.x, listPlankBridge.getData(i).plankCollision.y);
@@ -267,7 +290,7 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
             font.draw(batch, Integer.toString(listPlankBridge.getData(i).plankNumber), listPlankBridge.getData(i).plankCollision.x + 10, listPlankBridge.getData(i).plankCollision.y + 70);
 
         }
-
+        
         for (int i = 0; i < listPlank.getSize(); i++) {
             if (listPlank.getData(i) != null) {
                 batch.draw(listPlank.getData(i).plankTexture, listPlank.getData(i).plankCollision.x, listPlank.getData(i).plankCollision.y);
@@ -282,14 +305,20 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
             font.draw(batch, Integer.toString(listPlankFired.getData(i).plankNumber), listPlankFired.getData(i).plankCollision.x + 10, listPlankFired.getData(i).plankCollision.y + 70);
 
         }
-
+        }
         // RENDERIZADO DE BOTONES
-        batch.draw(buttonRestart.buttonTexture, 0, 0);
-        batch.draw(buttonRestart.buttonTexture, 0, 0);
-        batch.draw(buttonHelp.buttonTexture, 0, 555);
-        batch.draw(buttonCannon.cannonTexture, 90, 70);
-        batch.draw(buttonShooting.buttonTexture, 10, 80);
-
+        
+        if(currentLevel != 0){
+            batch.draw(buttonRestart.buttonTexture, 0, 0);
+            batch.draw(buttonHelp.buttonTexture, 0, 555);
+            batch.draw(buttonCannon.cannonTexture, 90, 70);
+            batch.draw(buttonShooting.buttonTexture, 10, 80);
+        } else {
+        batch.draw(buttonLevelLinearDS.buttonTexture,210, 270);
+        font.draw(batch, "Linear Data Structures", 250, 300);
+        batch.draw(buttonLevelTrees.buttonTexture,210, 180);
+        font.draw(batch, "Trees and Priority Heaps", 240, 210);
+        }
         //RENDERIZADO DE EL POPUP DE INFO
         if (info == true) {
             // Sprite es un tipo de objeto que deja cambiar algunas caracteristicas ed las texturas x eso se crea un sprite con la textura
@@ -314,6 +343,7 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
         }
 
         // Funcion de disparo
+        if(currentLevel != 0) {
         if (Shooting == true) {
             if (Shootingindex >= listPlankCannon.getSize()) {
                 Lastfilled = Shootingindex;
@@ -321,7 +351,7 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
                 MyDoubleLinkedList<Integer> listNumber = convertPlankToNumber(listPlankFired);
                 if(Shootingindex >= listPlankBridge.getSize()){
                 //Aca se sabe si el usuario gana o pierde
-                if (OrderBridge.commit(listNumber)) {
+                if (OrderBridge.commit(listNumber) && currentLevel > 0) {
                     Gdx.app.log("E", "Ganar");
                     win=true;  
                 } else {
@@ -368,7 +398,7 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
             }
             }
         }
-
+    }
         batch.end();
 
         if (debug) {
@@ -415,20 +445,38 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
         Integer[] myArr;
         Integer[] myArr2;
         //AC� VA LA INFO DE NIVELES. 0=MENU;
-        if (level!=0){
-            
-                batch = new SpriteBatch();
-                buttonHelp = new GenericButton(0, 555, 50, 50, "buttonHelp.png");
-                buttonClose = new GenericButton(600, 503, 50, 50, "buttonClose.png");
-                buttonRestart = new GenericButton(0, 0, 50, 50, "buttonRestart.png");
-                backgroundTexture = new Texture(Gdx.files.internal("parallax-mountain-bg.png"));
-                buttonWin= new GenericButton(100,100,100,100,"Win.png");
-                buttonLose=new GenericButton(0,0,50,50,"Lose.png");
-
-                
-        }
+        batch = new SpriteBatch();
+        backgroundTexture = new Texture(Gdx.files.internal("parallax-mountain-bg.png"));
+        
+        
+        buttonHelp = new GenericButton(0, 555, 50, 50, "buttonHelp.png");
+        buttonClose = new GenericButton(600, 503, 50, 50, "buttonClose.png");
+        buttonRestart = new GenericButton(0, 0, 50, 50, "buttonRestart.png");
+        buttonWin= new GenericButton(100,100,100,100,"Win.png");
+        buttonLose=new GenericButton(0,0,50,50,"Lose.png");
+        
         switch (level) {
-            
+            case 0:
+                buttonLevelLinearDS = new GenericButton(210, 270, 381, 44, "MainMenuButtons.jpg");
+                buttonLevelTrees = new GenericButton(210, 180, 381, 44, "MainMenuButtons.jpg");
+                
+                currentLevel = 0;
+                mode = "fifo";
+                infoTexture = new Texture(Gdx.files.internal("Info.png"));
+                buttonCannon = new Canon(90, 70, 100, 100, "Canon_1.png");
+                buttonShooting = new GenericButton(10, 80, 50, 50, "shooting.png");
+                myArr = strToArr("1,2");
+                myArr2 = strToArr("1");
+                
+                OrderBridge = new Bridge<>(myArr);
+                for (int i = 0; i < OrderBridge.getSize(); i++) {
+                    createPlank(10, 10, 1, 1, listPlankBridge, myArr[i]);
+                }
+                for (int i = 0; i < myArr2.length; i++) {
+                    createPlank(0, 0, 1, 1, listPlank, myArr2[i]);
+                }
+                break;
+             
             case 1:
                 mode = "fifo";
                 infoTexture = new Texture(Gdx.files.internal("Info.png"));
