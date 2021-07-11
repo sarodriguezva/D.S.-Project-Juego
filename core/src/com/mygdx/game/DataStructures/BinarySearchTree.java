@@ -1,3 +1,5 @@
+package com.mygdx.game.DataStructures;
+
 public class BinarySearchTree<T extends Comparable <? super T>> extends BinaryTree<T>{
 
     public void makeEmpty(){ this.root = null; }

@@ -8,6 +8,8 @@ class NthGradeTreeNode<T>{
 }
 */
 
+package com.mygdx.game.DataStructures;
+
 class BinaryTreeNode<T>{
     T data;
     int height;
