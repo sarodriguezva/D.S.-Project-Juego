@@ -14,6 +14,7 @@ class BinaryTreeNode<T>{
     T data;
     BinaryTreeNode<T> leftSon;
     BinaryTreeNode<T> rightSon;
+    int height;
 
     public BinaryTreeNode(T data){
         this.data = data;

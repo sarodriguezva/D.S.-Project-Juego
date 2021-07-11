@@ -29,7 +29,44 @@ public class BinarySearchTree<T extends Comparable <? super T>> extends BinaryTr
         */
         if(compareResult < 0) aux.leftSon = insert(data, aux.leftSon);
         else if(compareResult > 0) aux.rightSon = insert(data, aux.rightSon);
-        else System.out.println("No está permitida la inserción de valores repetidos.");
+        else {
+            System.out.println("No está permitida la inserción de valores repetidos.");
+            return aux;
+        }
+        
+        //Implementación AVL
+        
+        aux.height = this.height(aux);  //Actualización de altura.
+        
+        int balance = this.height(aux.leftSon) - this.height(aux.rightSon);
+        /*
+        * balance > 1 -> sobrecargado a la izquierda.
+        * balance < -1 -> sobrecargado a la derecha.
+        */
+
+        if (balance > 1){
+            int compareLeft = data.compareTo(aux.leftSon.data);
+            /*
+            * compareLeft = -1 -> data < aux.leftSon.data
+            *   Caso Left-Left. Rotación simple a la derecha.
+            * compareLeft = 1 -> data > aux.leftSon.data
+            *   Caso Left-Right. Rotación doble izquierda-derecha.
+            */
+
+            if (compareLeft < 0) aux = rightRotation(aux);
+            else aux = leftRightRotation(aux);
+        } else if (balance < -1){
+            int compareRight = data.compareTo(aux.rightSon.data);
+            /*
+            * compareRight = -1 -> data < aux.rightSon.data
+            *   Caso Right-Left. Rotación doble derecha-izquierda.
+            * compareRight = 1 -> data > aux.rightSon.data
+            *   Caso Right-Right. Rotación simple a la izquierda.
+            */
+
+            if (compareRight > 0) aux = leftRotation(aux);
+            else aux = rightLeftRotation(aux);
+        }
         return aux;
     }
 
@@ -127,7 +164,44 @@ public class BinarySearchTree<T extends Comparable <? super T>> extends BinaryTr
             //Si mi nodo tiene uno o cero hijos.
             aux = (aux.leftSon != null) ? aux.leftSon : aux.rightSon;
         }
+        
+        //Implementación AVL.
+        
+        if (aux == null){
+            return aux;
+        }
+        
+        aux.height = this.height(aux);  //Actualización de altura.
+        
+        int balance = this.height(aux.leftSon) - this.height(aux.rightSon);
+        /*
+        * balance > 1 -> sobrecargado a la izquierda.
+        * balance < -1 -> sobrecargado a la derecha.
+        */
 
+        if (balance > 1){
+            int balanceLeft = this.height(aux.leftSon.leftSon) - this.height(aux.leftSon.rightSon);
+            /*
+            * balanceLeft >= 0 -> Hijo izquierdo sobrecargado a la izquierda.
+            *   Caso Left-Left. Rotación simple a la derecha.
+            * balanceLeft < 0 -> Hijo izquierdo sobrecargado a la derecha.
+            *   Caso Left-Right. Rotación doble izquierda-derecha.
+            */
+
+            if (balanceLeft >= 0) aux = rightRotation(aux);
+            else aux = leftRightRotation(aux);
+        } else if (balance < -1){
+            int balanceRight = this.height(aux.rightSon.leftSon) - this.height(aux.rightSon.rightSon);
+            /*
+            * balanceRight > 0 -> Hijo derecho sobrecargado a la izquierda.
+            *   Caso Right-Left. Rotación doble derecha-izquierda.
+            * balanceRight <= 0 -> Hijo derecho sobrecargado a la derecha.
+            *   Caso Right-Right. Rotación simple a la izquierda.
+            */
+
+            if (balanceRight <= 0) aux = leftRotation(aux);
+            else aux = rightLeftRotation(aux);
+        }
         return aux;
     }
 
@@ -137,6 +211,40 @@ public class BinarySearchTree<T extends Comparable <? super T>> extends BinaryTr
         if (aux == null) return -1;
         
         return 1 + Math.max(this.height(aux.leftSon), this.height(aux.rightSon));
+    }
+    
+    //IMPLEMENTACIÓN ROTACIONES AVL
+    
+    private BinaryTreeNode<T> rightRotation(BinaryTreeNode<T> aux){
+        BinaryTreeNode<T> tmp = aux.leftSon;
+        aux.leftSon = tmp.rightSon;
+        tmp.rightSon = aux;
+        aux = tmp;
+        
+        return aux;
+    }
+    
+    private BinaryTreeNode<T> leftRotation(BinaryTreeNode<T> aux){
+        BinaryTreeNode<T> tmp = aux.rightSon;
+        aux.rightSon = tmp.leftSon;
+        tmp.leftSon = aux;
+        aux = tmp;
+        
+        return aux;
+    }
+    
+    private BinaryTreeNode<T> leftRightRotation(BinaryTreeNode<T> aux){
+        aux.leftSon = leftRotation(aux.leftSon);
+        aux = rightRotation(aux);
+        
+        return aux;
+    }
+    
+    private BinaryTreeNode<T> rightLeftRotation(BinaryTreeNode<T> aux){
+        aux.rightSon = rightRotation(aux.rightSon);
+        aux = leftRotation(aux);
+        
+        return aux;
     }
 }
 
