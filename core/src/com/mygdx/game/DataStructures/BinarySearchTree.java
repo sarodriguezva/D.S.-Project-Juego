@@ -261,4 +261,9 @@ class Persona implements Comparable<Persona>{
         else if (this.age == otherElement.age) return 0;
         else return 1;
     }
+    
+    @Override
+    public String toString(){
+        return String.valueOf(this.age);
+    }
 }
