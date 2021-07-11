@@ -1,3 +1,5 @@
+package com.mygdx.game.DataStructures;
+
 /*
 class NthGradeTreeNode<T>{
     T data;
@@ -8,11 +10,8 @@ class NthGradeTreeNode<T>{
 }
 */
 
-package com.mygdx.game.DataStructures;
-
 class BinaryTreeNode<T>{
     T data;
-    int height;
     BinaryTreeNode<T> leftSon;
     BinaryTreeNode<T> rightSon;
 
@@ -77,34 +76,5 @@ class BinaryTree<T>{
             Q.enqueue(aux.leftSon);
             Q.enqueue(aux.rightSon);
         }
-    }
-}
-
-public class TreeTraversal {
-    public static void main(String[] args){
-        BinaryTree<String> stringTree = new BinaryTree<>();
-
-        //Creación machete del árbol.
-        stringTree.root = new BinaryTreeNode<>("A");
-        stringTree.root.leftSon = new BinaryTreeNode<>("B");
-        stringTree.root.rightSon = new BinaryTreeNode<>("C");
-        stringTree.root.leftSon.leftSon = new BinaryTreeNode<>("D");
-        stringTree.root.leftSon.rightSon = new BinaryTreeNode<>("E");
-        stringTree.root.rightSon.leftSon = new BinaryTreeNode<>("F");
-        stringTree.root.rightSon.rightSon = new BinaryTreeNode<>("G");
-        stringTree.root.leftSon.rightSon.leftSon = new BinaryTreeNode<>("H");
-        stringTree.root.rightSon.leftSon.rightSon = new BinaryTreeNode<>("I");
-        //Termina la creación machete del árbol.
-        System.out.print("Preorder: ");
-        stringTree.preorder();
-        System.out.println();
-        System.out.print("Posorder: ");
-        stringTree.posorder();
-        System.out.println();
-        System.out.print("Posorder: ");
-        stringTree.inorder();
-        System.out.println();
-        System.out.print("Level order: ");
-        stringTree.levelorder();
     }
 }
