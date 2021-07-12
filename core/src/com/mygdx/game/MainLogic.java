@@ -189,11 +189,9 @@ public class MainLogic extends ApplicationAdapter {
                 if (touchPos.y > volverMenu.buttonCollision.y - volverMenu.buttonCollision.height && touchPos.y < volverMenu.buttonCollision.y + volverMenu.buttonCollision.height) {
                     
                     if (pause){
-                    pause= false;}
-                    menu = true;
-                    clearLevel();
-                    currentLevel=0;
-                    initiateLevel(currentLevel);
+                    pause= false;
+                    menu = true;}
+                    
 
                 }
             }        
@@ -366,7 +364,7 @@ public class MainLogic extends ApplicationAdapter {
 
         if (currentLevel != 0) {
             batch.draw(buttonRestart.buttonTexture, 0, 0);
-            batch.draw(buttonHelp.buttonTexture, 0, 555);
+            batch.draw(buttonPause.buttonTexture, 0, 555);
             if ("list".equals(tema)) {
                 batch.draw(buttonCannon.cannonTexture, 90, 70);
                 batch.draw(buttonShooting.buttonTexture, 10, 80);
@@ -388,9 +386,10 @@ public class MainLogic extends ApplicationAdapter {
             sprite.draw(batch);
             
             batch.draw(buttonClose.buttonTexture, 600, 503);
-            batch.draw(buttonHelp.buttonTexture, 500, 450);
-            batch.draw(buttonLevelLinearDS.buttonTexture,210, 270);
-            font.draw(batch, "Volver al Menu", 250, 300);
+            batch.draw(buttonHelp.buttonTexture, 220, 250);
+            font.draw(batch, "Info nivel", 310, 290);
+            batch.draw(buttonLevelLinearDS.buttonTexture,220, 370);
+            font.draw(batch, "Volver al Menu", 290, 400);
         }
         
         if (menu == true){
@@ -399,7 +398,7 @@ public class MainLogic extends ApplicationAdapter {
             menu =false;
             pause= false;
             info = false;
-            
+            batch.draw(volverMenu.buttonTexture, 280, 400);
         }
         
         if (info == true) {
@@ -411,7 +410,7 @@ public class MainLogic extends ApplicationAdapter {
             sprite.setColor(1, 1, 1, 0.8f);
             sprite.draw(batch);
             batch.draw(buttonClose.buttonTexture, 600, 503);
-            batch.draw(volverMenu.buttonTexture, 450, 400);
+           
 
         }
         if (win == true) {
@@ -508,7 +507,7 @@ public class MainLogic extends ApplicationAdapter {
 
     @Override
     public void dispose() {
-        // esta funci�n se llama al cerrar el juego, elimina los objetos manualmente (java lo hace solito, pero es como por seguridad)
+        // esta funci?n se llama al cerrar el juego, elimina los objetos manualmente (java lo hace solito, pero es como por seguridad)
         batch.dispose();
         for (int i = 0; i < listPlank.getSize(); i++) {
             listPlank.getData(i).dispose();
@@ -533,6 +532,9 @@ public class MainLogic extends ApplicationAdapter {
         listPlankFired.makeEmpty();
         buttonRestart.dispose();
         backgroundTexture.dispose();
+        buttonCannon.dispose();
+        buttonCtrz.dispose();
+        
         System.gc();
 
     }
@@ -543,8 +545,8 @@ public class MainLogic extends ApplicationAdapter {
         //ACA VA LA INFO DE NIVELES. 0=MENU;
         batch = new SpriteBatch();
         backgroundTexture = new Texture(Gdx.files.internal("parallax-mountain-bg.png"));
-        volverMenu= new GenericButton(450,400,381,44,"buttonHelp.png");
-        buttonHelp = new GenericButton(500, 450, 50, 50, "buttonHelp.png");
+        volverMenu= new GenericButton(280,400,381,44,"MainMenuButtons.jpg");
+        buttonHelp = new GenericButton(220, 250, 381, 44, "MainMenuButtons.jpg");
         buttonPause= new GenericButton(0, 555, 50, 50, "opciones.png");
         buttonCtrz = new GenericButton(200, 80, 100, 100, "ctrz.png");
         buttonClose = new GenericButton(600, 503, 50, 50, "buttonClose.png");
@@ -563,7 +565,7 @@ public class MainLogic extends ApplicationAdapter {
                 fondoPause= new Texture(Gdx.files.internal("fondoPause.png"));
                 infoTexture = new Texture(Gdx.files.internal("Info.png"));
                 buttonCannon = new Canon(90, 70, 100, 100, "Canon_1.png");
-               // buttonShooting = new GenericButton(10, 80, 50, 50, "shooting.png");
+                buttonShooting = new GenericButton(10, 80, 50, 50, "shooting.png");
                 break;
             case 1:
                 mode = "fifo";
