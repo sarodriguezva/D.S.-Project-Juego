@@ -151,7 +151,8 @@ public class MainLogic extends ApplicationAdapter {
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             camera.unproject(touchPos);
         }
-
+        
+        if (currentLevel!=0){
         // Si ha sido recientemente presionado compruebe si ya esta arrastrando un objeto, si no hay objeto, busca el que el mouse presiona en esas coordenadas.
         if (justTouched && currentPick == null) {
 
@@ -184,48 +185,15 @@ public class MainLogic extends ApplicationAdapter {
                 }
             }
 
+            if (tema=="list"){
             //BOTON FUEGO//
             if (touchPos.x > buttonShooting.buttonCollision.x - buttonShooting.buttonCollision.width && touchPos.x < buttonShooting.buttonCollision.x + buttonShooting.buttonCollision.width) {
                 if (touchPos.y > buttonShooting.buttonCollision.y - buttonShooting.buttonCollision.height && touchPos.y < buttonShooting.buttonCollision.y + buttonShooting.buttonCollision.height) {
                     Shooting = true;
                 }
             }
-            
-            
-            //BOTON CTRZ //
-            if (touchPos.x > buttonCtrz.buttonCollision.x - buttonCtrz.buttonCollision.width && touchPos.x < buttonCtrz.buttonCollision.x + buttonCtrz.buttonCollision.width) {
-                if (touchPos.y > buttonCtrz.buttonCollision.y - buttonCtrz.buttonCollision.height && touchPos.y < buttonCtrz.buttonCollision.y + buttonCtrz.buttonCollision.height) {
-                    if (listPlankCannon.getSize()!=0){
-                    Plank myLastPlank = listPlankCannon.pop();
-                    myLastPlank.plankCollision.x = 400;
-                    myLastPlank.plankCollision.y = 0;
-                    
-                    listPlank.add( myLastPlank  );}
-                }
             }
-            
-            
-            // ELEGIR TEMATICA DE NIVEES
-            if (currentLevel == 0) {
-                if (touchPos.x > buttonLevelLinearDS.buttonCollision.x - buttonLevelLinearDS.buttonCollision.width && touchPos.x < buttonLevelLinearDS.buttonCollision.x + buttonLevelLinearDS.buttonCollision.width) {
-                    if (touchPos.y > buttonLevelLinearDS.buttonCollision.y - buttonLevelLinearDS.buttonCollision.height && touchPos.y < buttonLevelLinearDS.buttonCollision.y + buttonLevelLinearDS.buttonCollision.height) {
-                        clearLevel();
-                        initiateLevel(1);
-                        tema = "list";
-                    }
-                }
-
-                if (touchPos.x > buttonLevelTrees.buttonCollision.x - buttonLevelTrees.buttonCollision.width && touchPos.x < buttonLevelTrees.buttonCollision.x + buttonLevelTrees.buttonCollision.width) {
-                    if (touchPos.y > buttonLevelTrees.buttonCollision.y - buttonLevelTrees.buttonCollision.height && touchPos.y < buttonLevelTrees.buttonCollision.y + buttonLevelTrees.buttonCollision.height) {
-                        //CUANDO HAYA NIVEL DE ARBOLES (DEBERIA SER EL NIVEL 4)
-                        clearLevel();
-                        initiateLevel(4);
-                        tema = "tree";
-
-                    }
-                }
-            }
-            /// BOTON PARA CERRAR EL POPUP DE HELP ///
+                        /// BOTON PARA CERRAR EL POPUP DE HELP ///
             if (touchPos.x > buttonClose.buttonCollision.x - buttonClose.buttonCollision.width && touchPos.x < buttonClose.buttonCollision.x + buttonClose.buttonCollision.width) {
                 if (touchPos.y > buttonClose.buttonCollision.y - buttonClose.buttonCollision.height && touchPos.y < buttonClose.buttonCollision.y + buttonClose.buttonCollision.height) {
                     if (info) {
@@ -248,8 +216,18 @@ public class MainLogic extends ApplicationAdapter {
                 }
             }
 
-        }
-
+            //BOTON CTRZ //
+            if (touchPos.x > buttonCtrz.buttonCollision.x - buttonCtrz.buttonCollision.width && touchPos.x < buttonCtrz.buttonCollision.x + buttonCtrz.buttonCollision.width) {
+                if (touchPos.y > buttonCtrz.buttonCollision.y - buttonCtrz.buttonCollision.height && touchPos.y < buttonCtrz.buttonCollision.y + buttonCtrz.buttonCollision.height) {
+                    if (listPlankCannon.getSize()!=0){
+                    Plank myLastPlank = listPlankCannon.pop();
+                    myLastPlank.plankCollision.x = 400;
+                    myLastPlank.plankCollision.y = 0;
+                    
+                    listPlank.add( myLastPlank  );}
+                }
+            }
+            
         // Si esta siendo un objeto presionado:
         if (currentPick != null) {
             // Movement
@@ -289,6 +267,33 @@ public class MainLogic extends ApplicationAdapter {
             }
             //Gdx.app.log("MyTag", "MyMessage"); //ASI SE PRINTEA A CONSOla
         }
+        }}
+            
+            // ELEGIR TEMATICA DE NIVEES
+            if (currentLevel == 0) {
+                Gdx.app.log("mouse", Float.toString( touchPos.x));
+                
+                if (touchPos.x > buttonLevelLinearDS.buttonCollision.x - buttonLevelLinearDS.buttonCollision.width && touchPos.x < buttonLevelLinearDS.buttonCollision.x + buttonLevelLinearDS.buttonCollision.width) {
+                    if (touchPos.y > buttonLevelLinearDS.buttonCollision.y - buttonLevelLinearDS.buttonCollision.height && touchPos.y < buttonLevelLinearDS.buttonCollision.y + buttonLevelLinearDS.buttonCollision.height) {
+                        clearLevel();
+                        initiateLevel(1);
+                        tema = "list";
+                    }
+                }
+
+                if (touchPos.x > buttonLevelTrees.buttonCollision.x - buttonLevelTrees.buttonCollision.width && touchPos.x < buttonLevelTrees.buttonCollision.x + buttonLevelTrees.buttonCollision.width) {
+                    if (touchPos.y > buttonLevelTrees.buttonCollision.y - buttonLevelTrees.buttonCollision.height && touchPos.y < buttonLevelTrees.buttonCollision.y + buttonLevelTrees.buttonCollision.height) {
+                        //CUANDO HAYA NIVEL DE ARBOLES (DEBERIA SER EL NIVEL 4)
+                        clearLevel();
+                        initiateLevel(4);
+                        tema = "tree";
+
+                    }
+                }
+            }
+
+        
+
 
         // PARTE DE RENDER
         batch.enableBlending();
@@ -493,20 +498,10 @@ public class MainLogic extends ApplicationAdapter {
                 buttonLevelTrees = new GenericButton(210, 180, 381, 44, "MainMenuButtons.jpg");
 
                 currentLevel = 0;
-                mode = "fifo";
-                infoTexture = new Texture(Gdx.files.internal("Info.png"));
+               // mode = "fifo";
+               // infoTexture = new Texture(Gdx.files.internal("Info.png"));
                 buttonCannon = new Canon(90, 70, 100, 100, "Canon_1.png");
-                buttonShooting = new GenericButton(10, 80, 50, 50, "shooting.png");
-                myArr = strToArr("1,2");
-                myArr2 = strToArr("1");
-
-                OrderBridge = new Bridge<>(myArr);
-                for (int i = 0; i < OrderBridge.getSize(); i++) {
-                    createPlank(10, 10, 1, 1, listPlankBridge, myArr[i]);
-                }
-                for (int i = 0; i < myArr2.length; i++) {
-                    createPlank(0, 0, 1, 1, listPlank, myArr2[i]);
-                }
+               // buttonShooting = new GenericButton(10, 80, 50, 50, "shooting.png");
                 break;
 
             case 1:
