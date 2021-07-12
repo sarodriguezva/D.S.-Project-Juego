@@ -30,8 +30,15 @@ public class MainLogic extends ApplicationAdapter {
     GenericButton buttonClose = null;
     GenericButton buttonLevelTrees = null;
     GenericButton buttonLevelLinearDS = null;
+    GenericButton buttonPause= null;
+    GenericButton volverMenu=null;
     private Texture infoTexture;
+    private Texture fondoPause;
     boolean info = false;
+    boolean pause= false;
+    boolean menu= false;
+    
+   
     GenericButton buttonShooting = null;
     //GANAR O PERDER
     GenericButton buttonWin=null;
@@ -175,11 +182,34 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
                     }
                 }
             }
+            // BOTON VOLVER AL MENU
+            
+            if (touchPos.x > volverMenu.buttonCollision.x - volverMenu.buttonCollision.width && touchPos.x < volverMenu.buttonCollision.x + volverMenu.buttonCollision.width) {
+                if (touchPos.y > volverMenu.buttonCollision.y - volverMenu.buttonCollision.height && touchPos.y < volverMenu.buttonCollision.y + volverMenu.buttonCollision.height) {
+                    
+                    if (pause){
+                    pause= false;}
+                    menu = true;
+                    clearLevel();
+                    currentLevel=0;
+                    initiateLevel(currentLevel);
 
+                }
+            }        
+            // BOTON PAUSE
+            if (touchPos.x > buttonPause.buttonCollision.x - buttonPause.buttonCollision.width && touchPos.x < buttonPause.buttonCollision.x + buttonPause.buttonCollision.width) {
+                if (touchPos.y > buttonPause.buttonCollision.y - buttonPause.buttonCollision.height && touchPos.y < buttonPause.buttonCollision.y + buttonPause.buttonCollision.height) {
+                    pause = true;
+                    
+
+                }
+            }
             // BOTON HELP ////
             if (touchPos.x > buttonHelp.buttonCollision.x - buttonHelp.buttonCollision.width && touchPos.x < buttonHelp.buttonCollision.x + buttonHelp.buttonCollision.width) {
                 if (touchPos.y > buttonHelp.buttonCollision.y - buttonHelp.buttonCollision.height && touchPos.y < buttonHelp.buttonCollision.y + buttonHelp.buttonCollision.height) {
-                    info = true;
+                    if (pause){
+                    pause = false;
+                    info = true;}
 
                 }
             }
@@ -215,11 +245,13 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
             /// BOTON PARA CERRAR EL POPUP DE HELP ///
             if (touchPos.x > buttonClose.buttonCollision.x - buttonClose.buttonCollision.width && touchPos.x < buttonClose.buttonCollision.x + buttonClose.buttonCollision.width) {
                 if (touchPos.y > buttonClose.buttonCollision.y - buttonClose.buttonCollision.height && touchPos.y < buttonClose.buttonCollision.y + buttonClose.buttonCollision.height) {
+                    if (pause){
+                    pause= false;}
                     if (info){
                     info = false;}
                     
                     if (win){
-                          clearLevel();
+                        clearLevel();
                         initiateLevel(currentLevel+1);
                     }
 
@@ -311,7 +343,7 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
         
         if(currentLevel != 0){
             batch.draw(buttonRestart.buttonTexture, 0, 0);
-            batch.draw(buttonHelp.buttonTexture, 0, 555);
+            batch.draw(buttonPause.buttonTexture, 0, 555);
             if (tema=="list"){
             batch.draw(buttonCannon.cannonTexture, 90, 70);
             batch.draw(buttonShooting.buttonTexture, 10, 80);}
@@ -322,6 +354,29 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
         font.draw(batch, "Trees and Priority Heaps", 240, 210);
         }
         //RENDERIZADO DE EL POPUP DE INFO
+        if (pause == true){
+            Sprite sprite = new Sprite(fondoPause);
+            //Aqui se le pone un color en RGB,A. osea color y opacidad.
+            sprite.setPosition(150, 100);
+            sprite.setSize(500, 450);
+            sprite.setColor(1, 1, 1, 0.8f);
+            sprite.draw(batch);
+            
+            batch.draw(buttonClose.buttonTexture, 600, 503);
+            batch.draw(buttonHelp.buttonTexture, 500, 450);
+            batch.draw(buttonLevelLinearDS.buttonTexture,210, 270);
+            font.draw(batch, "Volver al Menu", 250, 300);
+        }
+        
+        if (menu == true){
+            
+            currentLevel =0;
+            menu =false;
+            pause= false;
+            info = false;
+            
+        }
+        
         if (info == true) {
             // Sprite es un tipo de objeto que deja cambiar algunas caracteristicas ed las texturas x eso se crea un sprite con la textura
             Sprite sprite = new Sprite(infoTexture);
@@ -331,6 +386,7 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
             sprite.setColor(1, 1, 1, 0.8f);
             sprite.draw(batch);
             batch.draw(buttonClose.buttonTexture, 600, 503);
+            batch.draw(volverMenu.buttonTexture, 450, 400);
 
         }
         if (win==true){
@@ -466,9 +522,9 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
         //AC� VA LA INFO DE NIVELES. 0=MENU;
         batch = new SpriteBatch();
         backgroundTexture = new Texture(Gdx.files.internal("parallax-mountain-bg.png"));
-        
-        
-        buttonHelp = new GenericButton(0, 555, 50, 50, "buttonHelp.png");
+        volverMenu= new GenericButton(450,400,381,44,"buttonHelp.png");
+        buttonHelp = new GenericButton(500, 450, 50, 50, "buttonHelp.png");
+        buttonPause= new GenericButton(0, 555, 50, 50, "opciones.png");
         buttonClose = new GenericButton(600, 503, 50, 50, "buttonClose.png");
         buttonRestart = new GenericButton(0, 0, 50, 50, "buttonRestart.png");
         buttonWin= new GenericButton(100,100,100,100,"Win.png");
@@ -481,6 +537,7 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
                 
                 currentLevel = 0;
                 mode = "fifo";
+                fondoPause= new Texture(Gdx.files.internal("fondoPause.png"));
                 infoTexture = new Texture(Gdx.files.internal("Info.png"));
                 buttonCannon = new Canon(90, 70, 100, 100, "Canon_1.png");
                 buttonShooting = new GenericButton(10, 80, 50, 50, "shooting.png");
@@ -495,7 +552,7 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
                     createPlank(0, 0, 1, 1, listPlank, myArr2[i]);
                 }
                 break;
-             
+            
             case 1:
                 mode = "fifo";
                 infoTexture = new Texture(Gdx.files.internal("Info.png"));
