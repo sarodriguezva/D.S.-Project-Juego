@@ -26,6 +26,7 @@ public class MainLogic extends ApplicationAdapter {
     // BOTONES
     // TEXTURA Y OBJETOS PARA BOTONES
     GenericButton buttonRestart = null;
+    GenericButton buttonCtrz = null;
     GenericButton buttonHelp = null;
     GenericButton buttonClose = null;
     GenericButton buttonLevelTrees = null;
@@ -41,13 +42,12 @@ public class MainLogic extends ApplicationAdapter {
    
     GenericButton buttonShooting = null;
     //GANAR O PERDER
-    GenericButton buttonWin=null;
-    GenericButton buttonLose=null;
-    boolean win= false;
-    boolean lose=false;
+    GenericButton buttonWin = null;
+    GenericButton buttonLose = null;
+    boolean win = false;
+    boolean lose = false;
     String mode;
     int Lastfilled;
-    
 
     // TEXTURAS DE FONDO
     private SpriteBatch batch;
@@ -77,57 +77,59 @@ public class MainLogic extends ApplicationAdapter {
     private final MyDoubleLinkedList<Plank> listPlankFired = new MyDoubleLinkedList<>();
     MyStack<Integer> plankStack = new MyStack<>();
     private BitmapFont font;
+
     
-public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(String str) 
-  throws IOException {
-    BufferedWriter writer = new BufferedWriter(new FileWriter("data.txt", true));
-    writer.append("\n\n\n\n\n");
-    writer.append(str);
-    
-    writer.close();
-}
+    public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(String str)
+            throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter("data.txt", true));
+        writer.append("\n\n\n\n\n");
+        writer.append(str);
+
+        writer.close();
+    }
+
     @Override
     public void create() {
-       
-        
 
         // ESTA FUNCION ES MUY IMPORTANTE, SE LLAMA AL INICIO DEL JUEGO Y SE ENCARGA DE INICIALIZARLO TODO
         // SE CREA LA CAMARA  Y SE PONE EN ORTOGONAL Y LAS DIMENSIONES DE LA PANTALLA
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 600);
-        
+
         //Se inicia el nivel y se pone la fuente que se va a usar
         font = new BitmapFont(Gdx.files.internal("asd.fnt"));
-        if (debug==false){
-        initiateLevel(0);}
-        else{
         
-         try {
-             long m = 1000000;
-            String str="";
-            long total = Runtime.getRuntime().totalMemory();
-            long used = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-            str+="MEMORY PRE DATA" + "total: " + total / 1048576 + "MB used: " + used / 1048576 + "MB";
-            long pretm = System.currentTimeMillis();
-            MyDynamicArray<Plank> plankTry= new MyDynamicArray<>();
-            for (int i=0 ; i<m ; i++){
-                plankTry.pushBack(new Plank(i, i, i, i, i));
-            }
-            long posttm = System.currentTimeMillis();
-            total = Runtime.getRuntime().totalMemory();
-            used = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-            str+="\n MEMORY POST DATA" + "total: " + total / 1048576 + "MB used: " + used / 1048576 + "MB";
-            str+="\n Time in miliseconds: "+ ( posttm - pretm) ;
-            whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(str);
-                        
-            
-            
-            
-            
-        } catch (IOException ex) {
-            Logger.getLogger(MainLogic.class.getName()).log(Level.SEVERE, null, ex);
+       
+        if (debug == false) {
+            initiateLevel(0);
         }
-}
+        
+        
+         /// DATA TIME PARA DISTINTAS ESTRUCTURAS DE DATOS
+        else {
+
+            try {
+                long m = 1000000;
+                String str = "";
+                long total = Runtime.getRuntime().totalMemory();
+                long used = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+                str += "MEMORY PRE DATA" + "total: " + total / 1048576 + "MB used: " + used / 1048576 + "MB";
+                long pretm = System.currentTimeMillis();
+                MyDynamicArray<Plank> plankTry = new MyDynamicArray<>();
+                for (int i = 0; i < m; i++) {
+                    plankTry.pushBack(new Plank(i, i, i, i, i));
+                }
+                long posttm = System.currentTimeMillis();
+                total = Runtime.getRuntime().totalMemory();
+                used = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+                str += "\n MEMORY POST DATA" + "total: " + total / 1048576 + "MB used: " + used / 1048576 + "MB";
+                str += "\n Time in miliseconds: " + (posttm - pretm);
+                whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(str);
+
+            } catch (IOException ex) {
+                Logger.getLogger(MainLogic.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     // Funcion para crear un plank y anadirlo a la lista automaticamente
@@ -141,8 +143,6 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
     public void render() {
 
         // ESTA FUNCION MUESTRA TODO EN PANTALLA, TAMBIEN ES UNA FUNCION QUE SE LLAMA REPETIDAMENTE
-        // clear es pa borrar todo en pantalla
-        ScreenUtils.clear(0, 0, 0.2f, 1);
 
         // aca se usa lo de batch es un objeto que se encarga de manejar el tema de opengl para renderizar todo de manera eficiente
         camera.update();
@@ -158,7 +158,8 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             camera.unproject(touchPos);
         }
-
+        
+        if (currentLevel!=0){
         // Si ha sido recientemente presionado compruebe si ya esta arrastrando un objeto, si no hay objeto, busca el que el mouse presiona en esas coordenadas.
         if (justTouched && currentPick == null) {
 
@@ -214,35 +215,15 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
                 }
             }
 
+            if (tema=="list"){
             //BOTON FUEGO//
             if (touchPos.x > buttonShooting.buttonCollision.x - buttonShooting.buttonCollision.width && touchPos.x < buttonShooting.buttonCollision.x + buttonShooting.buttonCollision.width) {
                 if (touchPos.y > buttonShooting.buttonCollision.y - buttonShooting.buttonCollision.height && touchPos.y < buttonShooting.buttonCollision.y + buttonShooting.buttonCollision.height) {
                     Shooting = true;
                 }
             }
-            
-            // ELEGIR TEMATICA DE NIVEES
-            if(currentLevel == 0){
-            if (touchPos.x > buttonLevelLinearDS.buttonCollision.x - buttonLevelLinearDS.buttonCollision.width && touchPos.x < buttonLevelLinearDS.buttonCollision.x + buttonLevelLinearDS.buttonCollision.width) {
-                if (touchPos.y > buttonLevelLinearDS.buttonCollision.y - buttonLevelLinearDS.buttonCollision.height && touchPos.y < buttonLevelLinearDS.buttonCollision.y + buttonLevelLinearDS.buttonCollision.height) {
-                    clearLevel();
-                    initiateLevel(1);
-                    tema="list";
-                }
             }
-            
-            if (touchPos.x > buttonLevelTrees.buttonCollision.x - buttonLevelTrees.buttonCollision.width && touchPos.x < buttonLevelTrees.buttonCollision.x + buttonLevelTrees.buttonCollision.width) {
-                if (touchPos.y > buttonLevelTrees.buttonCollision.y - buttonLevelTrees.buttonCollision.height && touchPos.y < buttonLevelTrees.buttonCollision.y + buttonLevelTrees.buttonCollision.height) {
-                    //CUANDO HAYA NIVEL DE ARBOLES (DEBERIA SER EL NIVEL 4)
-                    //PONER:
-                    clearLevel();
-                    initiateLevel(4);
-                    tema="tree";
-                    
-                }
-            }
-            }
-            /// BOTON PARA CERRAR EL POPUP DE HELP ///
+                        /// BOTON PARA CERRAR EL POPUP DE HELP ///
             if (touchPos.x > buttonClose.buttonCollision.x - buttonClose.buttonCollision.width && touchPos.x < buttonClose.buttonCollision.x + buttonClose.buttonCollision.width) {
                 if (touchPos.y > buttonClose.buttonCollision.y - buttonClose.buttonCollision.height && touchPos.y < buttonClose.buttonCollision.y + buttonClose.buttonCollision.height) {
                     if (pause){
@@ -255,19 +236,34 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
                         initiateLevel(currentLevel+1);
                     }
 
-                    if (lose){
+                    if (win) {
+                        clearLevel();
+                        initiateLevel(currentLevel + 1);
+                    }
+
+                    if (lose) {
                         clearLevel();
                         initiateLevel(currentLevel);
-                        
+
                     }
                     win = false;
                     lose = false;
-                    
+
                 }
             }
 
-        }
-
+            //BOTON CTRZ //
+            if (touchPos.x > buttonCtrz.buttonCollision.x - buttonCtrz.buttonCollision.width && touchPos.x < buttonCtrz.buttonCollision.x + buttonCtrz.buttonCollision.width) {
+                if (touchPos.y > buttonCtrz.buttonCollision.y - buttonCtrz.buttonCollision.height && touchPos.y < buttonCtrz.buttonCollision.y + buttonCtrz.buttonCollision.height) {
+                    if (listPlankCannon.getSize()!=0){
+                    Plank myLastPlank = listPlankCannon.pop();
+                    myLastPlank.plankCollision.x = 400;
+                    myLastPlank.plankCollision.y = 0;
+                    
+                    listPlank.add( myLastPlank  );}
+                }
+            }
+            
         // Si esta siendo un objeto presionado:
         if (currentPick != null) {
             // Movement
@@ -307,6 +303,33 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
             }
             //Gdx.app.log("MyTag", "MyMessage"); //ASI SE PRINTEA A CONSOla
         }
+        }}
+            
+            // ELEGIR TEMATICA DE NIVEES
+            if (currentLevel == 0) {
+                Gdx.app.log("mouse", Float.toString( touchPos.x));
+                
+                if (touchPos.x > buttonLevelLinearDS.buttonCollision.x - buttonLevelLinearDS.buttonCollision.width && touchPos.x < buttonLevelLinearDS.buttonCollision.x + buttonLevelLinearDS.buttonCollision.width) {
+                    if (touchPos.y > buttonLevelLinearDS.buttonCollision.y - buttonLevelLinearDS.buttonCollision.height && touchPos.y < buttonLevelLinearDS.buttonCollision.y + buttonLevelLinearDS.buttonCollision.height) {
+                        clearLevel();
+                        initiateLevel(1);
+                        tema = "list";
+                    }
+                }
+
+                if (touchPos.x > buttonLevelTrees.buttonCollision.x - buttonLevelTrees.buttonCollision.width && touchPos.x < buttonLevelTrees.buttonCollision.x + buttonLevelTrees.buttonCollision.width) {
+                    if (touchPos.y > buttonLevelTrees.buttonCollision.y - buttonLevelTrees.buttonCollision.height && touchPos.y < buttonLevelTrees.buttonCollision.y + buttonLevelTrees.buttonCollision.height) {
+                        //CUANDO HAYA NIVEL DE ARBOLES (DEBERIA SER EL NIVEL 4)
+                        clearLevel();
+                        initiateLevel(4);
+                        tema = "tree";
+
+                    }
+                }
+            }
+
+        
+
 
         // PARTE DE RENDER
         batch.enableBlending();
@@ -314,44 +337,46 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
         batch.draw(backgroundTexture, 0, 0);
 
         //RENDERIZADO DE TABLAS
-        if(currentLevel != 0){
-        for (int i = 0; i < listPlankBridge.getSize(); i++) {
-            Sprite sprPlankBridge = new Sprite(listPlankBridge.getData(i).plankTexture);
-            sprPlankBridge.setPosition(listPlankBridge.getData(i).plankCollision.x, listPlankBridge.getData(i).plankCollision.y);
-            sprPlankBridge.setColor(1, 1, 1, 0.4f);
-            sprPlankBridge.draw(batch);
-            font.draw(batch, Integer.toString(listPlankBridge.getData(i).plankNumber), listPlankBridge.getData(i).plankCollision.x + 10, listPlankBridge.getData(i).plankCollision.y + 70);
+        if (currentLevel != 0) {
+            for (int i = 0; i < listPlankBridge.getSize(); i++) {
+                Sprite sprPlankBridge = new Sprite(listPlankBridge.getData(i).plankTexture);
+                sprPlankBridge.setPosition(listPlankBridge.getData(i).plankCollision.x, listPlankBridge.getData(i).plankCollision.y);
+                sprPlankBridge.setColor(1, 1, 1, 0.4f);
+                sprPlankBridge.draw(batch);
+                font.draw(batch, Integer.toString(listPlankBridge.getData(i).plankNumber), listPlankBridge.getData(i).plankCollision.x + 10, listPlankBridge.getData(i).plankCollision.y + 70);
 
-        }
-        
-        for (int i = 0; i < listPlank.getSize(); i++) {
-            if (listPlank.getData(i) != null) {
-                batch.draw(listPlank.getData(i).plankTexture, listPlank.getData(i).plankCollision.x, listPlank.getData(i).plankCollision.y);
-                font.draw(batch, Integer.toString(listPlank.getData(i).plankNumber), listPlank.getData(i).plankCollision.x + 10, listPlank.getData(i).plankCollision.y + 70);
+            }
+
+            for (int i = 0; i < listPlank.getSize(); i++) {
+                if (listPlank.getData(i) != null) {
+                    batch.draw(listPlank.getData(i).plankTexture, listPlank.getData(i).plankCollision.x, listPlank.getData(i).plankCollision.y);
+                    font.draw(batch, Integer.toString(listPlank.getData(i).plankNumber), listPlank.getData(i).plankCollision.x + 10, listPlank.getData(i).plankCollision.y + 70);
+
+                }
+            }
+
+            for (int i = 0; i < listPlankFired.getSize(); i++) {
+
+                batch.draw(listPlankFired.getData(i).plankTexture, listPlankFired.getData(i).plankCollision.x, listPlankFired.getData(i).plankCollision.y);
+                font.draw(batch, Integer.toString(listPlankFired.getData(i).plankNumber), listPlankFired.getData(i).plankCollision.x + 10, listPlankFired.getData(i).plankCollision.y + 70);
 
             }
         }
-
-        for (int i = 0; i < listPlankFired.getSize(); i++) {
-
-            batch.draw(listPlankFired.getData(i).plankTexture, listPlankFired.getData(i).plankCollision.x, listPlankFired.getData(i).plankCollision.y);
-            font.draw(batch, Integer.toString(listPlankFired.getData(i).plankNumber), listPlankFired.getData(i).plankCollision.x + 10, listPlankFired.getData(i).plankCollision.y + 70);
-
-        }
-        }
         // RENDERIZADO DE BOTONES
-        
-        if(currentLevel != 0){
+
+        if (currentLevel != 0) {
             batch.draw(buttonRestart.buttonTexture, 0, 0);
-            batch.draw(buttonPause.buttonTexture, 0, 555);
-            if (tema=="list"){
-            batch.draw(buttonCannon.cannonTexture, 90, 70);
-            batch.draw(buttonShooting.buttonTexture, 10, 80);}
+            batch.draw(buttonHelp.buttonTexture, 0, 555);
+            if ("list".equals(tema)) {
+                batch.draw(buttonCannon.cannonTexture, 90, 70);
+                batch.draw(buttonShooting.buttonTexture, 10, 80);
+                batch.draw(buttonCtrz.buttonTexture, 200,80);
+            }
         } else {
-        batch.draw(buttonLevelLinearDS.buttonTexture,210, 270);
-        font.draw(batch, "Linear Data Structures", 250, 300);
-        batch.draw(buttonLevelTrees.buttonTexture,210, 180);
-        font.draw(batch, "Trees and Priority Heaps", 240, 210);
+            batch.draw(buttonLevelLinearDS.buttonTexture, 210, 270);
+            font.draw(batch, "Linear Data Structures", 250, 300);
+            batch.draw(buttonLevelTrees.buttonTexture, 210, 180);
+            font.draw(batch, "Trees and Priority Heaps", 240, 210);
         }
         //RENDERIZADO DE EL POPUP DE INFO
         if (pause == true){
@@ -389,90 +414,86 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
             batch.draw(volverMenu.buttonTexture, 450, 400);
 
         }
-        if (win==true){
-            batch.draw(buttonWin.buttonTexture,53,249);
+        if (win == true) {
+            batch.draw(buttonWin.buttonTexture, 53, 249);
             batch.draw(buttonClose.buttonTexture, 600, 503);
-            
+
         }
-        if (lose==true){
+        if (lose == true) {
             batch.draw(buttonLose.buttonTexture, 53, 249);
             batch.draw(buttonClose.buttonTexture, 600, 503);
-            
+
         }
 
         // Funcion de disparo
-        if (tema=="list"){
-            
-        
-        if(currentLevel != 0) {
-        if (Shooting == true) {
-            if (Shootingindex >= listPlankCannon.getSize()) {
-                Lastfilled = Shootingindex;
-                Shooting = false;
-                MyDoubleLinkedList<Integer> listNumber = convertPlankToNumber(listPlankFired);
-                if(Shootingindex >= listPlankBridge.getSize()){
-                //Aca se sabe si el usuario gana o pierde
-                if (OrderBridge.commit(listNumber) && currentLevel > 0) {
-                    Gdx.app.log("E", "Ganar");
-                    win=true;  
-                } else {
-                    Gdx.app.log("E", "Perder");
-                    lose=true; 
-                }
-                }
+        if ("list".equals(tema)) {
 
-            } else {
-                if(mode.equals("fifo")){
-                if (Shootingindex < listPlankCannon.getSize()) {
-                    if (Math.abs(listPlankBridge.getData(Shootingindex).plankCollision.x - listPlankCannon.getData(Shootingindex).plankCollision.x) > 30 || Math.abs(listPlankBridge.getData(Shootingindex).plankCollision.y - listPlankCannon.getData(Shootingindex).plankCollision.y) > 30) {
-                        Canon.ShootPlankto((int) listPlankBridge.getData(Shootingindex).plankCollision.x, (int) listPlankBridge.getData(Shootingindex).plankCollision.y, buttonCannon.cannonCollision.x, buttonCannon.cannonCollision.y, Shootingtime, listPlankCannon.getData(Shootingindex));
-                        batch.draw(listPlankCannon.getData(Shootingindex).plankTexture, listPlankCannon.getData(Shootingindex).plankCollision.x, listPlankCannon.getData(Shootingindex).plankCollision.y);
-                        font.draw(batch, Integer.toString(listPlankCannon.getData(Shootingindex).plankNumber), listPlankCannon.getData(Shootingindex).plankCollision.x + 10, listPlankCannon.getData(Shootingindex).plankCollision.y + 70);
-                        Shootingtime += Gdx.graphics.getDeltaTime();
-                    } else if (Shootingindex < listPlankBridge.getSize()) {
-                        listPlankCannon.getData(Shootingindex).plankCollision.x = listPlankBridge.getData(Shootingindex).plankCollision.x;
-                        listPlankCannon.getData(Shootingindex).plankCollision.y = listPlankBridge.getData(Shootingindex).plankCollision.y;
-                        listPlankFired.add(listPlankCannon.getData(Shootingindex));
-                        Shootingindex++;
-                        Shootingtime = 0;
+            if (currentLevel != 0) {
+                if (Shooting == true) {
+                    if (Shootingindex >= listPlankCannon.getSize()) {
+                        Lastfilled = Shootingindex;
+                        Shooting = false;
+                        MyDoubleLinkedList<Integer> listNumber = convertPlankToNumber(listPlankFired);
+                        if (Shootingindex >= listPlankBridge.getSize()) {
+                            //Aca se sabe si el usuario gana o pierde
+                            if (OrderBridge.commit(listNumber) && currentLevel > 0) {
+                                Gdx.app.log("E", "Ganar");
+                                win = true;
+                            } else {
+                                Gdx.app.log("E", "Perder");
+                                lose = true;
+                            }
+                        }
+
+                    } else {
+                        if (mode.equals("fifo")) {
+                            if (Shootingindex < listPlankCannon.getSize()) {
+                                if (Math.abs(listPlankBridge.getData(Shootingindex).plankCollision.x - listPlankCannon.getData(Shootingindex).plankCollision.x) > 30 || Math.abs(listPlankBridge.getData(Shootingindex).plankCollision.y - listPlankCannon.getData(Shootingindex).plankCollision.y) > 30) {
+                                    Canon.ShootPlankto((int) listPlankBridge.getData(Shootingindex).plankCollision.x, (int) listPlankBridge.getData(Shootingindex).plankCollision.y, buttonCannon.cannonCollision.x, buttonCannon.cannonCollision.y, Shootingtime, listPlankCannon.getData(Shootingindex));
+                                    batch.draw(listPlankCannon.getData(Shootingindex).plankTexture, listPlankCannon.getData(Shootingindex).plankCollision.x, listPlankCannon.getData(Shootingindex).plankCollision.y);
+                                    font.draw(batch, Integer.toString(listPlankCannon.getData(Shootingindex).plankNumber), listPlankCannon.getData(Shootingindex).plankCollision.x + 10, listPlankCannon.getData(Shootingindex).plankCollision.y + 70);
+                                    Shootingtime += Gdx.graphics.getDeltaTime();
+                                } else if (Shootingindex < listPlankBridge.getSize()) {
+                                    listPlankCannon.getData(Shootingindex).plankCollision.x = listPlankBridge.getData(Shootingindex).plankCollision.x;
+                                    listPlankCannon.getData(Shootingindex).plankCollision.y = listPlankBridge.getData(Shootingindex).plankCollision.y;
+                                    listPlankFired.add(listPlankCannon.getData(Shootingindex));
+                                    Shootingindex++;
+                                    Shootingtime = 0;
+                                }
+                            }
+                        } else if (mode.equals("lifo")) {
+
+                            if (listPlankBridge.getSize() - Shootingindex >= 0) {
+                                if (Math.abs(listPlankBridge.getData(Shootingindex).plankCollision.x - listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled - 1) - Shootingindex).plankCollision.x) > 30 || Math.abs(listPlankBridge.getData(Shootingindex).plankCollision.y - listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled - 1) - Shootingindex).plankCollision.y) > 30) {
+                                    Canon.ShootPlankto((int) listPlankBridge.getData(Shootingindex).plankCollision.x, (int) listPlankBridge.getData(Shootingindex).plankCollision.y, buttonCannon.cannonCollision.x, buttonCannon.cannonCollision.y, Shootingtime, listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled - 1) - Shootingindex));
+                                    batch.draw(listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled - 1) - Shootingindex).plankTexture, listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled - 1) - Shootingindex).plankCollision.x, listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled - 1) - Shootingindex).plankCollision.y);
+                                    font.draw(batch, Integer.toString(listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled - 1) - Shootingindex).plankNumber), listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled - 1) - Shootingindex).plankCollision.x + 10, listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled - 1) - Shootingindex).plankCollision.y + 70);
+                                    Shootingtime += Gdx.graphics.getDeltaTime();
+
+                                } else if ((listPlankCannon.getSize() + Lastfilled - 1) - Shootingindex >= 0) {
+                                    listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled - 1) - Shootingindex).plankCollision.x = listPlankBridge.getData(Shootingindex).plankCollision.x;
+                                    listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled - 1) - Shootingindex).plankCollision.y = listPlankBridge.getData(Shootingindex).plankCollision.y;
+                                    listPlankFired.add(listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled - 1) - Shootingindex));
+                                    Shootingindex++;
+                                    Shootingtime = 0;
+                                }
+                            }
+                        }
                     }
                 }
-            } else if(mode.equals("lifo")){
+            }
+        }
+        if ("tree".equals(tema)) {
+            // Rotacion del canon
+            double rotx = -(double) Gdx.input.getX() / 4.5;
 
-               
-               
-            if(listPlankBridge.getSize() - Shootingindex >=0){
-            if (Math.abs(listPlankBridge.getData(Shootingindex).plankCollision.x - listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled -1) - Shootingindex ).plankCollision.x) > 30 || Math.abs(listPlankBridge.getData(Shootingindex).plankCollision.y - listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled -1) - Shootingindex ).plankCollision.y) > 30) {
-                        Canon.ShootPlankto((int) listPlankBridge.getData(Shootingindex).plankCollision.x, (int) listPlankBridge.getData(Shootingindex).plankCollision.y, buttonCannon.cannonCollision.x, buttonCannon.cannonCollision.y, Shootingtime, listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled -1) - Shootingindex ));
-                        batch.draw(listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled -1) - Shootingindex ).plankTexture, listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled -1) - Shootingindex ).plankCollision.x, listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled -1) - Shootingindex ).plankCollision.y);
-                        font.draw(batch, Integer.toString(listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled -1) - Shootingindex ).plankNumber), listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled -1) - Shootingindex ).plankCollision.x + 10, listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled -1) - Shootingindex ).plankCollision.y + 70);
-                        Shootingtime += Gdx.graphics.getDeltaTime();
-                       
-                    } else if ((listPlankCannon.getSize() + Lastfilled -1) - Shootingindex >= 0) {
-                        listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled -1) - Shootingindex).plankCollision.x = listPlankBridge.getData(Shootingindex).plankCollision.x;
-                        listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled -1) - Shootingindex).plankCollision.y = listPlankBridge.getData(Shootingindex).plankCollision.y;
-                        listPlankFired.add(listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled -1) - Shootingindex));
-                        Shootingindex++;
-                        Shootingtime = 0;
-                    } 
-            }
-            }
-            }
-        }
-    }
-        }
-        if (tema=="tree"){
-            
-            double rotx = -(double) Gdx.input.getX()/4.5;
-            
             // RENDER CANON ROTANDO
             Sprite sprite = new Sprite(buttonCannon.cannonTexture);
             sprite.setPosition(buttonCannon.cannonCollision.x, buttonCannon.cannonCollision.y);
-            sprite.setSize(buttonCannon.cannonCollision.height,buttonCannon.cannonCollision.width);
+            sprite.setSize(buttonCannon.cannonCollision.height, buttonCannon.cannonCollision.width);
             sprite.setRotation((float) rotx);
-            sprite.draw(batch);  
-        
-        
+            sprite.draw(batch);
+
         }
         batch.end();
 
@@ -519,40 +540,31 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
     public void initiateLevel(int level) {
         Integer[] myArr;
         Integer[] myArr2;
-        //AC� VA LA INFO DE NIVELES. 0=MENU;
+        //ACA VA LA INFO DE NIVELES. 0=MENU;
         batch = new SpriteBatch();
         backgroundTexture = new Texture(Gdx.files.internal("parallax-mountain-bg.png"));
         volverMenu= new GenericButton(450,400,381,44,"buttonHelp.png");
         buttonHelp = new GenericButton(500, 450, 50, 50, "buttonHelp.png");
         buttonPause= new GenericButton(0, 555, 50, 50, "opciones.png");
+        buttonCtrz = new GenericButton(200, 80, 100, 100, "ctrz.png");
         buttonClose = new GenericButton(600, 503, 50, 50, "buttonClose.png");
         buttonRestart = new GenericButton(0, 0, 50, 50, "buttonRestart.png");
-        buttonWin= new GenericButton(100,100,100,100,"Win.png");
-        buttonLose=new GenericButton(0,0,50,50,"Lose.png");
+        buttonWin = new GenericButton(100, 100, 100, 100, "Win.png");
+        buttonLose = new GenericButton(0, 0, 50, 50, "Lose.png");
         
+
         switch (level) {
             case 0:
                 buttonLevelLinearDS = new GenericButton(210, 270, 381, 44, "MainMenuButtons.jpg");
                 buttonLevelTrees = new GenericButton(210, 180, 381, 44, "MainMenuButtons.jpg");
-                
+
                 currentLevel = 0;
                 mode = "fifo";
                 fondoPause= new Texture(Gdx.files.internal("fondoPause.png"));
                 infoTexture = new Texture(Gdx.files.internal("Info.png"));
                 buttonCannon = new Canon(90, 70, 100, 100, "Canon_1.png");
-                buttonShooting = new GenericButton(10, 80, 50, 50, "shooting.png");
-                myArr = strToArr("1,2");
-                myArr2 = strToArr("1");
-                
-                OrderBridge = new Bridge<>(myArr);
-                for (int i = 0; i < OrderBridge.getSize(); i++) {
-                    createPlank(10, 10, 1, 1, listPlankBridge, myArr[i]);
-                }
-                for (int i = 0; i < myArr2.length; i++) {
-                    createPlank(0, 0, 1, 1, listPlank, myArr2[i]);
-                }
+               // buttonShooting = new GenericButton(10, 80, 50, 50, "shooting.png");
                 break;
-            
             case 1:
                 mode = "fifo";
                 infoTexture = new Texture(Gdx.files.internal("Info.png"));
@@ -561,7 +573,7 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
                 buttonShooting = new GenericButton(10, 80, 50, 50, "shooting.png");
                 myArr = strToArr("1,2,3");
                 myArr2 = strToArr("1,2,3");
-                
+
                 OrderBridge = new Bridge<>(myArr);
                 for (int i = 0; i < OrderBridge.getSize(); i++) {
                     createPlank(100 + i * 45, 400, 44, 117, listPlankBridge, myArr[i]);
@@ -570,7 +582,7 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
                     createPlank(300 + i * 45, 0, 44, 117, listPlank, myArr2[i]);
                 }
                 break;
-                
+
             case 2:
                 mode = "lifo";
                 infoTexture = new Texture(Gdx.files.internal("Info.png"));
@@ -604,7 +616,7 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
                     createPlank(300 + i * 45, 0, 44, 117, listPlank, myArr2[i]);
                 }
                 break;
-                case 4:
+            case 4:
                 infoTexture = new Texture(Gdx.files.internal("Info.png"));
                 buttonCannon = new Canon(300, 70, 100, 100, "CanonTree.png");
                 currentLevel = 4;
@@ -620,13 +632,13 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(St
         }
         return toReturn;
     }
-    
-    Integer[] strToArr(String str){
+
+    Integer[] strToArr(String str) {
         String[] myarr = str.split(",");
         Integer[] toReturn = new Integer[myarr.length];
-        
-        for (int i=0 ; i<myarr.length;i++){
-            toReturn[i] = Integer.parseInt(myarr[i] ) ;
+
+        for (int i = 0; i < myarr.length; i++) {
+            toReturn[i] = Integer.parseInt(myarr[i]);
         }
         return toReturn;
     }
