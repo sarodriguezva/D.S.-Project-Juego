@@ -32,8 +32,9 @@ class BinaryTreeNode<T>{
  * Contiene los métodos de recorrido para un árbol.
  * 
  * @author Santiago Rodrí­guez Vallejo.
+ * @param <T> Tipo de elementos que almacena el árbol binario.
  */
-class BinaryTree<T>{
+public class BinaryTree<T>{
     BinaryTreeNode<T> root;
 
     /**
