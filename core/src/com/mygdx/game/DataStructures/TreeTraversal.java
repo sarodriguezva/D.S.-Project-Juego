@@ -124,4 +124,30 @@ class BinaryTree<T>{
             Q.enqueue(aux.rightSon);
         }
     }
+    
+    public T[] toArray(){
+        return this.toArray(this.root);
+    }
+    
+    /**
+     * Método que convierte el árbol a un arreglo
+     * mediante un recorrido levelOrder.
+     * @return Arreglo con los nodos del árbol.
+     */
+    private T[] toArray(BinaryTreeNode<T> auxRoot){
+        T[] array = (T[]) new Object[auxRoot.height];
+        int cnt = 0;
+        
+        MyQueue<BinaryTreeNode<T>> Q = new MyQueue<>();
+        Q.enqueue(auxRoot);
+        while (!Q.isEmpty()){
+            BinaryTreeNode<T> aux = Q.dequeue();
+            if (aux == null) continue;
+            array[cnt++] = aux.data;
+            Q.enqueue(aux.leftSon);
+            Q.enqueue(aux.rightSon);
+        }
+        
+        return array;
+    }
 }
