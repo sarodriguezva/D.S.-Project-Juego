@@ -12,7 +12,7 @@ import com.mygdx.game.DataStructures.*;
  * @author Santiago
  * @param <T> Tipo de dato
  */
-public class Test<T extends Comparable <? super T>> {
+class Test<T extends Comparable <? super T>> {
     
     /**
      * Método que compara si dos árboles son iguales.
