@@ -31,8 +31,15 @@ public class MainLogic extends ApplicationAdapter {
     GenericButton buttonClose = null;
     GenericButton buttonLevelTrees = null;
     GenericButton buttonLevelLinearDS = null;
+    GenericButton buttonPause= null;
+    GenericButton volverMenu=null;
     private Texture infoTexture;
+    private Texture fondoPause;
     boolean info = false;
+    boolean pause= false;
+    boolean menu= false;
+    
+   
     GenericButton buttonShooting = null;
     //GANAR O PERDER
     GenericButton buttonWin = null;
@@ -176,11 +183,32 @@ public class MainLogic extends ApplicationAdapter {
                     }
                 }
             }
+            // BOTON VOLVER AL MENU
+            
+            if (touchPos.x > volverMenu.buttonCollision.x - volverMenu.buttonCollision.width && touchPos.x < volverMenu.buttonCollision.x + volverMenu.buttonCollision.width) {
+                if (touchPos.y > volverMenu.buttonCollision.y - volverMenu.buttonCollision.height && touchPos.y < volverMenu.buttonCollision.y + volverMenu.buttonCollision.height) {
+                    
+                    if (pause){
+                    pause= false;
+                    menu = true;}
+                    
 
+                }
+            }        
+            // BOTON PAUSE
+            if (touchPos.x > buttonPause.buttonCollision.x - buttonPause.buttonCollision.width && touchPos.x < buttonPause.buttonCollision.x + buttonPause.buttonCollision.width) {
+                if (touchPos.y > buttonPause.buttonCollision.y - buttonPause.buttonCollision.height && touchPos.y < buttonPause.buttonCollision.y + buttonPause.buttonCollision.height) {
+                    pause = true;
+                    
+
+                }
+            }
             // BOTON HELP ////
             if (touchPos.x > buttonHelp.buttonCollision.x - buttonHelp.buttonCollision.width && touchPos.x < buttonHelp.buttonCollision.x + buttonHelp.buttonCollision.width) {
                 if (touchPos.y > buttonHelp.buttonCollision.y - buttonHelp.buttonCollision.height && touchPos.y < buttonHelp.buttonCollision.y + buttonHelp.buttonCollision.height) {
-                    info = true;
+                    if (pause){
+                    pause = false;
+                    info = true;}
 
                 }
             }
@@ -196,8 +224,14 @@ public class MainLogic extends ApplicationAdapter {
                         /// BOTON PARA CERRAR EL POPUP DE HELP ///
             if (touchPos.x > buttonClose.buttonCollision.x - buttonClose.buttonCollision.width && touchPos.x < buttonClose.buttonCollision.x + buttonClose.buttonCollision.width) {
                 if (touchPos.y > buttonClose.buttonCollision.y - buttonClose.buttonCollision.height && touchPos.y < buttonClose.buttonCollision.y + buttonClose.buttonCollision.height) {
-                    if (info) {
-                        info = false;
+                    if (pause){
+                    pause= false;}
+                    if (info){
+                    info = false;}
+                    
+                    if (win){
+                        clearLevel();
+                        initiateLevel(currentLevel+1);
                     }
 
                     if (win) {
@@ -330,7 +364,7 @@ public class MainLogic extends ApplicationAdapter {
 
         if (currentLevel != 0) {
             batch.draw(buttonRestart.buttonTexture, 0, 0);
-            batch.draw(buttonHelp.buttonTexture, 0, 555);
+            batch.draw(buttonPause.buttonTexture, 0, 555);
             if ("list".equals(tema)) {
                 batch.draw(buttonCannon.cannonTexture, 90, 70);
                 batch.draw(buttonShooting.buttonTexture, 10, 80);
@@ -343,6 +377,30 @@ public class MainLogic extends ApplicationAdapter {
             font.draw(batch, "Trees and Priority Heaps", 240, 210);
         }
         //RENDERIZADO DE EL POPUP DE INFO
+        if (pause == true){
+            Sprite sprite = new Sprite(fondoPause);
+            //Aqui se le pone un color en RGB,A. osea color y opacidad.
+            sprite.setPosition(150, 100);
+            sprite.setSize(500, 450);
+            sprite.setColor(1, 1, 1, 0.8f);
+            sprite.draw(batch);
+            
+            batch.draw(buttonClose.buttonTexture, 600, 503);
+            batch.draw(buttonHelp.buttonTexture, 220, 250);
+            font.draw(batch, "Info nivel", 310, 290);
+            batch.draw(buttonLevelLinearDS.buttonTexture,220, 370);
+            font.draw(batch, "Volver al Menu", 290, 400);
+        }
+        
+        if (menu == true){
+            
+            currentLevel =0;
+            menu =false;
+            pause= false;
+            info = false;
+            batch.draw(volverMenu.buttonTexture, 280, 400);
+        }
+        
         if (info == true) {
             // Sprite es un tipo de objeto que deja cambiar algunas caracteristicas ed las texturas x eso se crea un sprite con la textura
             Sprite sprite = new Sprite(infoTexture);
@@ -352,6 +410,7 @@ public class MainLogic extends ApplicationAdapter {
             sprite.setColor(1, 1, 1, 0.8f);
             sprite.draw(batch);
             batch.draw(buttonClose.buttonTexture, 600, 503);
+           
 
         }
         if (win == true) {
@@ -448,7 +507,7 @@ public class MainLogic extends ApplicationAdapter {
 
     @Override
     public void dispose() {
-        // esta funci�n se llama al cerrar el juego, elimina los objetos manualmente (java lo hace solito, pero es como por seguridad)
+        // esta funci?n se llama al cerrar el juego, elimina los objetos manualmente (java lo hace solito, pero es como por seguridad)
         batch.dispose();
         for (int i = 0; i < listPlank.getSize(); i++) {
             listPlank.getData(i).dispose();
@@ -473,6 +532,9 @@ public class MainLogic extends ApplicationAdapter {
         listPlankFired.makeEmpty();
         buttonRestart.dispose();
         backgroundTexture.dispose();
+        buttonCannon.dispose();
+        buttonCtrz.dispose();
+        
         System.gc();
 
     }
@@ -483,9 +545,10 @@ public class MainLogic extends ApplicationAdapter {
         //ACA VA LA INFO DE NIVELES. 0=MENU;
         batch = new SpriteBatch();
         backgroundTexture = new Texture(Gdx.files.internal("parallax-mountain-bg.png"));
+        volverMenu= new GenericButton(280,400,381,44,"MainMenuButtons.jpg");
+        buttonHelp = new GenericButton(220, 250, 381, 44, "MainMenuButtons.jpg");
+        buttonPause= new GenericButton(0, 555, 50, 50, "opciones.png");
         buttonCtrz = new GenericButton(200, 80, 100, 100, "ctrz.png");
-        
-        buttonHelp = new GenericButton(0, 555, 50, 50, "buttonHelp.png");
         buttonClose = new GenericButton(600, 503, 50, 50, "buttonClose.png");
         buttonRestart = new GenericButton(0, 0, 50, 50, "buttonRestart.png");
         buttonWin = new GenericButton(100, 100, 100, 100, "Win.png");
@@ -498,12 +561,12 @@ public class MainLogic extends ApplicationAdapter {
                 buttonLevelTrees = new GenericButton(210, 180, 381, 44, "MainMenuButtons.jpg");
 
                 currentLevel = 0;
-               // mode = "fifo";
-               // infoTexture = new Texture(Gdx.files.internal("Info.png"));
+                mode = "fifo";
+                fondoPause= new Texture(Gdx.files.internal("fondoPause.png"));
+                infoTexture = new Texture(Gdx.files.internal("Info.png"));
                 buttonCannon = new Canon(90, 70, 100, 100, "Canon_1.png");
-               // buttonShooting = new GenericButton(10, 80, 50, 50, "shooting.png");
+                buttonShooting = new GenericButton(10, 80, 50, 50, "shooting.png");
                 break;
-
             case 1:
                 mode = "fifo";
                 infoTexture = new Texture(Gdx.files.internal("Info.png"));
