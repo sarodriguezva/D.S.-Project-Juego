@@ -14,6 +14,13 @@ public class AVLTree<T extends Comparable <? super T>> extends BinaryTree<T>{
 
     /**
      * Constructor de AVLTree.
+     */
+    public AVLTree(){
+        
+    }
+    
+    /**
+     * Constructor de AVLTree.
      * Crea un árbol AVL a partir de un arreglo.
      * 
      * @param array Arreglo a partir del cual se crea el árbol AVL.

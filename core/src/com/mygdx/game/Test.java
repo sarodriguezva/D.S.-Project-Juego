@@ -22,20 +22,16 @@ class Test<T extends Comparable <? super T>> {
      */
     public boolean checkTrees(BinaryTree<T> original, BinaryTree<T> user ){
         //Se obtienen la representación en arreglos de ambos árboles.
-        T[] originalArray = original.toArray();
-        T[] userArray = user.toArray();
+        MyDoubleLinkedList<T> originalArray = original.toArray();
+        MyDoubleLinkedList<T> userArray = user.toArray();
         
         //Si tienen distinto tamaño, no pueden ser iguales
-        if (originalArray.length != userArray.length) return false;
+        if (originalArray.getSize() != userArray.getSize()) return false;
         
         //Se comparan uno a uno sus elementos.
-        for (T originalElement : originalArray){
-            for (T userElement : userArray){
-                int compareResult = userElement.compareTo(originalElement);
-                //compareResult = 0; userElement = originalElement
-                //Al encontrar que dos elementos no sean iguales, retorna falso.
-                if (compareResult != 0) return false;
-            }
+        int cnt = 0;
+        while (originalArray.getData(cnt).equals(userArray.getData(cnt))){
+            cnt++;
         }
         
         return true;

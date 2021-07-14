@@ -623,10 +623,15 @@ public class MainLogic extends ApplicationAdapter {
                 infoTexture = new Texture(Gdx.files.internal("Info.png"));
                 buttonCannon = new Canon(300, 70, 100, 100, "CanonTree.png");
                 currentLevel = 4;
-                Integer[] arr = {1,2,3};
-                AVLTree<Integer> arbol = new AVLTree<>(arr);
-                Integer[] arr2 = (Integer[]) new Object[100];
+                //Integer[] arr = {1,2,3};
+                AVLTree<Integer> arbol = new AVLTree<>();
+                arbol.insert(1);
+                arbol.insert(2);
+                arbol.insert(3);
+                MyDoubleLinkedList<Integer> arr2 = new MyDoubleLinkedList<>();
                 arr2= arbol.toArray();
+                
+                
                 
                 break;
         }

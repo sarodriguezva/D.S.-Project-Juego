@@ -128,7 +128,7 @@ public class BinaryTree<T>{
         }
     }
     
-    public T[] toArray(){
+    public MyDoubleLinkedList<T> toArray(){
         return this.toArray(this.root);
     }
     
@@ -137,22 +137,19 @@ public class BinaryTree<T>{
      * mediante un recorrido levelOrder.
      * @return Arreglo con los nodos del árbol.
      */
-    private T[] toArray(BinaryTreeNode<T> auxRoot){
-        T[] array = (T[]) new Object[100];
-
-        int cnt = 0;
+    private MyDoubleLinkedList<T> toArray(BinaryTreeNode<T> auxRoot){
+        MyDoubleLinkedList<T> list = new MyDoubleLinkedList();
         
         MyQueue<BinaryTreeNode<T>> Q = new MyQueue<>();
         Q.enqueue(auxRoot);
         while (!Q.isEmpty()){
             BinaryTreeNode<T> aux = Q.dequeue();
             if (aux == null) continue;
-            array[cnt] = aux.data;
+            list.add(aux.data);
             Q.enqueue(aux.leftSon);
             Q.enqueue(aux.rightSon);
-            cnt+=1;
         }
         
-        return array;
+        return list;
     }
 }
