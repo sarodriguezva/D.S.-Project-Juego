@@ -185,7 +185,7 @@ public class MainLogic extends ApplicationAdapter {
                 }
             }
 
-            if (tema=="list"){
+            if ("list".equals(tema)){
             //BOTON FUEGO//
             if (touchPos.x > buttonShooting.buttonCollision.x - buttonShooting.buttonCollision.width && touchPos.x < buttonShooting.buttonCollision.x + buttonShooting.buttonCollision.width) {
                 if (touchPos.y > buttonShooting.buttonCollision.y - buttonShooting.buttonCollision.height && touchPos.y < buttonShooting.buttonCollision.y + buttonShooting.buttonCollision.height) {
@@ -227,7 +227,7 @@ public class MainLogic extends ApplicationAdapter {
                     listPlank.add( myLastPlank  );}
                 }
             }
-            
+        }
         // Si esta siendo un objeto presionado:
         if (currentPick != null) {
             // Movement
@@ -267,7 +267,7 @@ public class MainLogic extends ApplicationAdapter {
             }
             //Gdx.app.log("MyTag", "MyMessage"); //ASI SE PRINTEA A CONSOla
         }
-        }}
+        }
             
             // ELEGIR TEMATICA DE NIVEES
             if (currentLevel == 0) {
