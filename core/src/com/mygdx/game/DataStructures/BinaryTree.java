@@ -1,4 +1,6 @@
 package com.mygdx.game.DataStructures;
+import java.lang.reflect.Array;
+
 /*
 class NthGradeTreeNode<T>{
     T data;
@@ -136,7 +138,8 @@ public class BinaryTree<T>{
      * @return Arreglo con los nodos del árbol.
      */
     private T[] toArray(BinaryTreeNode<T> auxRoot){
-        T[] array = (T[]) new Object[auxRoot.height];
+        T[] array = (T[]) new Object[100];
+
         int cnt = 0;
         
         MyQueue<BinaryTreeNode<T>> Q = new MyQueue<>();
@@ -144,9 +147,10 @@ public class BinaryTree<T>{
         while (!Q.isEmpty()){
             BinaryTreeNode<T> aux = Q.dequeue();
             if (aux == null) continue;
-            array[cnt++] = aux.data;
+            array[cnt] = aux.data;
             Q.enqueue(aux.leftSon);
             Q.enqueue(aux.rightSon);
+            cnt+=1;
         }
         
         return array;

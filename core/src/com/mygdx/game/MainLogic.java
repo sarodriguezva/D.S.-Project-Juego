@@ -17,6 +17,7 @@ import java.io.IOException;
 import static java.lang.System.currentTimeMillis;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.lang.reflect.Array;
 
 public class MainLogic extends ApplicationAdapter {
 
@@ -305,7 +306,7 @@ public class MainLogic extends ApplicationAdapter {
             
             // ELEGIR TEMATICA DE NIVEES
             if (currentLevel == 0) {
-                Gdx.app.log("mouse", Float.toString( touchPos.x));
+                //Gdx.app.log("mouse", Float.toString( touchPos.x));
                 
                 if (touchPos.x > buttonLevelLinearDS.buttonCollision.x - buttonLevelLinearDS.buttonCollision.width && touchPos.x < buttonLevelLinearDS.buttonCollision.x + buttonLevelLinearDS.buttonCollision.width) {
                     if (touchPos.y > buttonLevelLinearDS.buttonCollision.y - buttonLevelLinearDS.buttonCollision.height && touchPos.y < buttonLevelLinearDS.buttonCollision.y + buttonLevelLinearDS.buttonCollision.height) {
@@ -565,7 +566,7 @@ public class MainLogic extends ApplicationAdapter {
                 fondoPause= new Texture(Gdx.files.internal("fondoPause.png"));
                 infoTexture = new Texture(Gdx.files.internal("Info.png"));
                 buttonCannon = new Canon(90, 70, 100, 100, "Canon_1.png");
-                buttonShooting = new GenericButton(10, 80, 50, 50, "shooting.png");
+               // buttonShooting = new GenericButton(10, 80, 50, 50, "shooting.png");
                 break;
             case 1:
                 mode = "fifo";
@@ -622,6 +623,11 @@ public class MainLogic extends ApplicationAdapter {
                 infoTexture = new Texture(Gdx.files.internal("Info.png"));
                 buttonCannon = new Canon(300, 70, 100, 100, "CanonTree.png");
                 currentLevel = 4;
+                Integer[] arr = {1,2,3};
+                AVLTree<Integer> arbol = new AVLTree<>(arr);
+                Integer[] arr2 = (Integer[]) new Object[100];
+                arr2= arbol.toArray();
+                
                 break;
         }
 
