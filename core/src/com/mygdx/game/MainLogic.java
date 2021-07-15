@@ -488,12 +488,13 @@ public class MainLogic extends ApplicationAdapter {
             double rotx = -(double) Gdx.input.getX() / 4.5;
 
             // RENDER CANON ROTANDO
+            if(currentLevel != 0 && buttonCannon != null){
             Sprite sprite = new Sprite(buttonCannon.cannonTexture);
             sprite.setPosition(buttonCannon.cannonCollision.x, buttonCannon.cannonCollision.y);
             sprite.setSize(buttonCannon.cannonCollision.height, buttonCannon.cannonCollision.width);
             sprite.setRotation((float) rotx);
             sprite.draw(batch);
-
+            }   
         }
         batch.end();
 
