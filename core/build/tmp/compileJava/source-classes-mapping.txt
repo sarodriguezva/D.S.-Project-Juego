@@ -2,8 +2,8 @@ com/mygdx/game/DataStructures/BinaryHeap.java
  com.mygdx.game.DataStructures.BinaryHeap
 com/mygdx/game/DataStructures/MyQueue.java
  com.mygdx.game.DataStructures.MyQueue
-com/mygdx/game/MainLogic.java
- com.mygdx.game.MainLogic
+com/mygdx/game/Canon.java
+ com.mygdx.game.Canon
 com/mygdx/game/DataStructures/AVLTree.java
  com.mygdx.game.DataStructures.AVLTree
  com.mygdx.game.DataStructures.Persona
@@ -26,5 +26,5 @@ com/mygdx/game/DataStructures/MyDoubleLinkedList.java
 com/mygdx/game/DataStructures/BinaryTree.java
  com.mygdx.game.DataStructures.BinaryTree
  com.mygdx.game.DataStructures.BinaryTreeNode
-com/mygdx/game/Canon.java
- com.mygdx.game.Canon
+com/mygdx/game/MainLogic.java
+ com.mygdx.game.MainLogic

@@ -19,3 +19,5 @@ public class Plank extends ApplicationAdapter {
         plankTexture = new Texture(Gdx.files.internal("plank.jpg"));
     }
 }
+
+

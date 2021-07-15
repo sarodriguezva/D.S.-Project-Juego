@@ -427,7 +427,8 @@ public class MainLogic extends ApplicationAdapter {
 
         // Funcion de disparo
         if ("list".equals(tema)) {
-
+            
+            
             if (currentLevel != 0) {
                 if (Shooting == true) {
                     if (Shootingindex >= listPlankCannon.getSize()) {
@@ -494,7 +495,23 @@ public class MainLogic extends ApplicationAdapter {
             sprite.setSize(buttonCannon.cannonCollision.height, buttonCannon.cannonCollision.width);
             sprite.setRotation((float) rotx);
             sprite.draw(batch);
-            }   
+            }
+            
+            
+            Gdx.app.log("E", "Lista");
+            listPlankCannon.print((1==2));
+            if (justTouched && touchPos.y >200 && currentPick == null && !listPlankCannon.isEmpty()) {
+                Shooting = true;
+            }
+            if(!listPlankCannon.isEmpty()){
+                if(Shooting){
+                    Canon.ShootPlankto((int) touchPos.x, (int) touchPos.y, buttonCannon.cannonCollision.x, buttonCannon.cannonCollision.y, Shootingtime, listPlankCannon.getData(0));
+                    batch.draw(listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled - 1) - Shootingindex).plankTexture, listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled - 1) - Shootingindex).plankCollision.x, listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled - 1) - Shootingindex).plankCollision.y);
+                    font.draw(batch, Integer.toString(listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled - 1) - Shootingindex).plankNumber), listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled - 1) - Shootingindex).plankCollision.x + 10, listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled - 1) - Shootingindex).plankCollision.y + 70);
+                    Shootingtime += Gdx.graphics.getDeltaTime();
+                }
+            }
+            
         }
         batch.end();
 
@@ -632,7 +649,10 @@ public class MainLogic extends ApplicationAdapter {
                 MyDoubleLinkedList<Integer> arr2 = new MyDoubleLinkedList<>();
                 arr2= arbol.toArray();
                 
-                
+                for (int i = 0; i < arr2.getSize(); i++) {
+                    createPlank(500 + i * 45, 0, 44, 117, listPlank, arr2.getData(i));
+                }
+                Shootingtime = 0;
                 
                 break;
         }
