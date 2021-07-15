@@ -500,7 +500,7 @@ public class MainLogic extends ApplicationAdapter {
             
             Gdx.app.log("E", "Lista");
             listPlankCannon.print((1==2));
-            if (justTouched && touchPos.y >200 && currentPick == null && !listPlankCannon.isEmpty()) {
+            if (justTouched && touchPos.y >200 && currentPick == null && !listPlankCannon.isEmpty() && !Shooting) {
                 Shooting = true;
             }
             if(!listPlankCannon.isEmpty()){
