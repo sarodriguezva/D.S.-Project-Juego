@@ -38,4 +38,15 @@ public class Canon extends ApplicationAdapter {
         
     }
     
+    public static void ShootLeafto(int objX, int objY, float initx, float inity, float Shoottime, Leaf proyectile){
+        float velx,vely,accel;
+        velx = (objX - (initx+30))/0.9f;
+        vely = ((objY+10)-inity)/0.9f + 120f;
+        accel = 129f;
+        vely -= accel * Shoottime;
+        proyectile.leafCollision.x += velx * Gdx.graphics.getDeltaTime();
+        proyectile.leafCollision.y += vely * Gdx.graphics.getDeltaTime();
+        
+    }
+    
 }

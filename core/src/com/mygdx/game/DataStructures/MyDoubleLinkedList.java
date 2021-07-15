@@ -303,6 +303,7 @@ public class MyDoubleLinkedList<E> {
      * @return La cadena de texto que representa los elementos en
      * la lista.
      */
+    
     private String toString(boolean reverse) {
         StringBuilder sb = new StringBuilder();
         sb.append("[");
@@ -317,6 +318,9 @@ public class MyDoubleLinkedList<E> {
         return toReturn+"]";
     }
     
+    public String toStringArr(){
+        return toString(false);
+    }
     /**
      * Método que imprime visualmente la lista.
      * @param reverse Valor booleano. Si es verdadero, imprimirá la lista

@@ -36,6 +36,7 @@ public class MainLogic extends ApplicationAdapter {
     GenericButton volverMenu=null;
     private Texture infoTexture;
     private Texture fondoPause;
+    private Texture treeTexture;
     boolean info = false;
     boolean pause= false;
     boolean menu= false;
@@ -76,6 +77,10 @@ public class MainLogic extends ApplicationAdapter {
     private final MyDoubleLinkedList<Plank> listPlankBridge = new MyDoubleLinkedList<>();
     private final MyDoubleLinkedList<Plank> listPlankCannon = new MyDoubleLinkedList<>();
     private final MyDoubleLinkedList<Plank> listPlankFired = new MyDoubleLinkedList<>();
+    private final MyDoubleLinkedList<Leaf> listLeaf = new MyDoubleLinkedList<>();
+    private final MyDoubleLinkedList<Leaf> listLeafFired = new MyDoubleLinkedList<>();
+    private final MyDoubleLinkedList<Leaf> listLeafTree = new MyDoubleLinkedList<>();
+    
     MyStack<Integer> plankStack = new MyStack<>();
     private BitmapFont font;
 
@@ -191,7 +196,8 @@ public class MainLogic extends ApplicationAdapter {
                     
                     if (pause){
                     pause= false;
-                    menu = true;}
+                    menu = true;
+                    tema="";}
                     
 
                 }
@@ -330,11 +336,16 @@ public class MainLogic extends ApplicationAdapter {
         
 
 
-        // PARTE DE RENDER
+        // PARTE DE RENDER 
         batch.enableBlending();
         batch.begin();
+        
         batch.draw(backgroundTexture, 0, 0);
 
+        if (tema == "tree"){
+            batch.draw(treeTexture, 0, 0);
+
+        }
         //RENDERIZADO DE TABLAS
         if (currentLevel != 0) {
             for (int i = 0; i < listPlankBridge.getSize(); i++) {
@@ -486,7 +497,7 @@ public class MainLogic extends ApplicationAdapter {
         }
         if ("tree".equals(tema)) {
             // Rotacion del canon
-            double rotx = -(double) Gdx.input.getX() / 4.5;
+            double rotx = -(double) Gdx.input.getX() / 4.8;
 
             // RENDER CANON ROTANDO
             if(currentLevel != 0 && buttonCannon != null){
@@ -498,20 +509,43 @@ public class MainLogic extends ApplicationAdapter {
             }
             
             
-            Gdx.app.log("E", "Lista");
-            listPlankCannon.print((1==2));
-            if (justTouched && touchPos.y >200 && currentPick == null && !listPlankCannon.isEmpty() && !Shooting) {
+            // DISPARAR A LAS HOJAS
+            //Gdx.app.log("E", "Lista");
+           // listPlankCannon.print((1==2));
+            if (justTouched && touchPos.y >200 && currentPick == null && !listLeaf.isEmpty() && !Shooting) {
                 Shooting = true;
+                listLeafFired.add(listLeaf.pop());
             }
-            if(!listPlankCannon.isEmpty()){
+            if(!listLeafFired.isEmpty()){
                 if(Shooting){
-                    Canon.ShootPlankto((int) touchPos.x, (int) touchPos.y, buttonCannon.cannonCollision.x, buttonCannon.cannonCollision.y, Shootingtime, listPlankCannon.getData(0));
-                    batch.draw(listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled - 1) - Shootingindex).plankTexture, listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled - 1) - Shootingindex).plankCollision.x, listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled - 1) - Shootingindex).plankCollision.y);
-                    font.draw(batch, Integer.toString(listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled - 1) - Shootingindex).plankNumber), listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled - 1) - Shootingindex).plankCollision.x + 10, listPlankCannon.getData((listPlankCannon.getSize() + Lastfilled - 1) - Shootingindex).plankCollision.y + 70);
+                    Canon.ShootLeafto((int) touchPos.x, (int) touchPos.y, buttonCannon.cannonCollision.x, buttonCannon.cannonCollision.y, Shootingtime, listLeafFired.getData(0));
+                    batch.draw(listLeafFired.getData((listLeafFired.getSize() + Lastfilled - 1) - Shootingindex).leafTexture, listLeafFired.getData((listLeafFired.getSize() + Lastfilled - 1) - Shootingindex).leafCollision.x, listLeafFired.getData((listLeafFired.getSize() + Lastfilled - 1) - Shootingindex).leafCollision.y);
+                    font.draw(batch, Integer.toString(listLeafFired.getData((listLeafFired.getSize() + Lastfilled - 1) - Shootingindex).leafNumber), listLeafFired.getData((listLeafFired.getSize() + Lastfilled - 1) - Shootingindex).leafCollision.x + 10, listLeafFired.getData((listLeafFired.getSize() + Lastfilled - 1) - Shootingindex).leafCollision.y + 70);
                     Shootingtime += Gdx.graphics.getDeltaTime();
+                    
+                    if (listLeafFired.getData(listLeafFired.getSize() + Lastfilled - 1).leafCollision.y>touchPos.y){
+                        Shooting=false;
+                        listLeafTree.add(listLeafFired.pop());
+                    }
                 }
             }
             
+            // Renderizar hojas
+            
+                        for (int i = 0; i < listLeaf.getSize(); i++) {
+                if (listLeaf.getData(i) != null) {
+                    batch.draw(listLeaf.getData(i).leafTexture, listLeaf.getData(i).leafCollision.x, listLeaf.getData(i).leafCollision.y);
+                    font.draw(batch, Integer.toString(listLeaf.getData(i).leafNumber), listLeaf.getData(i).leafCollision.x + 10, listLeaf.getData(i).leafCollision.y + 70);
+
+                }
+            }
+                                           for (int i = 0; i < listLeafTree.getSize(); i++) {
+                if (listLeafTree.getData(i) != null) {
+                    batch.draw(listLeafTree.getData(i).leafTexture, listLeafTree.getData(i).leafCollision.x, listLeafTree.getData(i).leafCollision.y);
+                    font.draw(batch, Integer.toString(listLeafTree.getData(i).leafNumber), listLeafTree.getData(i).leafCollision.x + 10, listLeafTree.getData(i).leafCollision.y + 70);
+
+                }
+            }
         }
         batch.end();
 
@@ -639,19 +673,25 @@ public class MainLogic extends ApplicationAdapter {
                 break;
             case 4:
                 infoTexture = new Texture(Gdx.files.internal("Info.png"));
-                buttonCannon = new Canon(300, 70, 100, 100, "CanonTree.png");
+                buttonCannon = new Canon(345, 5, 100, 100, "CanonTree.png");
                 currentLevel = 4;
+                treeTexture = new Texture(Gdx.files.internal("nivel_uno.png"));
                 //Integer[] arr = {1,2,3};
                 AVLTree<Integer> arbol = new AVLTree<>();
-                arbol.insert(1);
-                arbol.insert(2);
-                arbol.insert(3);
+                arbol.insert(50);
+                arbol.insert(40);
+                arbol.insert(80);
+                arbol.insert(35);
+                arbol.insert(45);
+                arbol.insert(90);
                 MyDoubleLinkedList<Integer> arr2 = new MyDoubleLinkedList<>();
                 arr2= arbol.toArray();
+                //Gdx.app.log("lista", arr2.toStringArr());
+                Leaf lef = new Leaf(500,0,10,10,35);
+                listLeaf.add(lef);
+                lef = new Leaf(600,0,10,10,45);
+                listLeaf.add(lef);
                 
-                for (int i = 0; i < arr2.getSize(); i++) {
-                    createPlank(500 + i * 45, 0, 44, 117, listPlank, arr2.getData(i));
-                }
                 Shootingtime = 0;
                 
                 break;
