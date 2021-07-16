@@ -510,21 +510,22 @@ public class MainLogic extends ApplicationAdapter {
             
             
             // DISPARAR A LAS HOJAS
-            //Gdx.app.log("E", "Lista");
-           // listPlankCannon.print((1==2));
+            int objx = (int) touchPos.x;
+            int objy = (int) touchPos.y - 50;
             if (justTouched && touchPos.y >200 && currentPick == null && !listLeaf.isEmpty() && !Shooting) {
                 Shooting = true;
                 listLeafFired.add(listLeaf.pop());
             }
             if(!listLeafFired.isEmpty()){
                 if(Shooting){
-                    Canon.ShootLeafto((int) touchPos.x, (int) touchPos.y, buttonCannon.cannonCollision.x, buttonCannon.cannonCollision.y, Shootingtime, listLeafFired.getData(0));
+                    Canon.ShootLeafto(objx, objy + 130, Shootingtime, listLeafFired.getData(0));
                     batch.draw(listLeafFired.getData((listLeafFired.getSize() + Lastfilled - 1) - Shootingindex).leafTexture, listLeafFired.getData((listLeafFired.getSize() + Lastfilled - 1) - Shootingindex).leafCollision.x, listLeafFired.getData((listLeafFired.getSize() + Lastfilled - 1) - Shootingindex).leafCollision.y);
                     font.draw(batch, Integer.toString(listLeafFired.getData((listLeafFired.getSize() + Lastfilled - 1) - Shootingindex).leafNumber), listLeafFired.getData((listLeafFired.getSize() + Lastfilled - 1) - Shootingindex).leafCollision.x + 10, listLeafFired.getData((listLeafFired.getSize() + Lastfilled - 1) - Shootingindex).leafCollision.y + 70);
                     Shootingtime += Gdx.graphics.getDeltaTime();
                     
-                    if (listLeafFired.getData(listLeafFired.getSize() + Lastfilled - 1).leafCollision.y>touchPos.y){
+                    if (Math.abs(listLeafFired.getData(listLeafFired.getSize() + Lastfilled - 1).leafCollision.y- objy - 60) < 10 && (listLeafFired.getData(listLeafFired.getSize() + Lastfilled - 1).leafCollision.x - objx <10)){
                         Shooting=false;
+                        Shootingtime = 0;
                         listLeafTree.add(listLeafFired.pop());
                     }
                 }
@@ -532,20 +533,20 @@ public class MainLogic extends ApplicationAdapter {
             
             // Renderizar hojas
             
-                        for (int i = 0; i < listLeaf.getSize(); i++) {
+                for (int i = 0; i < listLeaf.getSize(); i++) {
                 if (listLeaf.getData(i) != null) {
                     batch.draw(listLeaf.getData(i).leafTexture, listLeaf.getData(i).leafCollision.x, listLeaf.getData(i).leafCollision.y);
                     font.draw(batch, Integer.toString(listLeaf.getData(i).leafNumber), listLeaf.getData(i).leafCollision.x + 10, listLeaf.getData(i).leafCollision.y + 70);
 
+                    }
                 }
-            }
-                                           for (int i = 0; i < listLeafTree.getSize(); i++) {
+                for (int i = 0; i < listLeafTree.getSize(); i++) {
                 if (listLeafTree.getData(i) != null) {
                     batch.draw(listLeafTree.getData(i).leafTexture, listLeafTree.getData(i).leafCollision.x, listLeafTree.getData(i).leafCollision.y);
                     font.draw(batch, Integer.toString(listLeafTree.getData(i).leafNumber), listLeafTree.getData(i).leafCollision.x + 10, listLeafTree.getData(i).leafCollision.y + 70);
 
+                    }
                 }
-            }
         }
         batch.end();
 
@@ -583,6 +584,9 @@ public class MainLogic extends ApplicationAdapter {
         listPlankCannon.makeEmpty();
         listPlankBridge.makeEmpty();
         listPlankFired.makeEmpty();
+        listLeaf.makeEmpty();
+        listLeafFired.makeEmpty();
+        listLeafTree.makeEmpty();
         buttonRestart.dispose();
         backgroundTexture.dispose();
         buttonCannon.dispose();
@@ -686,7 +690,6 @@ public class MainLogic extends ApplicationAdapter {
                 arbol.insert(90);
                 MyDoubleLinkedList<Integer> arr2 = new MyDoubleLinkedList<>();
                 arr2= arbol.toArray();
-                //Gdx.app.log("lista", arr2.toStringArr());
                 Leaf lef = new Leaf(500,0,10,10,35);
                 listLeaf.add(lef);
                 lef = new Leaf(600,0,10,10,45);
