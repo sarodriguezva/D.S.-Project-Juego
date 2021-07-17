@@ -511,10 +511,13 @@ public class MainLogic extends ApplicationAdapter {
             
             // DISPARAR A LAS HOJAS
             int objx = (int) touchPos.x;
-            int objy = (int) touchPos.y - 50;
+            int objy = (int) touchPos.y - 70;
             if (justTouched && touchPos.y >200 && currentPick == null && !listLeaf.isEmpty() && !Shooting) {
+                Leaf proyectile = listLeaf.pop();
+                proyectile.leafCollision.x = buttonCannon.cannonCollision.x;
+                proyectile.leafCollision.y = buttonCannon.cannonCollision.y;
+                listLeafFired.add(proyectile);
                 Shooting = true;
-                listLeafFired.add(listLeaf.pop());
             }
             if(!listLeafFired.isEmpty()){
                 if(Shooting){
@@ -536,14 +539,14 @@ public class MainLogic extends ApplicationAdapter {
                 for (int i = 0; i < listLeaf.getSize(); i++) {
                 if (listLeaf.getData(i) != null) {
                     batch.draw(listLeaf.getData(i).leafTexture, listLeaf.getData(i).leafCollision.x, listLeaf.getData(i).leafCollision.y);
-                    font.draw(batch, Integer.toString(listLeaf.getData(i).leafNumber), listLeaf.getData(i).leafCollision.x + 10, listLeaf.getData(i).leafCollision.y + 70);
+                    font.draw(batch, Integer.toString(listLeaf.getData(i).leafNumber), listLeaf.getData(i).leafCollision.x + 10, listLeaf.getData(i).leafCollision.y + 35);
 
                     }
                 }
                 for (int i = 0; i < listLeafTree.getSize(); i++) {
                 if (listLeafTree.getData(i) != null) {
                     batch.draw(listLeafTree.getData(i).leafTexture, listLeafTree.getData(i).leafCollision.x, listLeafTree.getData(i).leafCollision.y);
-                    font.draw(batch, Integer.toString(listLeafTree.getData(i).leafNumber), listLeafTree.getData(i).leafCollision.x + 10, listLeafTree.getData(i).leafCollision.y + 70);
+                    font.draw(batch, Integer.toString(listLeafTree.getData(i).leafNumber), listLeafTree.getData(i).leafCollision.x + 10, listLeafTree.getData(i).leafCollision.y + 35);
 
                     }
                 }
