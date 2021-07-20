@@ -81,7 +81,12 @@ public class MainLogic extends ApplicationAdapter {
     private final MyDoubleLinkedList<Leaf> listLeafFired = new MyDoubleLinkedList<>();
     private final MyDoubleLinkedList<Leaf> listLeafTree = new MyDoubleLinkedList<>();
     
+    //LISTAS PARA VERIFICAR EL ORDEN
+    private MyDoubleLinkedList<Integer> listLeafTreeOrder = new MyDoubleLinkedList<>();
+    private Integer[] listLeafTreePlayerOrder = new Integer[1];
+    
     MyStack<Integer> plankStack = new MyStack<>();
+    hueco objetivoArboles = new hueco(0,0,0);
     private BitmapFont font;
 
     
@@ -507,37 +512,74 @@ public class MainLogic extends ApplicationAdapter {
             sprite.setRotation((float) rotx);
             sprite.draw(batch);
             }
-            
-            
+            /*
+            Gdx.app.log("X", "" + touchPos.x);
+            Gdx.app.log("Y", "" + touchPos.y);
+*/
+            hueco hueco35 = new hueco(131,330,3);
+            hueco hueco45 = new hueco(332,327,4);
+            hueco hueco90 = new hueco(642,335,5);
             // DISPARAR A LAS HOJAS
             int objx = (int) touchPos.x;
             int objy = (int) touchPos.y - 70;
             if (justTouched && touchPos.y >200 && currentPick == null && !listLeaf.isEmpty() && !Shooting) {
-                Leaf proyectile = listLeaf.pop();
-                proyectile.leafCollision.x = buttonCannon.cannonCollision.x;
-                proyectile.leafCollision.y = buttonCannon.cannonCollision.y;
-                listLeafFired.add(proyectile);
-                Shooting = true;
+                
+            if (touchPos.x > 131 && touchPos.x < 214) {
+                if (touchPos.y > 330 && touchPos.y < 408) {
+                    objetivoArboles = hueco35;
+                }
+            }
+            
+            if (touchPos.x > 332 && touchPos.x < 404) {
+                if (touchPos.y > 327 && touchPos.y < 423) {
+                    objetivoArboles = hueco45;
+                }
+            }
+            
+            if (touchPos.x > 642 && touchPos.x < 710) {
+                if (touchPos.y > 335 && touchPos.y < 402) {
+                    objetivoArboles = hueco90;
+                }
+            }
+            
+            if(objetivoArboles.xpos != 0){
+                    Shooting = true;
+                    Leaf proyectile = listLeaf.pop();
+                    proyectile.leafCollision.x = buttonCannon.cannonCollision.x;
+                    proyectile.leafCollision.y = buttonCannon.cannonCollision.y;
+                    listLeafFired.add(proyectile);
+                    
+                }
             }
             if(!listLeafFired.isEmpty()){
                 if(Shooting){
-                    Canon.ShootLeafto(objx, objy + 130, Shootingtime, listLeafFired.getData(0));
+                    Canon.ShootLeafto(objetivoArboles.xpos, objetivoArboles.ypos +60, Shootingtime, listLeafFired.getData(0));
                     batch.draw(listLeafFired.getData((listLeafFired.getSize() + Lastfilled - 1) - Shootingindex).leafTexture, listLeafFired.getData((listLeafFired.getSize() + Lastfilled - 1) - Shootingindex).leafCollision.x, listLeafFired.getData((listLeafFired.getSize() + Lastfilled - 1) - Shootingindex).leafCollision.y);
                     font.draw(batch, Integer.toString(listLeafFired.getData((listLeafFired.getSize() + Lastfilled - 1) - Shootingindex).leafNumber), listLeafFired.getData((listLeafFired.getSize() + Lastfilled - 1) - Shootingindex).leafCollision.x + 10, listLeafFired.getData((listLeafFired.getSize() + Lastfilled - 1) - Shootingindex).leafCollision.y + 70);
                     Shootingtime += Gdx.graphics.getDeltaTime();
                     
-                    if (Math.abs(listLeafFired.getData(listLeafFired.getSize() + Lastfilled - 1).leafCollision.y- objy - 60) < 10 && (listLeafFired.getData(listLeafFired.getSize() + Lastfilled - 1).leafCollision.x - objx <10)){
+                  
+                    if (Math.abs(listLeafFired.getData(listLeafFired.getSize() + Lastfilled - 1).leafCollision.y- objetivoArboles.ypos) < 10 && (Math.abs(listLeafFired.getData(listLeafFired.getSize() + Lastfilled - 1).leafCollision.x - objetivoArboles.xpos) <20)){
                         Shooting=false;
                         Shootingtime = 0;
                         listLeafTree.add(listLeafFired.pop());
+                        listLeafTreePlayerOrder[objetivoArboles.index] = listLeafTree.getLastData().leafNumber;
+                        
+                        objetivoArboles = new hueco(0,0,0);
+                    }
+                    
+                    if(listLeafTreeOrder.getSize() == listLeafTreeOrder.getSize()){
+                        Test tester = new Test();
+                        win = tester.checkTreesAsLists(listLeafTreeOrder, listLeafTreePlayerOrder);
                     }
                 }
             }
             
             // Renderizar hojas
-            
+            //Solo cuando no ha ganado ni perdido
+            if(!win && !lose){
                 for (int i = 0; i < listLeaf.getSize(); i++) {
-                if (listLeaf.getData(i) != null) {
+                if (listLeaf.getData(i) != null ) {
                     batch.draw(listLeaf.getData(i).leafTexture, listLeaf.getData(i).leafCollision.x, listLeaf.getData(i).leafCollision.y);
                     font.draw(batch, Integer.toString(listLeaf.getData(i).leafNumber), listLeaf.getData(i).leafCollision.x + 10, listLeaf.getData(i).leafCollision.y + 35);
 
@@ -550,6 +592,7 @@ public class MainLogic extends ApplicationAdapter {
 
                     }
                 }
+        }
         }
         batch.end();
 
@@ -679,6 +722,7 @@ public class MainLogic extends ApplicationAdapter {
                 }
                 break;
             case 4:
+                listLeafTreePlayerOrder = new Integer[6];
                 infoTexture = new Texture(Gdx.files.internal("Info.png"));
                 buttonCannon = new Canon(345, 5, 100, 100, "CanonTree.png");
                 currentLevel = 4;
@@ -691,11 +735,15 @@ public class MainLogic extends ApplicationAdapter {
                 arbol.insert(35);
                 arbol.insert(45);
                 arbol.insert(90);
-                MyDoubleLinkedList<Integer> arr2 = new MyDoubleLinkedList<>();
-                arr2= arbol.toArray();
+                listLeafTreeOrder = arbol.toArray();
+                listLeafTreePlayerOrder[0] = 50;
+                listLeafTreePlayerOrder[1] = 40;
+                listLeafTreePlayerOrder[2] = 80;
                 Leaf lef = new Leaf(500,0,10,10,35);
                 listLeaf.add(lef);
                 lef = new Leaf(600,0,10,10,45);
+                listLeaf.add(lef);
+                lef = new Leaf(700,0,10,10,90);
                 listLeaf.add(lef);
                 
                 Shootingtime = 0;
@@ -721,6 +769,18 @@ public class MainLogic extends ApplicationAdapter {
             toReturn[i] = Integer.parseInt(myarr[i]);
         }
         return toReturn;
+    }
+    
+    public class hueco{
+        int xpos;
+        int ypos;
+        int index;
+        
+        public hueco(int x, int y, int i){
+            xpos = x;
+            ypos = y;
+            index = i;
+        }
     }
 
 }
