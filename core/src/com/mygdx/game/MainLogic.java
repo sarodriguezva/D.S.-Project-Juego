@@ -551,10 +551,6 @@ public class MainLogic extends ApplicationAdapter {
                         objetivoArboles = new hueco(0, 0, 0, 0, 0);
                     }
                     
-                    Gdx.app.log("O", "" + listLeafTreeOrder.toStringArr());
-                    for(int i = 0; i <listLeafTreePlayerOrder.length; i++){
-                        Gdx.app.log("P", "" + listLeafTreePlayerOrder[i]);
-                    }
                     
                     if (listLeafTreeOrder.getSize() == listLeafTreeOrder.getSize() && listLeaf.isEmpty()) {
                         Test tester = new Test();
