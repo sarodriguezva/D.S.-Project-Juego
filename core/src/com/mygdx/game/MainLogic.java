@@ -80,6 +80,7 @@ public class MainLogic extends ApplicationAdapter {
     private final MyDoubleLinkedList<Leaf> listLeafFired = new MyDoubleLinkedList<>();
     private final MyDoubleLinkedList<Leaf> listLeafTree = new MyDoubleLinkedList<>();
     private final MyDoubleLinkedList<hueco> listHueco = new MyDoubleLinkedList<>();
+    private final MyDoubleLinkedList<hueco> listHuecosUsados = new MyDoubleLinkedList<>();
 
     //LISTAS PARA VERIFICAR EL ORDEN
     private MyDoubleLinkedList<Integer> listLeafTreeOrder = new MyDoubleLinkedList<>();
@@ -242,11 +243,6 @@ public class MainLogic extends ApplicationAdapter {
                             initiateLevel(currentLevel + 1);
                         }
 
-                        if (win) {
-                            clearLevel();
-                            initiateLevel(currentLevel + 1);
-                        }
-
                         if (lose) {
                             clearLevel();
                             initiateLevel(currentLevel);
@@ -261,13 +257,7 @@ public class MainLogic extends ApplicationAdapter {
                 //BOTON CTRZ //
                 if (touchPos.x > buttonCtrz.buttonCollision.x - buttonCtrz.buttonCollision.width && touchPos.x < buttonCtrz.buttonCollision.x + buttonCtrz.buttonCollision.width) {
                     if (touchPos.y > buttonCtrz.buttonCollision.y - buttonCtrz.buttonCollision.height && touchPos.y < buttonCtrz.buttonCollision.y + buttonCtrz.buttonCollision.height) {
-                        if (listPlankCannon.getSize() != 0) {
-                            Plank myLastPlank = listPlankCannon.pop();
-                            myLastPlank.plankCollision.x = 400;
-                            myLastPlank.plankCollision.y = 0;
-
-                            listPlank.add(myLastPlank);
-                        }
+                        UndoLast();
                     }
                 }
             }
@@ -376,10 +366,10 @@ public class MainLogic extends ApplicationAdapter {
         if (currentLevel != 0) {
             batch.draw(buttonRestart.buttonTexture, 0, 0);
             batch.draw(buttonPause.buttonTexture, 0, 555);
+            batch.draw(buttonCtrz.buttonTexture, 200, 80);
             if ("list".equals(tema)) {
                 batch.draw(buttonCannon.cannonTexture, 90, 70);
                 batch.draw(buttonShooting.buttonTexture, 10, 80);
-                batch.draw(buttonCtrz.buttonTexture, 200, 80);
             }
         } else {
             batch.draw(buttonLevelLinearDS.buttonTexture, 210, 270);
@@ -517,9 +507,8 @@ public class MainLogic extends ApplicationAdapter {
                     if (touchPos.x > auxh.xpos - auxh.collx && touchPos.x < auxh.xpos + auxh.collx) {
                         if (touchPos.y > auxh.ypos - auxh.colly && touchPos.y < auxh.ypos + auxh.colly) {
                             objetivoArboles = auxh;
+                            listHuecosUsados.add(listHueco.getData(i));
                             listHueco.delete(i);
-                            //lista auxiliar de huecos eliimnados.add (el borrado)
-                            // Esto puede genera problemas si tratamos de hacer un ctr z o un deshacer
                         }
                     }
 
@@ -550,7 +539,7 @@ public class MainLogic extends ApplicationAdapter {
                         objetivoArboles = new hueco(0, 0, 0, 0, 0);
                     }
 
-                    if (listLeafTreeOrder.getSize() == listLeafTreeOrder.getSize()) {
+                    if (listLeafTreeOrder.getSize() == listLeafTreeOrder.getSize() && listLeaf.isEmpty()) {
                         Test tester = new Test();
                         win = tester.checkTreesAsLists(listLeafTreeOrder, listLeafTreePlayerOrder);
                     }
@@ -558,9 +547,8 @@ public class MainLogic extends ApplicationAdapter {
             }
 
             // Renderizar hojas
-            //Solo cuando no ha ganado ni perdido
-            if (!win && !lose) {
                 for (int i = 0; i < listLeaf.getSize(); i++) {
+                    Gdx.app.log("T","Las hojas se estan renderizando");
                     if (listLeaf.getData(i) != null) {
                         batch.draw(listLeaf.getData(i).leafTexture, listLeaf.getData(i).leafCollision.x, listLeaf.getData(i).leafCollision.y);
                         font.draw(batch, Integer.toString(listLeaf.getData(i).leafNumber), listLeaf.getData(i).leafCollision.x + 10, listLeaf.getData(i).leafCollision.y + 35);
@@ -574,7 +562,7 @@ public class MainLogic extends ApplicationAdapter {
 
                     }
                 }
-            }
+            
         }
         batch.end();
 
@@ -616,6 +604,7 @@ public class MainLogic extends ApplicationAdapter {
         listLeafFired.makeEmpty();
         listLeafTree.makeEmpty();
         listHueco.makeEmpty();
+        listHuecosUsados.makeEmpty();
         buttonRestart.dispose();
         backgroundTexture.dispose();
         buttonCannon.dispose();
@@ -734,6 +723,7 @@ public class MainLogic extends ApplicationAdapter {
 
                 break;
                 case 5:
+                Gdx.app.log("H","EMLO");
                 listLeafTreePlayerOrder = new Integer[6];
                 infoTexture = new Texture(Gdx.files.internal("Info.png"));
                 buttonCannon = new Canon(345, 5, 100, 100, "CanonTree.png");
@@ -756,9 +746,9 @@ public class MainLogic extends ApplicationAdapter {
                 listLeaf.add(lef2);
                 lef2 = new Leaf(700, 0, 10, 10, 100);
                 listLeaf.add(lef2);
-                addHueco(125, 345, 3, 64, 64);
-                addHueco(330, 345, 4, 64, 64);
-                addHueco(623, 345, 5, 64, 64);
+                addHueco(125, 345, 3, 128, 128);
+                addHueco(330, 345, 4, 128, 128);
+                addHueco(623, 345, 5, 128, 128);
 
                 Shootingtime = 0;
 
@@ -789,7 +779,33 @@ public class MainLogic extends ApplicationAdapter {
         hueco auxhueco = new hueco(x, y, i, cx, cy);
         listHueco.add(auxhueco);
     }
-
+    
+    private void UndoLast() {
+        if("list".equals(tema)){
+            if (listPlankCannon.getSize()!=0){
+                    Plank myLastPlank = listPlankCannon.pop();
+                    myLastPlank.plankCollision.x = 400;
+                    myLastPlank.plankCollision.y = 0;
+                    
+                    listPlank.add( myLastPlank  );
+            }
+        } else if ("tree".equals(tema)) {
+            if (listLeafTree.getSize()!=0){
+                    Leaf myLastLeaf = listLeafTree.pop();
+                    myLastLeaf.leafCollision.x = 700;
+                    myLastLeaf.leafCollision.y = 100;
+                    
+                    listLeaf.add( myLastLeaf  );
+                    
+            }
+            if(!listHuecosUsados.isEmpty()){
+                listHueco.add(listHuecosUsados.pop());
+            }
+            
+            
+        }
+    }
+    
     public class hueco {
 
         int xpos;
