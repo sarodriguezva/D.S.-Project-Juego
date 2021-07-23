@@ -28,6 +28,7 @@ public class MainLogic extends ApplicationAdapter {
     // TEXTURA Y OBJETOS PARA BOTONES
     GenericButton buttonRestart = null;
     GenericButton buttonCtrz = null;
+    GenericButton buttonDelete = null;
     GenericButton buttonHelp = null;
     GenericButton buttonClose = null;
     GenericButton buttonLevelTrees = null;
@@ -85,9 +86,11 @@ public class MainLogic extends ApplicationAdapter {
     //LISTAS PARA VERIFICAR EL ORDEN
     private MyDoubleLinkedList<Integer> listLeafTreeOrder = new MyDoubleLinkedList<>();
     private Integer[] listLeafTreePlayerOrder = new Integer[1];
-
+    
+    private MyDoubleLinkedList<Leaf> LastDeleted = new MyDoubleLinkedList<>();
     MyStack<Integer> plankStack = new MyStack<>();
     hueco objetivoArboles = new hueco(0, 0, 0, 0, 0);
+    hueco objetivoBorrar = new hueco(1, 150,0, 89, 92);
     private BitmapFont font;
 
     public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(String str)
@@ -370,6 +373,8 @@ public class MainLogic extends ApplicationAdapter {
             if ("list".equals(tema)) {
                 batch.draw(buttonCannon.cannonTexture, 90, 70);
                 batch.draw(buttonShooting.buttonTexture, 10, 80);
+            } else if("tree".equals(tema)){
+                batch.draw(buttonDelete.buttonTexture, 0, 150);
             }
         } else {
             batch.draw(buttonLevelLinearDS.buttonTexture, 210, 270);
@@ -494,25 +499,29 @@ public class MainLogic extends ApplicationAdapter {
                 sprite.setRotation((float) rotx);
                 sprite.draw(batch);
             }
-            /*
-            Gdx.app.log("X", "" + touchPos.x);
-            Gdx.app.log("Y", "" + touchPos.y);
-             */
+            
             // DISPARAR A LAS HOJAS
-            if (justTouched && touchPos.y > 200 && currentPick == null && !listLeaf.isEmpty() && !Shooting) {
+            if (justTouched && touchPos.y > 100 && currentPick == null && !listLeaf.isEmpty() && !Shooting) {
 
                 //Colision de huecos y hojas
                 for (int i = 0; i < listHueco.getSize(); i++) {
                     hueco auxh = listHueco.getData(i);
-                    if (touchPos.x > auxh.xpos - auxh.collx && touchPos.x < auxh.xpos + auxh.collx) {
-                        if (touchPos.y > auxh.ypos - auxh.colly && touchPos.y < auxh.ypos + auxh.colly) {
+                    if (touchPos.x > auxh.xpos && touchPos.x < auxh.xpos + auxh.collx) {
+                        if (touchPos.y > auxh.ypos && touchPos.y < auxh.ypos + auxh.colly) {
                             objetivoArboles = auxh;
                             listHuecosUsados.add(listHueco.getData(i));
                             listHueco.delete(i);
                         }
-                    }
+                    } 
+                    
 
                 }
+                
+                if (touchPos.x > objetivoBorrar.xpos && touchPos.x < objetivoBorrar.xpos + objetivoBorrar.collx) {
+                        if (touchPos.y > objetivoBorrar.ypos && touchPos.y < objetivoBorrar.ypos + objetivoBorrar.colly) {
+                            objetivoArboles = objetivoBorrar;
+                        }
+                    }
                 if (objetivoArboles.xpos != 0) {
                     Shooting = true;
                     Leaf proyectile = listLeaf.getData(0);
@@ -533,12 +542,20 @@ public class MainLogic extends ApplicationAdapter {
                     if (Math.abs(listLeafFired.getData(listLeafFired.getSize() + Lastfilled - 1).leafCollision.y - objetivoArboles.ypos) < 10 && (Math.abs(listLeafFired.getData(listLeafFired.getSize() + Lastfilled - 1).leafCollision.x - objetivoArboles.xpos) < 20)) {
                         Shooting = false;
                         Shootingtime = 0;
+                        if(objetivoArboles != objetivoBorrar){
                         listLeafTree.add(listLeafFired.pop());
                         listLeafTreePlayerOrder[objetivoArboles.index] = listLeafTree.getLastData().leafNumber;
-
+                        } else{
+                            LastDeleted.add(listLeafFired.pop());
+                        }
                         objetivoArboles = new hueco(0, 0, 0, 0, 0);
                     }
-
+                    
+                    Gdx.app.log("O", "" + listLeafTreeOrder.toStringArr());
+                    for(int i = 0; i <listLeafTreePlayerOrder.length; i++){
+                        Gdx.app.log("P", "" + listLeafTreePlayerOrder[i]);
+                    }
+                    
                     if (listLeafTreeOrder.getSize() == listLeafTreeOrder.getSize() && listLeaf.isEmpty()) {
                         Test tester = new Test();
                         win = tester.checkTreesAsLists(listLeafTreeOrder, listLeafTreePlayerOrder);
@@ -548,7 +565,6 @@ public class MainLogic extends ApplicationAdapter {
 
             // Renderizar hojas
                 for (int i = 0; i < listLeaf.getSize(); i++) {
-                    Gdx.app.log("T","Las hojas se estan renderizando");
                     if (listLeaf.getData(i) != null) {
                         batch.draw(listLeaf.getData(i).leafTexture, listLeaf.getData(i).leafCollision.x, listLeaf.getData(i).leafCollision.y);
                         font.draw(batch, Integer.toString(listLeaf.getData(i).leafNumber), listLeaf.getData(i).leafCollision.x + 10, listLeaf.getData(i).leafCollision.y + 35);
@@ -609,6 +625,7 @@ public class MainLogic extends ApplicationAdapter {
         backgroundTexture.dispose();
         buttonCannon.dispose();
         buttonCtrz.dispose();
+        buttonDelete.dispose();
 
         System.gc();
 
@@ -624,6 +641,7 @@ public class MainLogic extends ApplicationAdapter {
         buttonHelp = new GenericButton(220, 250, 381, 44, "MainMenuButtons.jpg");
         buttonPause = new GenericButton(0, 555, 50, 50, "opciones.png");
         buttonCtrz = new GenericButton(200, 80, 100, 100, "ctrz.png");
+        buttonDelete = new GenericButton(0, 150, 100, 100, "trashCan.png");
         buttonClose = new GenericButton(600, 503, 50, 50, "buttonClose.png");
         buttonRestart = new GenericButton(0, 0, 50, 50, "buttonRestart.png");
         buttonWin = new GenericButton(100, 100, 100, 100, "Win.png");
@@ -715,36 +733,39 @@ public class MainLogic extends ApplicationAdapter {
                 listLeaf.add(lef);
                 lef = new Leaf(700, 0, 10, 10, 90);
                 listLeaf.add(lef);
-                addHueco(125, 345, 3, 64, 64);
-                addHueco(330, 345, 4, 64, 64);
-                addHueco(623, 345, 5, 64, 64);
+                addHueco(125, 345, 3, 128, 128);
+                addHueco(330, 345, 4, 128, 128);
+                addHueco(623, 345, 5, 128, 128);
 
                 Shootingtime = 0;
 
                 break;
                 case 5:
-                Gdx.app.log("H","EMLO");
                 listLeafTreePlayerOrder = new Integer[6];
                 infoTexture = new Texture(Gdx.files.internal("Info.png"));
                 buttonCannon = new Canon(345, 5, 100, 100, "CanonTree.png");
                 currentLevel = 5;
                 treeTexture = new Texture(Gdx.files.internal("nivel_uno.png"));
                 AVLTree<Integer> arbol2 = new AVLTree<>();
-                arbol2.insert(60);
-                arbol2.insert(70);
-                arbol2.insert(90);
+                arbol2.insert(50);
+                arbol2.insert(40);
+                arbol2.insert(80);
+                arbol2.insert(15);
                 arbol2.insert(45);
-                arbol2.insert(55);
                 arbol2.insert(100);
                 listLeafTreeOrder = arbol2.toArray();
-                listLeafTreePlayerOrder[0] = 60;
-                listLeafTreePlayerOrder[1] = 70;
-                listLeafTreePlayerOrder[2] = 90;
+                listLeafTreePlayerOrder[0] = 50;
+                listLeafTreePlayerOrder[1] = 40;
+                listLeafTreePlayerOrder[2] = 80;
                 Leaf lef2 = new Leaf(500, 0, 10, 10, 45);
                 listLeaf.add(lef2);
                 lef2 = new Leaf(600, 0, 10, 10, 55);
                 listLeaf.add(lef2);
-                lef2 = new Leaf(700, 0, 10, 10, 100);
+                lef2 = new Leaf(700, 0, 10, 10, 73);
+                listLeaf.add(lef2);
+                lef2 = new Leaf(500, 75, 10, 10, 100);
+                listLeaf.add(lef2);
+                lef2 = new Leaf(600, 75, 10, 10, 15);
                 listLeaf.add(lef2);
                 addHueco(125, 345, 3, 128, 128);
                 addHueco(330, 345, 4, 128, 128);
@@ -790,6 +811,14 @@ public class MainLogic extends ApplicationAdapter {
                     listPlank.add( myLastPlank  );
             }
         } else if ("tree".equals(tema)) {
+            if(!LastDeleted.isEmpty()){
+                Leaf myLastLeaf = LastDeleted.getData(0);
+                myLastLeaf.leafCollision.x = 700;
+                myLastLeaf.leafCollision.y = 100;
+
+                listLeaf.add( myLastLeaf  );
+                LastDeleted.makeEmpty();
+            }
             if (listLeafTree.getSize()!=0){
                     Leaf myLastLeaf = listLeafTree.pop();
                     myLastLeaf.leafCollision.x = 700;
