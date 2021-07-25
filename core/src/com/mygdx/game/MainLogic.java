@@ -383,51 +383,7 @@ public class MainLogic extends ApplicationAdapter {
             font.draw(batch, "Trees and Priority Heaps", 240, 210);
         }
         //RENDERIZADO DE EL POPUP DE INFO
-        if (pause == true) {
-            Sprite sprite = new Sprite(fondoPause);
-            //Aqui se le pone un color en RGB,A. osea color y opacidad.
-            sprite.setPosition(150, 100);
-            sprite.setSize(500, 450);
-            sprite.setColor(1, 1, 1, 0.8f);
-            sprite.draw(batch);
 
-            batch.draw(buttonClose.buttonTexture, 600, 503);
-            batch.draw(buttonHelp.buttonTexture, 220, 250);
-            font.draw(batch, "Info nivel", 310, 290);
-            batch.draw(buttonLevelLinearDS.buttonTexture, 220, 370);
-            font.draw(batch, "Volver al Menu", 290, 400);
-        }
-
-        if (menu == true) {
-
-            currentLevel = 0;
-            menu = false;
-            pause = false;
-            info = false;
-            batch.draw(volverMenu.buttonTexture, 280, 400);
-        }
-
-        if (info == true) {
-            // Sprite es un tipo de objeto que deja cambiar algunas caracteristicas ed las texturas x eso se crea un sprite con la textura
-            Sprite sprite = new Sprite(infoTexture);
-            //Aqui se le pone un color en RGB,A. osea color y opacidad.
-            sprite.setPosition(150, 100);
-            sprite.setSize(500, 450);
-            sprite.setColor(1, 1, 1, 0.8f);
-            sprite.draw(batch);
-            batch.draw(buttonClose.buttonTexture, 600, 503);
-
-        }
-        if (win == true) {
-            batch.draw(buttonWin.buttonTexture, 53, 249);
-            batch.draw(buttonClose.buttonTexture, 600, 503);
-
-        }
-        if (lose == true) {
-            batch.draw(buttonLose.buttonTexture, 53, 249);
-            batch.draw(buttonClose.buttonTexture, 600, 503);
-
-        }
 
         // Funcion de disparo
         if ("list".equals(tema)) {
@@ -576,6 +532,51 @@ public class MainLogic extends ApplicationAdapter {
                 }
             
         }
+        if (pause == true) {
+            Sprite sprite = new Sprite(fondoPause);
+            //Aqui se le pone un color en RGB,A. osea color y opacidad.
+            sprite.setPosition(150, 100);
+            sprite.setSize(500, 450);
+            sprite.setColor(1, 1, 1, 0.8f);
+            sprite.draw(batch);
+
+            batch.draw(buttonClose.buttonTexture, 600, 503);
+            batch.draw(buttonHelp.buttonTexture, 220, 250);
+            font.draw(batch, "Info nivel", 310, 290);
+            batch.draw(buttonLevelLinearDS.buttonTexture, 220, 370);
+            font.draw(batch, "Volver al Menu", 290, 400);
+        }
+
+        if (menu == true) {
+
+            currentLevel = 0;
+            menu = false;
+            pause = false;
+            info = false;
+            batch.draw(volverMenu.buttonTexture, 280, 400);
+        }
+
+        if (info == true) {
+            // Sprite es un tipo de objeto que deja cambiar algunas caracteristicas ed las texturas x eso se crea un sprite con la textura
+            Sprite sprite = new Sprite(infoTexture);
+            //Aqui se le pone un color en RGB,A. osea color y opacidad.
+            sprite.setPosition(150, 100);
+            sprite.setSize(500, 450);
+            sprite.setColor(1, 1, 1, 0.8f);
+            sprite.draw(batch);
+            batch.draw(buttonClose.buttonTexture, 600, 503);
+
+        }
+        if (win == true) {
+            batch.draw(buttonWin.buttonTexture, 53, 249);
+            batch.draw(buttonClose.buttonTexture, 600, 503);
+
+        }
+        if (lose == true) {
+            batch.draw(buttonLose.buttonTexture, 53, 249);
+            batch.draw(buttonClose.buttonTexture, 600, 503);
+
+        }        
         batch.end();
 
         if (debug) {
