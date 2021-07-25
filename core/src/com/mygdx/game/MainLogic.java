@@ -691,7 +691,7 @@ public class MainLogic extends ApplicationAdapter {
                 break;
             case 3:
                 mode = "fifo";
-                infoTexture = new Texture(Gdx.files.internal("Info.png"));
+                infoTexture = new Texture(Gdx.files.internal("Info_dos.png"));
                 buttonCannon = new Canon(90, 70, 100, 100, "Canon_1.png");
                 currentLevel = 3;
                 buttonShooting = new GenericButton(10, 80, 50, 50, "shooting.png");
@@ -708,7 +708,7 @@ public class MainLogic extends ApplicationAdapter {
                 break;
             case 4:
                 listLeafTreePlayerOrder = new Integer[6];
-                infoTexture = new Texture(Gdx.files.internal("Info.png"));
+                infoTexture = new Texture(Gdx.files.internal("Info_dos.png"));
                 buttonCannon = new Canon(345, 5, 100, 100, "CanonTree.png");
                 currentLevel = 4;
                 treeTexture = new Texture(Gdx.files.internal("nivel_uno.png"));
@@ -739,6 +739,7 @@ public class MainLogic extends ApplicationAdapter {
                 case 5:
                 listLeafTreePlayerOrder = new Integer[6];
                 infoTexture = new Texture(Gdx.files.internal("Info.png"));
+                infoTexture = new Texture(Gdx.files.internal("Info_dos.png"));
                 buttonCannon = new Canon(345, 5, 100, 100, "CanonTree.png");
                 currentLevel = 5;
                 treeTexture = new Texture(Gdx.files.internal("nivel_uno.png"));
