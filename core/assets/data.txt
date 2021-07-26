@@ -65,3 +65,148 @@ MEMORY PRE DATAtotal: 224MB used: 9MB
  MEMORY POST DATAtotal: 400MB used: 324MB
  Time in miliseconds: 192770
 
+ARBOLES:
+
+
+
+INSERCIONES
+
+1.000
+MEMORY PRE DATAtotal: 224MB used: 9MB
+ MEMORY POST DATAtotal: 224MB used: 5MB
+ Time in miliseconds: 208
+
+
+
+
+10.000
+MEMORY PRE DATAtotal: 224MB used: 9MB
+ MEMORY POST DATAtotal: 224MB used: 71MB
+ Time in miliseconds: 3880
+
+
+
+
+50.000
+MEMORY PRE DATAtotal: 224MB used: 9MB
+ MEMORY POST DATAtotal: 224MB used: 111MB
+ Time in miliseconds: 94068
+
+
+
+100.000
+MEMORY PRE DATAtotal: 224MB used: 9MB
+ MEMORY POST DATAtotal: 224MB used: 118MB
+ Time in miliseconds: 413149
+
+
+
+
+
+150.000
+MEMORY PRE DATAtotal: 224MB used: 9MB
+ MEMORY POST DATAtotal: 224MB used: 130MB
+ Time in miliseconds: 926950
+
+
+
+200.000
+MEMORY PRE DATAtotal: 224MB used: 9MB
+ MEMORY POST DATAtotal: 224MB used: 142MB
+ Time in miliseconds: 1406521
+
+
+1.000.000
+tiempo > 4 horas
+Memoria 11GB
+
+
+
+ELIMINACIONES:
+
+
+1.000
+MEMORY PRE DATAtotal: 224MB used: 9MB
+ MEMORY POST DATAtotal: 224MB used: 12MB
+ Time in miliseconds: 191
+
+
+
+
+
+10.000
+MEMORY PRE DATAtotal: 224MB used: 9MB
+ MEMORY POST DATAtotal: 224MB used: 14MB
+ Time in miliseconds: 7885
+
+
+
+50.000
+MEMORY PRE DATAtotal: 224MB used: 9MB
+ MEMORY POST DATAtotal: 224MB used: 113MB
+ Time in miliseconds: 154217
+
+100.000
+MEMORY PRE DATAtotal: 224MB used: 9MB
+ MEMORY POST DATAtotal: 224MB used: 122MB
+ Time in miliseconds: 607823
+
+
+
+
+BUSQUEDAS EN UN ARBOL DE 20.000 DATOS
+
+
+
+1
+MEMORY PRE DATAtotal: 224MB used: 9MB
+ MEMORY POST DATAtotal: 224MB used: 16MB
+ Time in miliseconds: 1
+
+
+10
+MEMORY PRE DATAtotal: 224MB used: 9MB
+ MEMORY POST DATAtotal: 224MB used: 16MB
+ Time in miliseconds: 2
+
+
+
+100
+MEMORY PRE DATAtotal: 224MB used: 9MB
+ MEMORY POST DATAtotal: 224MB used: 16MB
+ Time in miliseconds: 16
+
+
+
+1.000
+MEMORY PRE DATAtotal: 224MB used: 9MB
+ MEMORY POST DATAtotal: 224MB used: 23MB
+ Time in miliseconds: 167
+
+
+
+5.000
+MEMORY PRE DATAtotal: 224MB used: 9MB
+ MEMORY POST DATAtotal: 224MB used: 52MB
+ Time in miliseconds: 830
+
+
+
+10.000
+MEMORY PRE DATAtotal: 224MB used: 9MB
+ MEMORY POST DATAtotal: 224MB used: 88MB
+ Time in miliseconds: 1944
+
+
+
+15.000
+MEMORY PRE DATAtotal: 224MB used: 9MB
+ MEMORY POST DATAtotal: 224MB used: 124MB
+ Time in miliseconds: 3142
+
+
+
+20.000
+MEMORY PRE DATAtotal: 224MB used: 9MB
+ MEMORY POST DATAtotal: 224MB used: 36MB
+ Time in miliseconds: 3538
