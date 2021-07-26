@@ -809,19 +809,19 @@ public class MainLogic extends ApplicationAdapter {
                 listLeafTreePlayerOrder[5] = 100;
                 Leaf lef3 = new Leaf(500, 0, 10, 10, 35);
                 listLeaf.add(lef3);
-                lef3 = new Leaf(600, 75, 10, 10, 40);
+                lef3 = new Leaf(600, 0, 10, 10, 40);
                 listLeaf.add(lef3);
-                lef3 = new Leaf(600, 0, 10, 10, 20);
+                lef3 = new Leaf(700, 0, 10, 10, 20);
                 listLeaf.add(lef3);
-                lef3 = new Leaf(700, 0, 10, 10, 15);
+                lef3 = new Leaf(500, 75, 10, 10, 15);
                 listLeaf.add(lef3);
-                lef3 = new Leaf(500, 75, 10, 10, 120);
+                lef3 = new Leaf(600, 75, 10, 10, 120);
                 listLeaf.add(lef3);
                 lef3 = new Leaf(700, 75, 10, 10, 68);
                 listLeaf.add(lef3);
-                lef3 = new Leaf(600, 150, 10, 10, 80);
+                lef3 = new Leaf(500, 150, 10, 10, 80);
                 listLeaf.add(lef3);
-                lef3 = new Leaf(500, 150, 10, 10, 25);
+                lef3 = new Leaf(600, 150, 10, 10, 25);
                 listLeaf.add(lef3);
 
                 addHueco(163, 310, 6, 45, 54);
