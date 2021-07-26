@@ -507,7 +507,6 @@ public class MainLogic extends ApplicationAdapter {
                         objetivoArboles = new hueco(0, 0, 0, 0, 0);
                     }
                     
-                    
                     if (listLeafTreeOrder.getSize() == listLeafTreeOrder.getSize() && listLeaf.isEmpty()) {
                         Test tester = new Test();
                         win = tester.checkTreesAsLists(listLeafTreeOrder, listLeafTreePlayerOrder);
@@ -737,7 +736,7 @@ public class MainLogic extends ApplicationAdapter {
                 Shootingtime = 0;
 
                 break;
-                case 5:
+            case 5:
                 listLeafTreePlayerOrder = new Integer[6];
                 infoTexture = new Texture(Gdx.files.internal("Info.png"));
                 infoTexture = new Texture(Gdx.files.internal("Info_dos.png"));
@@ -768,6 +767,59 @@ public class MainLogic extends ApplicationAdapter {
                 addHueco(125, 345, 3, 128, 128);
                 addHueco(330, 345, 4, 128, 128);
                 addHueco(623, 345, 5, 128, 128);
+
+                Shootingtime = 0;
+
+                break;
+        case 6:
+                listLeafTreePlayerOrder = new Integer[11];
+                infoTexture = new Texture(Gdx.files.internal("Info.png"));
+                infoTexture = new Texture(Gdx.files.internal("Info_dos.png"));
+                buttonCannon = new Canon(345, 5, 100, 100, "CanonTree.png");
+                currentLevel = 6;
+                treeTexture = new Texture(Gdx.files.internal("nivel2.png"));
+                BinaryTree<Integer> arbol3 = new BinaryTree<>();
+                arbol3.insert(39);
+                arbol3.insert(22);
+                arbol3.insert(71);
+                arbol3.insert(17);
+                arbol3.insert(29);
+                arbol3.insert(100);
+                arbol3.insert(15);
+                arbol3.insert(20);
+                arbol3.insert(35);
+                arbol3.insert(80);
+                arbol3.insert(120);
+                listLeafTreeOrder = arbol3.toArray();
+                listLeafTreePlayerOrder[0] = 39;
+                listLeafTreePlayerOrder[1] = 22;
+                listLeafTreePlayerOrder[2] = 71;
+                listLeafTreePlayerOrder[3] = 17;
+                listLeafTreePlayerOrder[4] = 29;
+                listLeafTreePlayerOrder[5] = 100;
+                Leaf lef3 = new Leaf(500, 0, 10, 10, 35);
+                listLeaf.add(lef3);
+                lef3 = new Leaf(600, 75, 10, 10, 40);
+                listLeaf.add(lef3);
+                lef3 = new Leaf(600, 0, 10, 10, 20);
+                listLeaf.add(lef3);
+                lef3 = new Leaf(700, 0, 10, 10, 15);
+                listLeaf.add(lef3);
+                lef3 = new Leaf(500, 75, 10, 10, 120);
+                listLeaf.add(lef3);
+                lef3 = new Leaf(700, 75, 10, 10, 68);
+                listLeaf.add(lef3);
+                lef3 = new Leaf(600, 150, 10, 10, 80);
+                listLeaf.add(lef3);
+                lef3 = new Leaf(500, 150, 10, 10, 25);
+                listLeaf.add(lef3);
+                
+                
+                addHueco(163, 310, 6, 45, 54);
+                addHueco(265, 304, 7, 50, 49);
+                addHueco(406, 303, 8, 40, 51);
+                addHueco(461, 303, 9, 50, 51);
+                addHueco(556, 290, 10, 63, 61);
 
                 Shootingtime = 0;
 
@@ -812,7 +864,7 @@ public class MainLogic extends ApplicationAdapter {
             if(!LastDeleted.isEmpty()){
                 Leaf myLastLeaf = LastDeleted.getData(0);
                 myLastLeaf.leafCollision.x = 700;
-                myLastLeaf.leafCollision.y = 100;
+                myLastLeaf.leafCollision.y = 150;
 
                 listLeaf.add( myLastLeaf  );
                 LastDeleted.makeEmpty();
@@ -820,7 +872,7 @@ public class MainLogic extends ApplicationAdapter {
             if (listLeafTree.getSize()!=0){
                     Leaf myLastLeaf = listLeafTree.pop();
                     myLastLeaf.leafCollision.x = 700;
-                    myLastLeaf.leafCollision.y = 100;
+                    myLastLeaf.leafCollision.y = 150;
                     
                     listLeaf.add( myLastLeaf  );
                     

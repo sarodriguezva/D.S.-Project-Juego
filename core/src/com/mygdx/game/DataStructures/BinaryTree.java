@@ -36,9 +36,45 @@ class BinaryTreeNode<T>{
  * @author Santiago Rodrí­guez Vallejo.
  * @param <T> Tipo de elementos que almacena el árbol binario.
  */
-public class BinaryTree<T>{
+public class BinaryTree<T extends Comparable <? super T>>{
     BinaryTreeNode<T> root;
 
+    /**
+     * Método para insertar un nodo con un elemento al árbol.
+     * 
+     * @param data Elemento a insertar.
+     */
+    public void insert(T data){  this.root = this.insert(data, this.root); }
+    
+    private BinaryTreeNode<T> insert(T data, BinaryTreeNode<T> aux){
+        /*
+        * Cuando se llegue a la posición deseada a insertar, aux será nulo, por lo que retornará un nuevo
+        * nodo con el dato.
+        */
+        if (aux == null){
+            return new BinaryTreeNode<>(data);
+        }
+        /*
+        * compareTo se usa porque no se garantiza que T sea entero siempre.
+        * T no puede ser cualquier dato, debe ser uno que yo pueda comparar.
+        * Por ello se pone que la clase sea <T extends Comparable <? super T>>
+        */
+        int compareResult = data.compareTo(aux.data);
+        /*
+        * compareResult = -1 -> data < aux.data
+        * compareResult = 0 -> data == aux.data
+        * compareResult = 1 -> data > aux.data
+        */
+        if(compareResult < 0) aux.leftSon = insert(data, aux.leftSon);
+        else if(compareResult > 0) aux.rightSon = insert(data, aux.rightSon);
+        else {
+            System.out.println("No estÃ¡ permitida la inserciÃ³n de valores repetidos.");
+            return aux;
+        }
+        
+        return aux;
+    }
+    
     /**
      * Método que recorre el árbol usando preOrder.
      */
