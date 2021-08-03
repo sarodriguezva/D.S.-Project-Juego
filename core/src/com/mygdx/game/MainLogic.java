@@ -615,18 +615,27 @@ public class MainLogic extends ApplicationAdapter {
             for (int i = 0; i < listLeaf.getSize(); i++) {
                 if (listLeaf.getData(i) != null) {
                     batch.draw(listLeaf.getData(i).leafTexture, listLeaf.getData(i).leafCollision.x, listLeaf.getData(i).leafCollision.y);
-                    font.draw(batch, Integer.toString(listLeaf.getData(i).leafNumber), listLeaf.getData(i).leafCollision.x + 10, listLeaf.getData(i).leafCollision.y + 35);
+                    font.draw(batch, Integer.toString(listLeaf.getData(i).leafNumber), listLeaf.getData(i).leafCollision.x + 32, listLeaf.getData(i).leafCollision.y+55);
 
                 }
             }
             for (int i = 0; i < listLeafTree.getSize(); i++) {
                 if (listLeafTree.getData(i) != null) {
                     batch.draw(listLeafTree.getData(i).leafTexture, listLeafTree.getData(i).leafCollision.x, listLeafTree.getData(i).leafCollision.y);
-                    font.draw(batch, Integer.toString(listLeafTree.getData(i).leafNumber), listLeafTree.getData(i).leafCollision.x + 10, listLeafTree.getData(i).leafCollision.y + 35);
+                    font.draw(batch, Integer.toString(listLeafTree.getData(i).leafNumber), listLeafTree.getData(i).leafCollision.x + 32, listLeafTree.getData(i).leafCollision.y + 55);
 
                 }
             }
-
+            //Renderizar huecos
+            /*
+            if (!listHueco.isEmpty()){
+            for (int i = 0; i < listHueco.getSize(); i++) {
+                if (listHueco.getData(i) != null) {
+                    Texture huecoTexture = new Texture(Gdx.files.internal("Nodo-faltante.png"));
+                    batch.draw(huecoTexture, listHueco.getData(i).xpos, listHueco.getData(i).ypos);
+                }
+        
+            }}*/
         }
         if (currentLevel!=0){
             fontScore.draw(batch,"Puntaje: " + Integer.toString(levelScore),290,585);
@@ -833,9 +842,9 @@ public class MainLogic extends ApplicationAdapter {
                 listLeaf.add(lef);
                 lef = new Leaf(700, 0, 10, 10, 90);
                 listLeaf.add(lef);
-                addHueco(125, 345, 3, 128, 128);
-                addHueco(330, 345, 4, 128, 128);
-                addHueco(623, 345, 5, 128, 128);
+                addHueco(125, 345, 3, 96, 96);
+                addHueco(330, 345, 4, 96, 96);
+                addHueco(623, 345, 5, 96, 96);
 
                 Shootingtime = 0;
 
@@ -982,7 +991,7 @@ public class MainLogic extends ApplicationAdapter {
  * Clase de objeto hueco para colocar en niveles de arboles, esta clase permite interactuar con espacios donde deben ir las hojas
  */
     public class hueco {
-
+        
         int xpos;
         int ypos;
         int index;
@@ -1003,6 +1012,8 @@ public class MainLogic extends ApplicationAdapter {
             index = i;
             collx = cx;
             colly = cy;
+             
+            
         }
     }
  // ****** FUNCIONES AUXILIARES PARA CONVERTIR DE UN TIPO DE ESTRUCTURA A OTRO ***** //

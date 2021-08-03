@@ -28,10 +28,10 @@ com/mygdx/game/Plank.java
  com.mygdx.game.Plank
 com/mygdx/game/GenericButton.java
  com.mygdx.game.GenericButton
+com/mygdx/game/Canon.java
+ com.mygdx.game.Canon
+com/mygdx/game/Leaf.java
+ com.mygdx.game.Leaf
 com/mygdx/game/MainLogic.java
  com.mygdx.game.MainLogic
  com.mygdx.game.MainLogic$hueco
-com/mygdx/game/Leaf.java
- com.mygdx.game.Leaf
-com/mygdx/game/Canon.java
- com.mygdx.game.Canon
