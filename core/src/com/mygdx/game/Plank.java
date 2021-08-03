@@ -27,7 +27,7 @@ public class Plank extends ApplicationAdapter {
         plankCollision.width = w;
         plankCollision.height = h;
         plankNumber=num;
-        plankTexture = new Texture(Gdx.files.internal("plank.jpg"));
+        plankTexture = new Texture(Gdx.files.internal("Tabla1.png"));
     }
 }
 

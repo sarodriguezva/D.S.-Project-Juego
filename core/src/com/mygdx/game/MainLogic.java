@@ -55,13 +55,15 @@ public class MainLogic extends ApplicationAdapter {
     boolean debug = false;
     boolean win = false;
     boolean lose = false;
+
     // VARIABLES DE TEXTO
     String tema;
     String mode;
     // VARIABLE DE ENTEROS
     int Lastfilled;
     int currentLevel = 0;
-
+    int sec = 0;
+    int levelScore = 0;
     // MOUSE
     boolean justTouched = false;
     boolean leftPressed;
@@ -98,6 +100,7 @@ public class MainLogic extends ApplicationAdapter {
     hueco objetivoArboles = new hueco(0, 0, 0, 0, 0);
     hueco objetivoBorrar = new hueco(1, 150, 0, 89, 92);
     private BitmapFont font;
+    private BitmapFont fontScore;
 
     // FUNCION PARA GUARDAR TEXTO EN UN ARCHIVO .TXT
     /**
@@ -128,7 +131,7 @@ public class MainLogic extends ApplicationAdapter {
 
         //Se inicia el nivel y se pone la fuente que se va a usar
         font = new BitmapFont(Gdx.files.internal("asd.fnt"));
-
+        fontScore = new BitmapFont(Gdx.files.internal("test.fnt"));
         
         // PRUEBAS DE TIEMPOS Y MEMORIA PARA DISTINTAS ESTRUCTURAS
         if (debug == false) {
@@ -351,6 +354,12 @@ public class MainLogic extends ApplicationAdapter {
                 }
             }
         // FIN LOGICA PARA NIVEL !=0
+        if (!pause && !info) sec++;
+        if (levelScore>1 && sec >=60){
+        levelScore-=10;
+        sec=0;
+        }
+
         }
 
         // ELEGIR TEMATICA DE NIVEES
@@ -381,7 +390,7 @@ public class MainLogic extends ApplicationAdapter {
 
         batch.draw(backgroundTexture, 0, 0);
 
-        if (tema == "tree") {
+        if ("tree".equals(tema)) {
             batch.draw(treeTexture, 0, 0);
 
         }
@@ -418,7 +427,11 @@ public class MainLogic extends ApplicationAdapter {
             batch.draw(buttonPause.buttonTexture, 0, 555);
             batch.draw(buttonCtrz.buttonTexture, 200, 80);
             if ("list".equals(tema)) {
-                batch.draw(buttonCannon.cannonTexture, 90, 70);
+                // Render canon lista 
+                Sprite spr= new Sprite(buttonCannon.cannonTexture);
+                spr.setPosition(buttonCannon.cannonCollision.x, buttonCannon.cannonCollision.y);
+                spr.setSize(buttonCannon.cannonCollision.width, buttonCannon.cannonCollision.height);
+                spr.draw(batch);
                 batch.draw(buttonShooting.buttonTexture, 10, 80);
             } else if ("tree".equals(tema)) {
                 batch.draw(buttonDelete.buttonTexture, 0, 150);
@@ -498,6 +511,7 @@ public class MainLogic extends ApplicationAdapter {
                 Sprite sprite = new Sprite(buttonCannon.cannonTexture);
                 sprite.setPosition(buttonCannon.cannonCollision.x, buttonCannon.cannonCollision.y);
                 sprite.setSize(buttonCannon.cannonCollision.height, buttonCannon.cannonCollision.width);
+                sprite.setOrigin(buttonCannon.cannonCollision.height/2, buttonCannon.cannonCollision.width/2);
                 sprite.setRotation((float) rotx);
                 sprite.draw(batch);
             }
@@ -551,10 +565,17 @@ public class MainLogic extends ApplicationAdapter {
                         }
                         objetivoArboles = new hueco(0, 0, 0, 0, 0);
                     }
-
-                    if (listLeafTreeOrder.getSize() == listLeafTreeOrder.getSize() && listLeaf.isEmpty()) {
+                    
+                    // COMPROBAR SI EL USUARIO PERDIO O GANO EL NIVEL DE ARBOLES
+                    if (listLeafTreeOrder.getSize() == listLeafTreeOrder.getSize() && listLeaf.isEmpty() && listLeafFired.isEmpty()) {
                         Test tester = new Test();
-                        win = tester.checkTreesAsLists(listLeafTreeOrder, listLeafTreePlayerOrder);
+                        if (tester.checkTreesAsLists(listLeafTreeOrder, listLeafTreePlayerOrder)){
+                        win = true;
+                        lose = false;}
+                        else{
+                            win = false;
+                            lose = true;
+                        }
                     }
                 }
             }
@@ -575,6 +596,9 @@ public class MainLogic extends ApplicationAdapter {
                 }
             }
 
+        }
+        if (currentLevel!=0){
+            fontScore.draw(batch,"Puntaje: " + Integer.toString(levelScore),290,585);
         }
         if (pause == true) {
             Sprite sprite = new Sprite(fondoPause);
@@ -703,6 +727,7 @@ public class MainLogic extends ApplicationAdapter {
                 // buttonShooting = new GenericButton(10, 80, 50, 50, "shooting.png");
                 break;
             case 1:
+                levelScore=10000;
                 mode = "fifo";
                 infoTexture = new Texture(Gdx.files.internal("Info.png"));
                 buttonCannon = new Canon(90, 70, 100, 100, "Canon_1.png");
