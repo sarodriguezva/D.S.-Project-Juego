@@ -27,7 +27,7 @@ public class Leaf extends ApplicationAdapter implements Comparable<Leaf>{
         leafCollision.width = w;
         leafCollision.height = h;
         leafNumber=num;
-        leafTexture = new Texture(Gdx.files.internal("leaf.png"));
+        leafTexture = new Texture(Gdx.files.internal("Nodo.png"));
     }
     /**
      * Esta funcion compara la hoja con otra hoja tomando en cuenta el numero que contiene cada una de ellas

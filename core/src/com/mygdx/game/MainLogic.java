@@ -259,6 +259,7 @@ public class MainLogic extends ApplicationAdapter {
                             pause = false;
                             menu = true;
                             tema = "";
+                            backgroundTexture= new Texture(Gdx.files.internal("Fondo_Principal.jpg"));
                         }
 
                     }
@@ -390,6 +391,7 @@ public class MainLogic extends ApplicationAdapter {
                     clearLevel();
                     initiateLevel(1);
                     tema = "list";
+                    backgroundTexture= new Texture(Gdx.files.internal("Fondo Pilas-colas.jpg"));
                 }
             }
             // CLICK BOTON NIVELES ARBOLES
@@ -399,6 +401,7 @@ public class MainLogic extends ApplicationAdapter {
                     clearLevel();
                     initiateLevel(4);
                     tema = "tree";
+                    backgroundTexture= new Texture(Gdx.files.internal("Fondo_Arboles.jpg"));
 
                 }
             }
@@ -407,9 +410,12 @@ public class MainLogic extends ApplicationAdapter {
         // PARTE DE RENDER 
         batch.enableBlending();
         batch.begin();
-
-        batch.draw(backgroundTexture, 0, 0);
-
+        
+        Sprite sprbc = new Sprite(backgroundTexture);
+        sprbc.setPosition(0,0);
+        sprbc.setSize(800, 600);
+        sprbc.draw(batch);
+        
         if ("tree".equals(tema)) {
             batch.draw(treeTexture, 0, 0);
 
@@ -728,9 +734,9 @@ public class MainLogic extends ApplicationAdapter {
         Integer[] myArr2;
         //ACA VA LA INFO DE NIVELES. 0=MENU;
         batch = new SpriteBatch();
-        backgroundTexture = new Texture(Gdx.files.internal("parallax-mountain-bg.png"));
+        backgroundTexture = new Texture(Gdx.files.internal("Fondo_Principal.jpg"));
         volverMenu = new GenericButton(280, 400, 381, 44, "MainMenuButtons.jpg");
-        buttonHelp = new GenericButton(220, 250, 381, 44, "MainMenuButtons.jpg");
+        buttonHelp = new GenericButton(220, 250, 381, 44, "Help.png");
         buttonPause = new GenericButton(0, 555, 50, 50, "Menu.png");
         buttonCtrz = new GenericButton(200, 80, 100, 100, "Re-Do.png");
         buttonDelete = new GenericButton(0, 150, 100, 100, "Basura.png");
