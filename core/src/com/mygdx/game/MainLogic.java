@@ -12,12 +12,15 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.DataStructures.*;
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import static java.lang.System.currentTimeMillis;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.lang.reflect.Array;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Clase que contiene toda la logica del juego y su funcionamiento interno
@@ -64,6 +67,7 @@ public class MainLogic extends ApplicationAdapter {
     int currentLevel = 0;
     int sec = 0;
     int levelScore = 0;
+    int minScore = 0;
     // MOUSE
     boolean justTouched = false;
     boolean leftPressed;
@@ -101,7 +105,7 @@ public class MainLogic extends ApplicationAdapter {
     hueco objetivoBorrar = new hueco(1, 150, 0, 89, 92);
     private BitmapFont font;
     private BitmapFont fontScore;
-
+    Firebase fbase;
     // FUNCION PARA GUARDAR TEXTO EN UN ARCHIVO .TXT
     /**
      * Esta funcion guarda una cadena de texto en un archivo txt llamado data.txt
@@ -174,6 +178,13 @@ public class MainLogic extends ApplicationAdapter {
             }
         }
         // FIN PRUEBAS
+        fbase = new Firebase();
+        try {
+            fbase.connect();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(MainLogic.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
 
     // Funcion para crear un plank y anadirlo a la lista automaticamente
@@ -256,6 +267,7 @@ public class MainLogic extends ApplicationAdapter {
                 if (touchPos.x > buttonPause.buttonCollision.x - buttonPause.buttonCollision.width && touchPos.x < buttonPause.buttonCollision.x + buttonPause.buttonCollision.width) {
                     if (touchPos.y > buttonPause.buttonCollision.y - buttonPause.buttonCollision.height && touchPos.y < buttonPause.buttonCollision.y + buttonPause.buttonCollision.height) {
                         pause = true;
+                        canUndo=false;
 
                     }
                 }
@@ -283,19 +295,27 @@ public class MainLogic extends ApplicationAdapter {
                     if (touchPos.y > buttonClose.buttonCollision.y - buttonClose.buttonCollision.height && touchPos.y < buttonClose.buttonCollision.y + buttonClose.buttonCollision.height) {
                         if (pause) {
                             pause = false;
+                            canUndo=true;
                         }
                         if (info) {
                             info = false;
+                            canUndo=true;
                         }
 
                         if (win) {
+                            String userName = "Prueba1";
+                            Map<String,String> data = new HashMap<>();
+                            data.put(Integer.toString(currentLevel), Integer.toString(levelScore));
+                            fbase.insertData(tema, userName, data);
                             clearLevel();
                             initiateLevel(currentLevel + 1);
+                            canUndo=true;
                         }
 
                         if (lose) {
                             clearLevel();
                             initiateLevel(currentLevel);
+                            canUndo=true;
 
                         }
                         win = false;
@@ -355,7 +375,7 @@ public class MainLogic extends ApplicationAdapter {
             }
         // FIN LOGICA PARA NIVEL !=0
         if (!pause && !info) sec++;
-        if (levelScore>1 && sec >=60){
+        if (levelScore>minScore && sec >=60 &&!win && !lose){
         levelScore-=10;
         sec=0;
         }
@@ -458,9 +478,11 @@ public class MainLogic extends ApplicationAdapter {
                             if (OrderBridge.commit(listNumber) && currentLevel > 0) {
                                 Gdx.app.log("E", "Ganar");
                                 win = true;
+                                canUndo=false;
                             } else {
                                 Gdx.app.log("E", "Perder");
                                 lose = true;
+                                canUndo=false;
                             }
                         }
 
@@ -571,10 +593,13 @@ public class MainLogic extends ApplicationAdapter {
                         Test tester = new Test();
                         if (tester.checkTreesAsLists(listLeafTreeOrder, listLeafTreePlayerOrder)){
                         win = true;
-                        lose = false;}
+                        lose = false;
+                        canUndo=false;
+                        }
                         else{
                             win = false;
                             lose = true;
+                            canUndo=false;
                         }
                     }
                 }
@@ -728,6 +753,7 @@ public class MainLogic extends ApplicationAdapter {
                 break;
             case 1:
                 levelScore=10000;
+                minScore = 9000;
                 mode = "fifo";
                 infoTexture = new Texture(Gdx.files.internal("Info.png"));
                 buttonCannon = new Canon(90, 70, 100, 100, "Canon_1.png");
