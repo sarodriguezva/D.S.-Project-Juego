@@ -11,13 +11,21 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 
 /**
- *
+ * Clase que permite crear un canion con tamanio y posicion, puede disparar.
  * @author judir
  */
 public class Canon extends ApplicationAdapter {
     public Texture cannonTexture;
     public Rectangle cannonCollision;
     public Integer cannonNumber;
+    /**
+     * 
+     * @param x posicion en el eje x
+     * @param y posicion en el eje y
+     * @param w tamanio en anchura
+     * @param h tamanio en altura
+     * @param pathTexture cadena de texto que contiene la URL local en assets en la cual esta almacenada la textura
+     */
     public Canon(int x, int y, int w, int h, String pathTexture ){
         cannonCollision = new Rectangle();
         cannonCollision.x = x;
@@ -26,7 +34,15 @@ public class Canon extends ApplicationAdapter {
         cannonCollision.height = h;
         cannonTexture = new Texture(Gdx.files.internal(pathTexture));
     }
-    
+    /**
+     * 
+     * @param objX
+     * @param objY
+     * @param initx
+     * @param inity
+     * @param Shoottime
+     * @param proyectile 
+     */
     public static void ShootPlankto(int objX, int objY, float initx, float inity, float Shoottime, Plank proyectile){
         float velx,vely,accel;
         velx = (objX - (initx+30))/0.9f;
@@ -40,6 +56,13 @@ public class Canon extends ApplicationAdapter {
     
     //Se dispara desde la posicion de la hoja, no hay necesidad de tener x inicial (initx) 
     //O y inicial (inity)
+    /**
+     * 
+     * @param objX
+     * @param objY
+     * @param Shoottime
+     * @param proyectile 
+     */
     public static void ShootLeafto(int objX, int objY, float Shoottime, Leaf proyectile){
         float velx,vely,accel;
         velx = (objX - (proyectile.leafCollision.x))/0.85f;

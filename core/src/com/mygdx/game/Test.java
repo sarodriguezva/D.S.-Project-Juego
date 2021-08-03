@@ -36,7 +36,12 @@ class Test<T extends Comparable <? super T>> {
         
         return true;
     }
-    
+    /**
+     * Metodo que compara dos arboles como listas y devuelve un booleano
+     * @param list1
+     * @param list2
+     * @return Verdadero si ambas listas son iguales, falso si difieren en un elemento
+     */
     public boolean checkTreesAsLists(MyDoubleLinkedList<T> list1, Integer[] list2){
         Node<T> list1Pointer = list1.getFirst();
         int list2Pointer = 0;

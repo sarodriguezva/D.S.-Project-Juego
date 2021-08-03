@@ -19,13 +19,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.lang.reflect.Array;
 
+/**
+ * Clase que contiene toda la logica del juego y su funcionamiento interno
+ * @author 3200g
+ */
 public class MainLogic extends ApplicationAdapter {
 
-    boolean debug = false;
-    String tema;
     //////// **** VARIABLES **** ////////
     // BOTONES
-    // TEXTURA Y OBJETOS PARA BOTONES
     GenericButton buttonRestart = null;
     GenericButton buttonCtrz = null;
     GenericButton buttonDelete = null;
@@ -35,26 +36,30 @@ public class MainLogic extends ApplicationAdapter {
     GenericButton buttonLevelLinearDS = null;
     GenericButton buttonPause = null;
     GenericButton volverMenu = null;
+    GenericButton buttonShooting = null;
+    GenericButton buttonWin = null;
+    GenericButton buttonLose = null;
+    // TEXTURA Y OBJETOS PARA BOTONES
     private Texture infoTexture;
     private Texture fondoPause;
     private Texture treeTexture;
-    boolean info = false;
-    boolean pause = false;
-    boolean menu = false;
-
-    GenericButton buttonShooting = null;
-    //GANAR O PERDER
-    GenericButton buttonWin = null;
-    GenericButton buttonLose = null;
-    boolean win = false;
-    boolean lose = false;
-    String mode;
-    int Lastfilled;
-
     // TEXTURAS DE FONDO
     private SpriteBatch batch;
     private Texture backgroundTexture;
     private OrthographicCamera camera;
+    // BOOLEANOS PARA CONTROLAR LA MAQUINA DE ESTADOS
+    boolean info = false;
+    boolean pause = false;
+    boolean menu = false;
+    boolean canUndo = true;
+    boolean debug = false;
+    boolean win = false;
+    boolean lose = false;
+    // VARIABLES DE TEXTO
+    String tema;
+    String mode;
+    // VARIABLE DE ENTEROS
+    int Lastfilled;
     int currentLevel = 0;
 
     // MOUSE
@@ -71,38 +76,49 @@ public class MainLogic extends ApplicationAdapter {
     // PUENTE
     Bridge<Integer> OrderBridge;
 
-    // TABLAS
+    // LISTAS DE TABLAS
     Plank currentPick = null;
     private final MyDoubleLinkedList<Plank> listPlank = new MyDoubleLinkedList<>();
     private final MyDoubleLinkedList<Plank> listPlankBridge = new MyDoubleLinkedList<>();
     private final MyDoubleLinkedList<Plank> listPlankCannon = new MyDoubleLinkedList<>();
     private final MyDoubleLinkedList<Plank> listPlankFired = new MyDoubleLinkedList<>();
+    MyStack<Integer> plankStack = new MyStack<>();
+    
+    // LISTAS DE ARBOLES
     private final MyDoubleLinkedList<Leaf> listLeaf = new MyDoubleLinkedList<>();
     private final MyDoubleLinkedList<Leaf> listLeafFired = new MyDoubleLinkedList<>();
     private final MyDoubleLinkedList<Leaf> listLeafTree = new MyDoubleLinkedList<>();
     private final MyDoubleLinkedList<hueco> listHueco = new MyDoubleLinkedList<>();
     private final MyDoubleLinkedList<hueco> listHuecosUsados = new MyDoubleLinkedList<>();
-
-    //LISTAS PARA VERIFICAR EL ORDEN
+    //LISTAS PARA VERIFICAR EL ORDEN DE LOS ARBOLES
     private MyDoubleLinkedList<Integer> listLeafTreeOrder = new MyDoubleLinkedList<>();
     private Integer[] listLeafTreePlayerOrder = new Integer[1];
-
+    // LISTA PARA PODER HACER UN-DO
     private MyDoubleLinkedList<Leaf> LastDeleted = new MyDoubleLinkedList<>();
-    MyStack<Integer> plankStack = new MyStack<>();
     hueco objetivoArboles = new hueco(0, 0, 0, 0, 0);
     hueco objetivoBorrar = new hueco(1, 150, 0, 89, 92);
     private BitmapFont font;
 
-    public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(String str)
-            throws IOException {
+    // FUNCION PARA GUARDAR TEXTO EN UN ARCHIVO .TXT
+    /**
+     * Esta funcion guarda una cadena de texto en un archivo txt llamado data.txt
+     * @param str La cadena a guardar en el archivo
+     * @throws IOException 
+     */
+    public void appendStringToTxt(String str) throws IOException {
+        
         BufferedWriter writer = new BufferedWriter(new FileWriter("data.txt", true));
         writer.append("\n\n\n\n\n");
         writer.append(str);
 
         writer.close();
+        
     }
 
     @Override
+    /**
+     * Esta funcion se llama al iniciar el juego, es la encargada de cargar variables antes de renderizar la pantalla
+     */
     public void create() {
 
         // ESTA FUNCION ES MUY IMPORTANTE, SE LLAMA AL INICIO DEL JUEGO Y SE ENCARGA DE INICIALIZARLO TODO
@@ -113,6 +129,8 @@ public class MainLogic extends ApplicationAdapter {
         //Se inicia el nivel y se pone la fuente que se va a usar
         font = new BitmapFont(Gdx.files.internal("asd.fnt"));
 
+        
+        // PRUEBAS DE TIEMPOS Y MEMORIA PARA DISTINTAS ESTRUCTURAS
         if (debug == false) {
             initiateLevel(0);
         } /// DATA TIME PARA DISTINTAS ESTRUCTURAS DE DATOS
@@ -146,15 +164,25 @@ public class MainLogic extends ApplicationAdapter {
                 used = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
                 str += "\n MEMORY POST DATA" + "total: " + total / 1048576 + "MB used: " + used / 1048576 + "MB";
                 str += "\n Time in miliseconds: " + (posttm - pretm);
-                whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo(str);
+                appendStringToTxt(str);
 
             } catch (IOException ex) {
                 Logger.getLogger(MainLogic.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        // FIN PRUEBAS
     }
 
     // Funcion para crear un plank y anadirlo a la lista automaticamente
+    /**
+     * Esta funcion se utiliza para crear una tabla con posicion, tamanio y numero ademas lo aniade a una lista de tablas
+     * @param x posicion de la tabla en el eje x
+     * @param y posicion de la tabla en el eje y
+     * @param w tamanio de anchura
+     * @param h tamanio de altura
+     * @param list lista a la cual aniadirse
+     * @param num numero de la tabla
+     */
     public void createPlank(int x, int y, int w, int h, MyDoubleLinkedList list, int num) {
         // Creacion de buckets.
         Plank myPlank = new Plank(x, y, w, h, num);
@@ -162,6 +190,9 @@ public class MainLogic extends ApplicationAdapter {
     }
 
     @Override
+    /**
+     * Esta funcion es la encargada de la logica del juego y de mostrar todo en pantalla, se llama en un ciclo infinito hasta cerrar el juego
+     */
     public void render() {
 
         // ESTA FUNCION MUESTRA TODO EN PANTALLA, TAMBIEN ES UNA FUNCION QUE SE LLAMA REPETIDAMENTE
@@ -183,7 +214,9 @@ public class MainLogic extends ApplicationAdapter {
         if (currentLevel != 0) {
             // Si ha sido recientemente presionado compruebe si ya esta arrastrando un objeto, si no hay objeto, busca el que el mouse presiona en esas coordenadas.
             if (justTouched && currentPick == null) {
-
+                ///AQUI VA SI CLICKEA ALGO MIENTRAS NO ARRASTRA NADA
+                
+                // CLICK BOTON INFO
                 if (info == false) {
                     for (int i = 0; i < listPlank.getSize(); i++) {
                         if (listPlank.getData(i) != null) {
@@ -196,7 +229,7 @@ public class MainLogic extends ApplicationAdapter {
                         }
                     }
 
-                    ///AQUI VA SI CLICKEA ALGO MIENTRAS NO ARRASTRA NADA
+                    // CLICK BOTON RESTART
                     if (touchPos.x > buttonRestart.buttonCollision.x - buttonRestart.buttonCollision.width && touchPos.x < buttonRestart.buttonCollision.x + buttonRestart.buttonCollision.width) {
                         if (touchPos.y > buttonRestart.buttonCollision.y - buttonRestart.buttonCollision.height && touchPos.y < buttonRestart.buttonCollision.y + buttonRestart.buttonCollision.height) {
                             clearLevel();
@@ -204,8 +237,7 @@ public class MainLogic extends ApplicationAdapter {
                         }
                     }
                 }
-                // BOTON VOLVER AL MENU
-
+                // CLICK BOTON VOLVER AL MENU
                 if (touchPos.x > volverMenu.buttonCollision.x - volverMenu.buttonCollision.width && touchPos.x < volverMenu.buttonCollision.x + volverMenu.buttonCollision.width) {
                     if (touchPos.y > volverMenu.buttonCollision.y - volverMenu.buttonCollision.height && touchPos.y < volverMenu.buttonCollision.y + volverMenu.buttonCollision.height) {
 
@@ -217,14 +249,14 @@ public class MainLogic extends ApplicationAdapter {
 
                     }
                 }
-                // BOTON PAUSE
+                // CLICK BOTON PAUSE
                 if (touchPos.x > buttonPause.buttonCollision.x - buttonPause.buttonCollision.width && touchPos.x < buttonPause.buttonCollision.x + buttonPause.buttonCollision.width) {
                     if (touchPos.y > buttonPause.buttonCollision.y - buttonPause.buttonCollision.height && touchPos.y < buttonPause.buttonCollision.y + buttonPause.buttonCollision.height) {
                         pause = true;
 
                     }
                 }
-                // BOTON HELP ////
+                // CLICK BOTON HELP ////
                 if (touchPos.x > buttonHelp.buttonCollision.x - buttonHelp.buttonCollision.width && touchPos.x < buttonHelp.buttonCollision.x + buttonHelp.buttonCollision.width) {
                     if (touchPos.y > buttonHelp.buttonCollision.y - buttonHelp.buttonCollision.height && touchPos.y < buttonHelp.buttonCollision.y + buttonHelp.buttonCollision.height) {
                         if (pause) {
@@ -234,16 +266,16 @@ public class MainLogic extends ApplicationAdapter {
 
                     }
                 }
-
+                
                 if ("list".equals(tema)) {
-                    //BOTON FUEGO//
+                    //CLICK BOTON FUEGO LISTAS//
                     if (touchPos.x > buttonShooting.buttonCollision.x - buttonShooting.buttonCollision.width && touchPos.x < buttonShooting.buttonCollision.x + buttonShooting.buttonCollision.width) {
                         if (touchPos.y > buttonShooting.buttonCollision.y - buttonShooting.buttonCollision.height && touchPos.y < buttonShooting.buttonCollision.y + buttonShooting.buttonCollision.height) {
                             Shooting = true;
                         }
                     }
                 }
-                /// BOTON PARA CERRAR EL POPUP DE HELP ///
+                /// CLICK BOTON PARA CERRAR EL POPUP DE HELP ///
                 if (touchPos.x > buttonClose.buttonCollision.x - buttonClose.buttonCollision.width && touchPos.x < buttonClose.buttonCollision.x + buttonClose.buttonCollision.width) {
                     if (touchPos.y > buttonClose.buttonCollision.y - buttonClose.buttonCollision.height && touchPos.y < buttonClose.buttonCollision.y + buttonClose.buttonCollision.height) {
                         if (pause) {
@@ -269,13 +301,17 @@ public class MainLogic extends ApplicationAdapter {
                     }
                 }
 
-                //BOTON CTRZ //
+                //CLICK BOTON CTRZ //
+                if (canUndo){
                 if (touchPos.x > buttonCtrz.buttonCollision.x - buttonCtrz.buttonCollision.width && touchPos.x < buttonCtrz.buttonCollision.x + buttonCtrz.buttonCollision.width) {
                     if (touchPos.y > buttonCtrz.buttonCollision.y - buttonCtrz.buttonCollision.height && touchPos.y < buttonCtrz.buttonCollision.y + buttonCtrz.buttonCollision.height) {
                         UndoLast();
                     }
                 }
+                }
             }
+            
+            // MOVIMIENTO DE TABLAS
             // Si esta siendo un objeto presionado:
             if (currentPick != null) {
                 // Movement
@@ -313,14 +349,13 @@ public class MainLogic extends ApplicationAdapter {
                     }
                     currentPick = null;
                 }
-                //Gdx.app.log("MyTag", "MyMessage"); //ASI SE PRINTEA A CONSOla
             }
+        // FIN LOGICA PARA NIVEL !=0
         }
 
         // ELEGIR TEMATICA DE NIVEES
         if (currentLevel == 0) {
-            //Gdx.app.log("mouse", Float.toString( touchPos.x));
-
+            //CLICK BOTON NIVELES LINEALES
             if (touchPos.x > buttonLevelLinearDS.buttonCollision.x - buttonLevelLinearDS.buttonCollision.width && touchPos.x < buttonLevelLinearDS.buttonCollision.x + buttonLevelLinearDS.buttonCollision.width) {
                 if (touchPos.y > buttonLevelLinearDS.buttonCollision.y - buttonLevelLinearDS.buttonCollision.height && touchPos.y < buttonLevelLinearDS.buttonCollision.y + buttonLevelLinearDS.buttonCollision.height) {
                     clearLevel();
@@ -328,7 +363,7 @@ public class MainLogic extends ApplicationAdapter {
                     tema = "list";
                 }
             }
-
+            // CLICK BOTON NIVELES ARBOLES
             if (touchPos.x > buttonLevelTrees.buttonCollision.x - buttonLevelTrees.buttonCollision.width && touchPos.x < buttonLevelTrees.buttonCollision.x + buttonLevelTrees.buttonCollision.width) {
                 if (touchPos.y > buttonLevelTrees.buttonCollision.y - buttonLevelTrees.buttonCollision.height && touchPos.y < buttonLevelTrees.buttonCollision.y + buttonLevelTrees.buttonCollision.height) {
                     //CUANDO HAYA NIVEL DE ARBOLES (DEBERIA SER EL NIVEL 4)
@@ -598,17 +633,16 @@ public class MainLogic extends ApplicationAdapter {
     }
 
     @Override
+    /**
+     * esta funcion se llama al cerrar el juego, elimina los objetos automaticamente
+     */
     public void dispose() {
-        // esta funci?n se llama al cerrar el juego, elimina los objetos manualmente (java lo hace solito, pero es como por seguridad)
-        batch.dispose();
-        for (int i = 0; i < listPlank.getSize(); i++) {
-            listPlank.getData(i).dispose();
-        }
-        buttonRestart.dispose();
-        backgroundTexture.dispose();
-
+      clearLevel();
     }
 
+    /**
+     * Esta funcion borra de la memoria ram todos los objetos que se vean en pantalla
+     */
     public void clearLevel() {
         batch.dispose();
         for (int i = 0; i < listPlank.getSize(); i++) {
@@ -636,7 +670,10 @@ public class MainLogic extends ApplicationAdapter {
         System.gc();
 
     }
-
+    /**
+     * Esta funcion inicia los niveles segun el numero de nivel enviado, donde cero es el menu.
+     * @param level nivel a cargar
+     */
     public void initiateLevel(int level) {
         Integer[] myArr;
         Integer[] myArr2;
@@ -836,30 +873,22 @@ public class MainLogic extends ApplicationAdapter {
         }
 
     }
-
-    MyDoubleLinkedList<Integer> convertPlankToNumber(MyDoubleLinkedList<Plank> toConvert) {
-        MyDoubleLinkedList<Integer> toReturn = new MyDoubleLinkedList<>();
-        for (int i = 0; i < toConvert.getSize(); i++) {
-            toReturn.add(toConvert.getData(i).plankNumber);
-        }
-        return toReturn;
-    }
-
-    Integer[] strToArr(String str) {
-        String[] myarr = str.split(",");
-        Integer[] toReturn = new Integer[myarr.length];
-
-        for (int i = 0; i < myarr.length; i++) {
-            toReturn[i] = Integer.parseInt(myarr[i]);
-        }
-        return toReturn;
-    }
-
+    /**
+     * Esta funcion crea un objeto hueco con posicion, tamanio y numero y lo aniade a una lista
+     * @param x posicion en el eje x
+     * @param y posicion en el eje y
+     * @param i numero de hueco
+     * @param cx tamanio del hueco en anchura
+     * @param cy tamanio del hueco en altura
+     */
     void addHueco(int x, int y, int i, int cx, int cy) {
         hueco auxhueco = new hueco(x, y, i, cx, cy);
         listHueco.add(auxhueco);
     }
 
+    /**
+     * Esta funcion permite deshacer el ultimo cambio realizado en el juego de tablas o de arboles
+     */
     private void UndoLast() {
         if ("list".equals(tema)) {
             if (listPlankCannon.getSize() != 0) {
@@ -909,5 +938,35 @@ public class MainLogic extends ApplicationAdapter {
             colly = cy;
         }
     }
+ // ****** FUNCIONES AUXILIARES PARA CONVERTIR DE UN TIPO DE ESTRUCTURA A OTRO ***** //
+    /**
+     * Esta funcion convierte una lista de clase tablas en una lista de numeros enteros
+     * @param toConvert la lista de clase tablas que se desea convertir a enteros
+     * @return devuelve una linkedlist de enteros
+     */
+    MyDoubleLinkedList<Integer> convertPlankToNumber(MyDoubleLinkedList<Plank> toConvert) {
+        MyDoubleLinkedList<Integer> toReturn = new MyDoubleLinkedList<>();
+        for (int i = 0; i < toConvert.getSize(); i++) {
+            toReturn.add(toConvert.getData(i).plankNumber);
+        }
+        return toReturn;
+    }
 
+    /**
+     * Esta funcion convierte una cadena de texto con numeros separados por comas en un array de enteros
+     * @param str
+     * @return devuelve un array de enteros
+     */
+    Integer[] strToArr(String str) {
+        String[] myarr = str.split(",");
+        Integer[] toReturn = new Integer[myarr.length];
+
+        for (int i = 0; i < myarr.length; i++) {
+            toReturn[i] = Integer.parseInt(myarr[i]);
+        }
+        return toReturn;
+    }
 }
+
+
+   
