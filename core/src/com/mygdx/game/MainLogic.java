@@ -731,11 +731,11 @@ public class MainLogic extends ApplicationAdapter {
         backgroundTexture = new Texture(Gdx.files.internal("parallax-mountain-bg.png"));
         volverMenu = new GenericButton(280, 400, 381, 44, "MainMenuButtons.jpg");
         buttonHelp = new GenericButton(220, 250, 381, 44, "MainMenuButtons.jpg");
-        buttonPause = new GenericButton(0, 555, 50, 50, "opciones.png");
-        buttonCtrz = new GenericButton(200, 80, 100, 100, "ctrz.png");
-        buttonDelete = new GenericButton(0, 150, 100, 100, "trashCan.png");
+        buttonPause = new GenericButton(0, 555, 50, 50, "Menu.png");
+        buttonCtrz = new GenericButton(200, 80, 100, 100, "Re-Do.png");
+        buttonDelete = new GenericButton(0, 150, 100, 100, "Basura.png");
         buttonClose = new GenericButton(600, 503, 50, 50, "buttonClose.png");
-        buttonRestart = new GenericButton(0, 0, 50, 50, "buttonRestart.png");
+        buttonRestart = new GenericButton(0, 0, 50, 50, "Re-Try.png");
         buttonWin = new GenericButton(100, 100, 100, 100, "Win.png");
         buttonLose = new GenericButton(0, 0, 50, 50, "Lose.png");
 
