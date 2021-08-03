@@ -35,13 +35,13 @@ public class Canon extends ApplicationAdapter {
         cannonTexture = new Texture(Gdx.files.internal(pathTexture));
     }
     /**
-     * 
-     * @param objX
-     * @param objY
-     * @param initx
-     * @param inity
-     * @param Shoottime
-     * @param proyectile 
+     * Funcion que dispara la tabla de forma parabolica hacia algun objetivo.
+     * @param objX posicion en el eje x a la cual se disparara la tabla
+     * @param objY posicion en el eje y a la cual se disparara la tabla
+     * @param initx posicion inicial en el eje x desde la cual se dispara la tabla
+     * @param inity posicion inicial en el eje y desde la cual se dispara la tabla
+     * @param Shoottime tiempo que ha pasado desde que se disparo para calcular la velocidad
+     * @param proyectile tabla que se va a disparar
      */
     public static void ShootPlankto(int objX, int objY, float initx, float inity, float Shoottime, Plank proyectile){
         float velx,vely,accel;
@@ -57,11 +57,11 @@ public class Canon extends ApplicationAdapter {
     //Se dispara desde la posicion de la hoja, no hay necesidad de tener x inicial (initx) 
     //O y inicial (inity)
     /**
-     * 
-     * @param objX
-     * @param objY
-     * @param Shoottime
-     * @param proyectile 
+     * Funcion que dispara la hoja de forma parabolica hacia algun objetivo, no necesita posicion inicial.
+     * @param objX posicion en el eje x a la cual se disparara la hoja
+     * @param objY posicion en el eje y a la cual se disparara la hoja
+     * @param Shoottime tiempo que ha pasado desde que se disparo para calcular la velocidad
+     * @param proyectile hoja que se va a disparar
      */
     public static void ShootLeafto(int objX, int objY, float Shoottime, Leaf proyectile){
         float velx,vely,accel;

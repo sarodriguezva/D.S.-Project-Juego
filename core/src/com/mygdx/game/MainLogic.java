@@ -632,10 +632,10 @@ public class MainLogic extends ApplicationAdapter {
 
     }
 
-    @Override
     /**
-     * esta funcion se llama al cerrar el juego, elimina los objetos automaticamente
+     *esta funcion se llama al cerrar el juego, elimina los objetos automaticamente
      */
+    @Override
     public void dispose() {
       clearLevel();
     }
@@ -921,7 +921,9 @@ public class MainLogic extends ApplicationAdapter {
 
         }
     }
-
+/**
+ * Clase de objeto hueco para colocar en niveles de arboles, esta clase permite interactuar con espacios donde deben ir las hojas
+ */
     public class hueco {
 
         int xpos;
@@ -930,6 +932,14 @@ public class MainLogic extends ApplicationAdapter {
         int collx;
         int colly;
 
+        /**
+         * Constructor de la clase
+         * @param x posicion en eje x
+         * @param y posicion en eje y
+         * @param i numero entero
+         * @param cx tamanio en anchura
+         * @param cy tamanio en altura 
+         */
         public hueco(int x, int y, int i, int cx, int cy) {
             xpos = x;
             ypos = y;
