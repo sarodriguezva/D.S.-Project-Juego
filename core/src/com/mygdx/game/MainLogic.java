@@ -24,6 +24,7 @@ import java.util.Map;
 
 /**
  * Clase que contiene toda la logica del juego y su funcionamiento interno
+ *
  * @author 3200g
  */
 public class MainLogic extends ApplicationAdapter {
@@ -42,12 +43,15 @@ public class MainLogic extends ApplicationAdapter {
     GenericButton buttonShooting = null;
     GenericButton buttonWin = null;
     GenericButton buttonLose = null;
+    GenericButton buttonNextLevel = null;
+    GenericButton buttonRetry = null;
     // TEXTURA Y OBJETOS PARA BOTONES
     private Texture infoTexture;
     private Texture fondoPause;
     private Texture treeTexture;
     // TEXTURAS DE FONDO
     private SpriteBatch batch;
+    Sprite sprbc;
     private Texture backgroundTexture;
     private OrthographicCamera camera;
     // BOOLEANOS PARA CONTROLAR LA MAQUINA DE ESTADOS
@@ -68,6 +72,11 @@ public class MainLogic extends ApplicationAdapter {
     int sec = 0;
     int levelScore = 0;
     int minScore = 0;
+    int treeX = 0;
+    int treeY = 0;
+    int waitTime = 0;
+    // MAX LIST LEVEL NOS DICE CUANTOS NIVELES DE LISTA HAY
+    int maxListLevel = 3;
     // MOUSE
     boolean justTouched = false;
     boolean leftPressed;
@@ -89,7 +98,7 @@ public class MainLogic extends ApplicationAdapter {
     private final MyDoubleLinkedList<Plank> listPlankCannon = new MyDoubleLinkedList<>();
     private final MyDoubleLinkedList<Plank> listPlankFired = new MyDoubleLinkedList<>();
     MyStack<Integer> plankStack = new MyStack<>();
-    
+
     // LISTAS DE ARBOLES
     private final MyDoubleLinkedList<Leaf> listLeaf = new MyDoubleLinkedList<>();
     private final MyDoubleLinkedList<Leaf> listLeafFired = new MyDoubleLinkedList<>();
@@ -106,25 +115,29 @@ public class MainLogic extends ApplicationAdapter {
     private BitmapFont font;
     private BitmapFont fontScore;
     Firebase fbase;
+
     // FUNCION PARA GUARDAR TEXTO EN UN ARCHIVO .TXT
     /**
-     * Esta funcion guarda una cadena de texto en un archivo txt llamado data.txt
+     * Esta funcion guarda una cadena de texto en un archivo txt llamado
+     * data.txt
+     *
      * @param str La cadena a guardar en el archivo
-     * @throws IOException 
+     * @throws IOException
      */
     public void appendStringToTxt(String str) throws IOException {
-        
+
         BufferedWriter writer = new BufferedWriter(new FileWriter("data.txt", true));
         writer.append("\n\n\n\n\n");
         writer.append(str);
 
         writer.close();
-        
+
     }
 
     @Override
     /**
-     * Esta funcion se llama al iniciar el juego, es la encargada de cargar variables antes de renderizar la pantalla
+     * Esta funcion se llama al iniciar el juego, es la encargada de cargar
+     * variables antes de renderizar la pantalla
      */
     public void create() {
 
@@ -134,38 +147,37 @@ public class MainLogic extends ApplicationAdapter {
         camera.setToOrtho(false, 800, 600);
 
         //Se inicia el nivel y se pone la fuente que se va a usar
-        font = new BitmapFont(Gdx.files.internal("asd.fnt"));
+        font = new BitmapFont(Gdx.files.internal("segoeprint.fnt"));
         fontScore = new BitmapFont(Gdx.files.internal("test.fnt"));
-        
-        // PRUEBAS DE TIEMPOS Y MEMORIA PARA DISTINTAS ESTRUCTURAS
-        if (debug == false) {
+          if (debug == false) {
             initiateLevel(0);
-        } /// DATA TIME PARA DISTINTAS ESTRUCTURAS DE DATOS
+        }
+        // PRUEBAS DE TIEMPOS Y MEMORIA PARA DISTINTAS ESTRUCTURAS
+       /// DATA TIME PARA DISTINTAS ESTRUCTURAS DE DATOS
         else {
 
             try {
                 int m = 20000;
-                int b = 20000-20000;
+                int b = 20000 - 20000;
                 String str = "";
                 long total = Runtime.getRuntime().totalMemory();
                 long used = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
                 str += "MEMORY PRE DATA" + "total: " + total / 1048576 + "MB used: " + used / 1048576 + "MB";
 
                 AVLTree<Leaf> plankTry = new AVLTree<>();
-                
+
                 for (int i = 0; i < m; i++) {
                     Leaf Leaftry = new Leaf(i, i, i, i, i);
                     plankTry.insert(Leaftry);
                 }
-                
+
                 long pretm = System.currentTimeMillis();
 
                 for (int i = m; i > b; i--) {
                     Leaf Leaftry = new Leaf(i, i, i, i, i);
                     plankTry.contains(Leaftry);
                 }
-                
-                
+
                 long posttm = System.currentTimeMillis();
                 total = Runtime.getRuntime().totalMemory();
                 used = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
@@ -184,12 +196,14 @@ public class MainLogic extends ApplicationAdapter {
         } catch (FileNotFoundException ex) {
             Logger.getLogger(MainLogic.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
 
     // Funcion para crear un plank y anadirlo a la lista automaticamente
     /**
-     * Esta funcion se utiliza para crear una tabla con posicion, tamanio y numero ademas lo aniade a una lista de tablas
+     * Esta funcion se utiliza para crear una tabla con posicion, tamanio y
+     * numero ademas lo aniade a una lista de tablas
+     *
      * @param x posicion de la tabla en el eje x
      * @param y posicion de la tabla en el eje y
      * @param w tamanio de anchura
@@ -205,7 +219,8 @@ public class MainLogic extends ApplicationAdapter {
 
     @Override
     /**
-     * Esta funcion es la encargada de la logica del juego y de mostrar todo en pantalla, se llama en un ciclo infinito hasta cerrar el juego
+     * Esta funcion es la encargada de la logica del juego y de mostrar todo en
+     * pantalla, se llama en un ciclo infinito hasta cerrar el juego
      */
     public void render() {
 
@@ -213,7 +228,13 @@ public class MainLogic extends ApplicationAdapter {
         // aca se usa lo de batch es un objeto que se encarga de manejar el tema de opengl para renderizar todo de manera eficiente
         camera.update();
         batch.setProjectionMatrix(camera.combined);
-
+        batch.enableBlending();
+        batch.begin();
+        sprbc = new Sprite(backgroundTexture);
+        sprbc.setPosition(0, 0);
+        sprbc.setSize(800, 600);
+        sprbc.draw(batch);
+        batch.end();
         // PARTE DE LOGICA
         //justTouched me dice si el mouse ha sido recientemente presionado, leftpressed si esta continuamente presionado
         justTouched = Gdx.input.justTouched();
@@ -225,12 +246,11 @@ public class MainLogic extends ApplicationAdapter {
             camera.unproject(touchPos);
         }
 
-        if (currentLevel != 0) {
+        if (currentLevel != 0 && currentLevel!=-1) {
             // Si ha sido recientemente presionado compruebe si ya esta arrastrando un objeto, si no hay objeto, busca el que el mouse presiona en esas coordenadas.
             if (justTouched && currentPick == null) {
                 ///AQUI VA SI CLICKEA ALGO MIENTRAS NO ARRASTRA NADA
-                
-                // CLICK BOTON INFO
+
                 if (info == false) {
                     for (int i = 0; i < listPlank.getSize(); i++) {
                         if (listPlank.getData(i) != null) {
@@ -246,8 +266,10 @@ public class MainLogic extends ApplicationAdapter {
                     // CLICK BOTON RESTART
                     if (touchPos.x > buttonRestart.buttonCollision.x - buttonRestart.buttonCollision.width && touchPos.x < buttonRestart.buttonCollision.x + buttonRestart.buttonCollision.width) {
                         if (touchPos.y > buttonRestart.buttonCollision.y - buttonRestart.buttonCollision.height && touchPos.y < buttonRestart.buttonCollision.y + buttonRestart.buttonCollision.height) {
-                            clearLevel();
-                            initiateLevel(currentLevel);
+                            if (!pause && !win && !lose && !info) {
+                                clearLevel();
+                                initiateLevel(currentLevel);
+                            }
                         }
                     }
                 }
@@ -255,11 +277,13 @@ public class MainLogic extends ApplicationAdapter {
                 if (touchPos.x > volverMenu.buttonCollision.x - volverMenu.buttonCollision.width && touchPos.x < volverMenu.buttonCollision.x + volverMenu.buttonCollision.width) {
                     if (touchPos.y > volverMenu.buttonCollision.y - volverMenu.buttonCollision.height && touchPos.y < volverMenu.buttonCollision.y + volverMenu.buttonCollision.height) {
 
-                        if (pause) {
+                        if (pause || win || lose) {
                             pause = false;
                             menu = true;
                             tema = "";
-                            backgroundTexture= new Texture(Gdx.files.internal("Fondo_Principal.jpg"));
+                            win = false;
+                            lose = false;
+                            backgroundTexture = new Texture(Gdx.files.internal("Fondo_Principal.jpg"));
                         }
 
                     }
@@ -267,27 +291,29 @@ public class MainLogic extends ApplicationAdapter {
                 // CLICK BOTON PAUSE
                 if (touchPos.x > buttonPause.buttonCollision.x - buttonPause.buttonCollision.width && touchPos.x < buttonPause.buttonCollision.x + buttonPause.buttonCollision.width) {
                     if (touchPos.y > buttonPause.buttonCollision.y - buttonPause.buttonCollision.height && touchPos.y < buttonPause.buttonCollision.y + buttonPause.buttonCollision.height) {
-                        pause = true;
-                        canUndo=false;
-
+                        if (!info && !win && !lose) {
+                            pause = true;
+                        }
+                        canUndo = false;
                     }
                 }
                 // CLICK BOTON HELP ////
                 if (touchPos.x > buttonHelp.buttonCollision.x - buttonHelp.buttonCollision.width && touchPos.x < buttonHelp.buttonCollision.x + buttonHelp.buttonCollision.width) {
                     if (touchPos.y > buttonHelp.buttonCollision.y - buttonHelp.buttonCollision.height && touchPos.y < buttonHelp.buttonCollision.y + buttonHelp.buttonCollision.height) {
-                        if (pause) {
-                            pause = false;
+                        if (!pause && !win && !lose) {
                             info = true;
+                            canUndo = false;
                         }
-
                     }
                 }
-                
+
                 if ("list".equals(tema)) {
                     //CLICK BOTON FUEGO LISTAS//
                     if (touchPos.x > buttonShooting.buttonCollision.x - buttonShooting.buttonCollision.width && touchPos.x < buttonShooting.buttonCollision.x + buttonShooting.buttonCollision.width) {
                         if (touchPos.y > buttonShooting.buttonCollision.y - buttonShooting.buttonCollision.height && touchPos.y < buttonShooting.buttonCollision.y + buttonShooting.buttonCollision.height) {
-                            Shooting = true;
+                            if (!pause && !info && !lose && !win) {
+                                Shooting = true;
+                            }
                         }
                     }
                 }
@@ -296,45 +322,62 @@ public class MainLogic extends ApplicationAdapter {
                     if (touchPos.y > buttonClose.buttonCollision.y - buttonClose.buttonCollision.height && touchPos.y < buttonClose.buttonCollision.y + buttonClose.buttonCollision.height) {
                         if (pause) {
                             pause = false;
-                            canUndo=true;
+                            canUndo = true;
                         }
                         if (info) {
                             info = false;
-                            canUndo=true;
+                            canUndo = true;
                         }
-
-                        if (win) {
-                            String userName = "Prueba1";
-                            Map<String,String> data = new HashMap<>();
-                            data.put(Integer.toString(currentLevel), Integer.toString(levelScore));
-                            fbase.insertData(tema, userName, data);
-                            clearLevel();
-                            initiateLevel(currentLevel + 1);
-                            canUndo=true;
-                        }
-
-                        if (lose) {
-                            clearLevel();
-                            initiateLevel(currentLevel);
-                            canUndo=true;
-
-                        }
-                        win = false;
-                        lose = false;
 
                     }
                 }
 
                 //CLICK BOTON CTRZ //
-                if (canUndo){
-                if (touchPos.x > buttonCtrz.buttonCollision.x - buttonCtrz.buttonCollision.width && touchPos.x < buttonCtrz.buttonCollision.x + buttonCtrz.buttonCollision.width) {
-                    if (touchPos.y > buttonCtrz.buttonCollision.y - buttonCtrz.buttonCollision.height && touchPos.y < buttonCtrz.buttonCollision.y + buttonCtrz.buttonCollision.height) {
-                        UndoLast();
+                if (canUndo) {
+                    if (touchPos.x > buttonCtrz.buttonCollision.x - buttonCtrz.buttonCollision.width && touchPos.x < buttonCtrz.buttonCollision.x + buttonCtrz.buttonCollision.width) {
+                        if (touchPos.y > buttonCtrz.buttonCollision.y - buttonCtrz.buttonCollision.height && touchPos.y < buttonCtrz.buttonCollision.y + buttonCtrz.buttonCollision.height) {
+                            UndoLast();
+                        }
                     }
                 }
+            }
+
+            // CLICK BOTON SIGUIENTE NIVEL //
+            if (touchPos.x > buttonNextLevel.buttonCollision.x - buttonNextLevel.buttonCollision.width && touchPos.x < buttonNextLevel.buttonCollision.x + buttonNextLevel.buttonCollision.width) {
+                if (touchPos.y > buttonNextLevel.buttonCollision.y - buttonNextLevel.buttonCollision.height && touchPos.y < buttonNextLevel.buttonCollision.y + buttonNextLevel.buttonCollision.height) {
+
+                    if (win) {
+                        String userName = "Prueba1";
+                        Map<String, String> data = new HashMap<>();
+                        data.put(Integer.toString(currentLevel), Integer.toString(levelScore));
+                        fbase.insertData(tema, userName, data);
+
+                        if (currentLevel == maxListLevel) {
+                            tema = "tree";
+                        }
+                        waitTime = 17;
+                        clearLevel();
+                        initiateLevel(currentLevel + 1);
+                        canUndo = true;
+                        win = false;
+                        lose = false;
+
+                    }
                 }
             }
-            
+            // CLICK BOTON REPETIR NIVEL (PERDIO NIVEL)//
+            if (touchPos.x > buttonRetry.buttonCollision.x - buttonRetry.buttonCollision.width && touchPos.x < buttonRetry.buttonCollision.x + buttonRetry.buttonCollision.width) {
+                if (touchPos.y > buttonRetry.buttonCollision.y - buttonRetry.buttonCollision.height && touchPos.y < buttonRetry.buttonCollision.y + buttonRetry.buttonCollision.height) {
+
+                    if (lose) {
+                        clearLevel();
+                        initiateLevel(currentLevel);
+                        canUndo = true;
+                        win = false;
+                        lose = false;
+                    }
+                }
+            }
             // MOVIMIENTO DE TABLAS
             // Si esta siendo un objeto presionado:
             if (currentPick != null) {
@@ -344,20 +387,20 @@ public class MainLogic extends ApplicationAdapter {
                 currentPick.plankCollision.y = touchPos.y - 64 / 2;
 
                 // Poner limites pa q no se salga el balde
-                if (currentPick.plankCollision.x > 800 - 64) {
-                    currentPick.plankCollision.x = 800 - 64;
+                if (currentPick.plankCollision.x > 800 - 32) {
+                    currentPick.plankCollision.x = 800 - 32;
 
                 }
-                if (currentPick.plankCollision.x < 0) {
-                    currentPick.plankCollision.x = 0;
+                if (currentPick.plankCollision.x < 32) {
+                    currentPick.plankCollision.x = 32;
                 }
                 // Limites en y
-                if (currentPick.plankCollision.y > 80 - 64) {
-                    currentPick.plankCollision.y = 80 - 64;
+                if (currentPick.plankCollision.y > 64 + 16) {
+                    currentPick.plankCollision.y = 64 + 16;
 
                 }
-                if (currentPick.plankCollision.y < 0) {
-                    currentPick.plankCollision.y = 0;
+                if (currentPick.plankCollision.y < 54) {
+                    currentPick.plankCollision.y = 54;
                 }
 
                 // Si deja de presionar el mouse, se quita el objeto arrastrable.
@@ -374,54 +417,27 @@ public class MainLogic extends ApplicationAdapter {
                     currentPick = null;
                 }
             }
-        // FIN LOGICA PARA NIVEL !=0
-        if (!pause && !info) sec++;
-        if (levelScore>minScore && sec >=60 &&!win && !lose){
-        levelScore-=10;
-        sec=0;
-        }
-
-        }
-
-        // ELEGIR TEMATICA DE NIVEES
-        if (currentLevel == 0) {
-            //CLICK BOTON NIVELES LINEALES
-            if (touchPos.x > buttonLevelLinearDS.buttonCollision.x - buttonLevelLinearDS.buttonCollision.width && touchPos.x < buttonLevelLinearDS.buttonCollision.x + buttonLevelLinearDS.buttonCollision.width) {
-                if (touchPos.y > buttonLevelLinearDS.buttonCollision.y - buttonLevelLinearDS.buttonCollision.height && touchPos.y < buttonLevelLinearDS.buttonCollision.y + buttonLevelLinearDS.buttonCollision.height) {
-                    clearLevel();
-                    initiateLevel(1);
-                    tema = "list";
-                    backgroundTexture= new Texture(Gdx.files.internal("Fondo Pilas-colas.jpg"));
-                }
+            if (!pause && !info) {
+                sec++;
             }
-            // CLICK BOTON NIVELES ARBOLES
-            if (touchPos.x > buttonLevelTrees.buttonCollision.x - buttonLevelTrees.buttonCollision.width && touchPos.x < buttonLevelTrees.buttonCollision.x + buttonLevelTrees.buttonCollision.width) {
-                if (touchPos.y > buttonLevelTrees.buttonCollision.y - buttonLevelTrees.buttonCollision.height && touchPos.y < buttonLevelTrees.buttonCollision.y + buttonLevelTrees.buttonCollision.height) {
-                    //CUANDO HAYA NIVEL DE ARBOLES (DEBERIA SER EL NIVEL 4)
-                    clearLevel();
-                    initiateLevel(4);
-                    tema = "tree";
-                    backgroundTexture= new Texture(Gdx.files.internal("Fondo_Arboles.jpg"));
-
-                }
+            if (levelScore > minScore && sec >= 60 && !win && !lose) {
+                levelScore -= 10;
+                sec = 0;
             }
-        }
+
+        
 
         // PARTE DE RENDER 
         batch.enableBlending();
         batch.begin();
-        
-        Sprite sprbc = new Sprite(backgroundTexture);
-        sprbc.setPosition(0,0);
-        sprbc.setSize(800, 600);
-        sprbc.draw(batch);
-        
         if ("tree".equals(tema)) {
-            batch.draw(treeTexture, 0, 0);
+            Sprite sprtree = new Sprite(treeTexture);
+            sprtree.setPosition(treeX, treeY);
+            sprtree.setScale(1);
+            sprtree.draw(batch);
 
         }
         //RENDERIZADO DE TABLAS
-        if (currentLevel != 0) {
             for (int i = 0; i < listPlankBridge.getSize(); i++) {
                 Sprite sprPlankBridge = new Sprite(listPlankBridge.getData(i).plankTexture);
                 sprPlankBridge.setPosition(listPlankBridge.getData(i).plankCollision.x, listPlankBridge.getData(i).plankCollision.y);
@@ -433,7 +449,7 @@ public class MainLogic extends ApplicationAdapter {
 
             for (int i = 0; i < listPlank.getSize(); i++) {
                 if (listPlank.getData(i) != null) {
-                    batch.draw(listPlank.getData(i).plankTexture, listPlank.getData(i).plankCollision.x, listPlank.getData(i).plankCollision.y);
+                    batch.draw(listPlank.getData(i).plankTexture, listPlank.getData(i).plankCollision.x - 28, listPlank.getData(i).plankCollision.y - 32);
                     font.draw(batch, Integer.toString(listPlank.getData(i).plankNumber), listPlank.getData(i).plankCollision.x + 10, listPlank.getData(i).plankCollision.y + 70);
 
                 }
@@ -445,31 +461,21 @@ public class MainLogic extends ApplicationAdapter {
                 font.draw(batch, Integer.toString(listPlankFired.getData(i).plankNumber), listPlankFired.getData(i).plankCollision.x + 10, listPlankFired.getData(i).plankCollision.y + 70);
 
             }
-        }
+        
         // RENDERIZADO DE BOTONES
-
-        if (currentLevel != 0) {
-            batch.draw(buttonRestart.buttonTexture, 0, 0);
-            batch.draw(buttonPause.buttonTexture, 0, 555);
-            batch.draw(buttonCtrz.buttonTexture, 200, 80);
+            batch.draw(buttonRestart.buttonTexture, buttonRestart.buttonCollision.x - 32, buttonRestart.buttonCollision.y - 32);
+            batch.draw(buttonPause.buttonTexture, buttonPause.buttonCollision.x - 32, buttonPause.buttonCollision.y - 32);
+            batch.draw(buttonCtrz.buttonTexture, buttonCtrz.buttonCollision.x - 32, buttonCtrz.buttonCollision.y - 32);
             if ("list".equals(tema)) {
                 // Render canon lista 
-                Sprite spr= new Sprite(buttonCannon.cannonTexture);
+                Sprite spr = new Sprite(buttonCannon.cannonTexture);
                 spr.setPosition(buttonCannon.cannonCollision.x, buttonCannon.cannonCollision.y);
                 spr.setSize(buttonCannon.cannonCollision.width, buttonCannon.cannonCollision.height);
                 spr.draw(batch);
-                batch.draw(buttonShooting.buttonTexture, 10, 80);
+                batch.draw(buttonShooting.buttonTexture, buttonShooting.buttonCollision.x - 32, buttonShooting.buttonCollision.y - 32);
             } else if ("tree".equals(tema)) {
-                batch.draw(buttonDelete.buttonTexture, 0, 150);
+                batch.draw(buttonDelete.buttonTexture, buttonDelete.buttonCollision.x - 32, buttonDelete.buttonCollision.y - 32);
             }
-        } else {
-            batch.draw(buttonLevelLinearDS.buttonTexture, 210, 270);
-            font.draw(batch, "Linear Data Structures", 250, 300);
-            batch.draw(buttonLevelTrees.buttonTexture, 210, 180);
-            font.draw(batch, "Trees and Priority Heaps", 240, 210);
-        }
-        //RENDERIZADO DE EL POPUP DE INFO
-
         // Funcion de disparo
         if ("list".equals(tema)) {
 
@@ -482,14 +488,14 @@ public class MainLogic extends ApplicationAdapter {
                         if (Shootingindex >= listPlankBridge.getSize()) {
                             //Aca se sabe si el usuario gana o pierde
                             if (OrderBridge.commit(listNumber) && currentLevel > 0) {
-                                Gdx.app.log("E", "Ganar");
                                 win = true;
-                                canUndo=false;
+                                canUndo = false;
                             } else {
-                                Gdx.app.log("E", "Perder");
                                 lose = true;
-                                canUndo=false;
+                                canUndo = false;
+
                             }
+                            volverMenu = new GenericButton(100, 100, 381, 44, "MainMenuButtons.jpg");
                         }
 
                     } else {
@@ -533,113 +539,127 @@ public class MainLogic extends ApplicationAdapter {
         if ("tree".equals(tema)) {
             // Rotacion del canon
             double rotx = -(double) Gdx.input.getX() / 4.8;
+            if (waitTime == 0) {
+                // RENDER CANON ROTANDO
+                if (currentLevel != 0 && buttonCannon != null) {
+                    Sprite sprite = new Sprite(buttonCannon.cannonTexture);
+                    sprite.setPosition(buttonCannon.cannonCollision.x, buttonCannon.cannonCollision.y);
+                    sprite.setSize(buttonCannon.cannonCollision.height, buttonCannon.cannonCollision.width);
+                    sprite.setOrigin(buttonCannon.cannonCollision.height / 2, buttonCannon.cannonCollision.width / 2);
+                    if (canUndo) {
+                        sprite.setRotation((float) rotx);
+                    }
+                    sprite.draw(batch);
+                }
 
-            // RENDER CANON ROTANDO
-            if (currentLevel != 0 && buttonCannon != null) {
-                Sprite sprite = new Sprite(buttonCannon.cannonTexture);
-                sprite.setPosition(buttonCannon.cannonCollision.x, buttonCannon.cannonCollision.y);
-                sprite.setSize(buttonCannon.cannonCollision.height, buttonCannon.cannonCollision.width);
-                sprite.setOrigin(buttonCannon.cannonCollision.height/2, buttonCannon.cannonCollision.width/2);
-                sprite.setRotation((float) rotx);
-                sprite.draw(batch);
-            }
+                // DISPARAR A LAS HOJAS
+                if (justTouched && touchPos.y > 100 && currentPick == null && !listLeaf.isEmpty() && !Shooting && canUndo) {
 
-            // DISPARAR A LAS HOJAS
-            if (justTouched && touchPos.y > 100 && currentPick == null && !listLeaf.isEmpty() && !Shooting) {
-
-                //Colision de huecos y hojas
-                for (int i = 0; i < listHueco.getSize(); i++) {
-                    hueco auxh = listHueco.getData(i);
-                    if (touchPos.x > auxh.xpos && touchPos.x < auxh.xpos + auxh.collx) {
-                        if (touchPos.y > auxh.ypos && touchPos.y < auxh.ypos + auxh.colly) {
-                            objetivoArboles = auxh;
-                            listHuecosUsados.add(listHueco.getData(i));
-                            listHueco.delete(i);
+                    //Colision de huecos y hojas
+                    for (int i = 0; i < listHueco.getSize(); i++) {
+                        hueco auxh = listHueco.getData(i);
+                        if (touchPos.x > auxh.xpos && touchPos.x < auxh.xpos + auxh.collx) {
+                            if (touchPos.y > auxh.ypos && touchPos.y < auxh.ypos + auxh.colly) {
+                                objetivoArboles = auxh;
+                                listHuecosUsados.add(listHueco.getData(i));
+                                listHueco.delete(i);
+                            }
                         }
+
                     }
 
-                }
-
-                if (touchPos.x > objetivoBorrar.xpos && touchPos.x < objetivoBorrar.xpos + objetivoBorrar.collx) {
-                    if (touchPos.y > objetivoBorrar.ypos && touchPos.y < objetivoBorrar.ypos + objetivoBorrar.colly) {
-                        objetivoArboles = objetivoBorrar;
-                    }
-                }
-                if (objetivoArboles.xpos != 0) {
-                    Shooting = true;
-                    Leaf proyectile = listLeaf.getData(0);
-                    listLeaf.delete(0);
-                    proyectile.leafCollision.x = buttonCannon.cannonCollision.x;
-                    proyectile.leafCollision.y = buttonCannon.cannonCollision.y;
-                    listLeafFired.add(proyectile);
-
-                }
-            }
-            if (!listLeafFired.isEmpty()) {
-                if (Shooting) {
-                    Canon.ShootLeafto(objetivoArboles.xpos, objetivoArboles.ypos + 60, Shootingtime, listLeafFired.getData(0));
-                    batch.draw(listLeafFired.getData((listLeafFired.getSize() + Lastfilled - 1) - Shootingindex).leafTexture, listLeafFired.getData((listLeafFired.getSize() + Lastfilled - 1) - Shootingindex).leafCollision.x, listLeafFired.getData((listLeafFired.getSize() + Lastfilled - 1) - Shootingindex).leafCollision.y);
-                    font.draw(batch, Integer.toString(listLeafFired.getData((listLeafFired.getSize() + Lastfilled - 1) - Shootingindex).leafNumber), listLeafFired.getData((listLeafFired.getSize() + Lastfilled - 1) - Shootingindex).leafCollision.x + 10, listLeafFired.getData((listLeafFired.getSize() + Lastfilled - 1) - Shootingindex).leafCollision.y + 70);
-                    Shootingtime += Gdx.graphics.getDeltaTime();
-
-                    if (Math.abs(listLeafFired.getData(listLeafFired.getSize() + Lastfilled - 1).leafCollision.y - objetivoArboles.ypos) < 10 && (Math.abs(listLeafFired.getData(listLeafFired.getSize() + Lastfilled - 1).leafCollision.x - objetivoArboles.xpos) < 20)) {
-                        Shooting = false;
-                        Shootingtime = 0;
-                        if (objetivoArboles != objetivoBorrar) {
-                            listLeafTree.add(listLeafFired.pop());
-                            listLeafTreePlayerOrder[objetivoArboles.index] = listLeafTree.getLastData().leafNumber;
-                        } else {
-                            LastDeleted.add(listLeafFired.pop());
-                        }
-                        objetivoArboles = new hueco(0, 0, 0, 0, 0);
-                    }
-                    
-                    // COMPROBAR SI EL USUARIO PERDIO O GANO EL NIVEL DE ARBOLES
-                    if (listLeafTreeOrder.getSize() == listLeafTreeOrder.getSize() && listLeaf.isEmpty() && listLeafFired.isEmpty()) {
-                        Test tester = new Test();
-                        if (tester.checkTreesAsLists(listLeafTreeOrder, listLeafTreePlayerOrder)){
-                        win = true;
-                        lose = false;
-                        canUndo=false;
-                        }
-                        else{
-                            win = false;
-                            lose = true;
-                            canUndo=false;
+                    if (touchPos.x > objetivoBorrar.xpos && touchPos.x < objetivoBorrar.xpos + objetivoBorrar.collx) {
+                        if (touchPos.y > objetivoBorrar.ypos && touchPos.y < objetivoBorrar.ypos + objetivoBorrar.colly) {
+                            objetivoArboles = objetivoBorrar;
                         }
                     }
+                    if (objetivoArboles.xpos != 0) {
+                        Shooting = true;
+                        Leaf proyectile = listLeaf.getData(0);
+                        listLeaf.delete(0);
+                        proyectile.leafCollision.x = buttonCannon.cannonCollision.x;
+                        proyectile.leafCollision.y = buttonCannon.cannonCollision.y;
+                        listLeafFired.add(proyectile);
+
+                    }
+                }
+                if (!listLeafFired.isEmpty()) {
+                    if (Shooting) {
+                        Canon.ShootLeafto(objetivoArboles.xpos, objetivoArboles.ypos + 60, Shootingtime, listLeafFired.getData(0));
+                        batch.draw(listLeafFired.getData((listLeafFired.getSize() + Lastfilled - 1) - Shootingindex).leafTexture, listLeafFired.getData((listLeafFired.getSize() + Lastfilled - 1) - Shootingindex).leafCollision.x, listLeafFired.getData((listLeafFired.getSize() + Lastfilled - 1) - Shootingindex).leafCollision.y);
+                        font.draw(batch, Integer.toString(listLeafFired.getData((listLeafFired.getSize() + Lastfilled - 1) - Shootingindex).leafNumber), listLeafFired.getData((listLeafFired.getSize() + Lastfilled - 1) - Shootingindex).leafCollision.x + 10, listLeafFired.getData((listLeafFired.getSize() + Lastfilled - 1) - Shootingindex).leafCollision.y + 70);
+                        Shootingtime += Gdx.graphics.getDeltaTime();
+
+                        if (Math.abs(listLeafFired.getData(listLeafFired.getSize() + Lastfilled - 1).leafCollision.y - objetivoArboles.ypos) < 25 && (Math.abs(listLeafFired.getData(listLeafFired.getSize() + Lastfilled - 1).leafCollision.x - objetivoArboles.xpos) < 25)) {
+                            Shooting = false;
+                            Shootingtime = 0;
+                            listLeafFired.getData(listLeafFired.getSize() + Lastfilled - 1).leafCollision.y = objetivoArboles.ypos;
+                            listLeafFired.getData(listLeafFired.getSize() + Lastfilled - 1).leafCollision.x = objetivoArboles.xpos;
+
+                            if (objetivoArboles != objetivoBorrar) {
+                                listLeafTree.add(listLeafFired.pop());
+                                listLeafTreePlayerOrder[objetivoArboles.index] = listLeafTree.getLastData().leafNumber;
+                            } else {
+                                LastDeleted.add(listLeafFired.pop());
+                            }
+                            objetivoArboles = new hueco(0, 0, 0, 0, 0);
+                        }
+
+                        // COMPROBAR SI EL USUARIO PERDIO O GANO EL NIVEL DE ARBOLES
+                        if (listLeafTreeOrder.getSize() == listLeafTreeOrder.getSize() && listLeaf.isEmpty() && listLeafFired.isEmpty()) {
+                            Test tester = new Test();
+                            if (tester.checkTreesAsLists(listLeafTreeOrder, listLeafTreePlayerOrder)) {
+                                win = true;
+                                lose = false;
+                                canUndo = false;
+                            } else {
+                                win = false;
+                                lose = true;
+                                canUndo = false;
+                            }
+                            volverMenu = new GenericButton(100, 100, 381, 44, "MainMenuButtons.jpg");
+                        }
+
+                    }
+                }
+
+                // Renderizado de hojas
+                for (int i = 0; i < listLeaf.getSize(); i++) {
+                    if (listLeaf.getData(i) != null) {
+                        batch.draw(listLeaf.getData(i).leafTexture, listLeaf.getData(i).leafCollision.x, listLeaf.getData(i).leafCollision.y);
+                        font.draw(batch, Integer.toString(listLeaf.getData(i).leafNumber), listLeaf.getData(i).leafCollision.x + 32, listLeaf.getData(i).leafCollision.y + 55);
+
+                    }
+                }
+                for (int i = 0; i < listLeafTree.getSize(); i++) {
+                    if (listLeafTree.getData(i) != null) {
+                        batch.draw(listLeafTree.getData(i).leafTexture, listLeafTree.getData(i).leafCollision.x, listLeafTree.getData(i).leafCollision.y);
+                        font.draw(batch, Integer.toString(listLeafTree.getData(i).leafNumber), listLeafTree.getData(i).leafCollision.x + 32, listLeafTree.getData(i).leafCollision.y + 55);
+
+                    }
+                }
+                //Renderizado de huecos
+
+                if (!listHueco.isEmpty()) {
+                    for (int i = 0; i < listHueco.getSize(); i++) {
+                        if (listHueco.getData(i) != null) {
+                            Texture huecoTexture = new Texture(Gdx.files.internal("Nodo-faltante.png"));
+                            batch.draw(huecoTexture, listHueco.getData(i).xpos, listHueco.getData(i).ypos);
+                        }
+
+                    }
                 }
             }
-
-            // Renderizar hojas
-            for (int i = 0; i < listLeaf.getSize(); i++) {
-                if (listLeaf.getData(i) != null) {
-                    batch.draw(listLeaf.getData(i).leafTexture, listLeaf.getData(i).leafCollision.x, listLeaf.getData(i).leafCollision.y);
-                    font.draw(batch, Integer.toString(listLeaf.getData(i).leafNumber), listLeaf.getData(i).leafCollision.x + 32, listLeaf.getData(i).leafCollision.y+55);
-
-                }
+        }
+            fontScore.draw(batch, "Puntaje: " + Integer.toString(levelScore), 290, 585);
+            batch.draw(buttonHelp.buttonTexture, buttonHelp.buttonCollision.x - 32, buttonHelp.buttonCollision.y - 32);
+            if (waitTime > 0) {
+                waitTime--;
             }
-            for (int i = 0; i < listLeafTree.getSize(); i++) {
-                if (listLeafTree.getData(i) != null) {
-                    batch.draw(listLeafTree.getData(i).leafTexture, listLeafTree.getData(i).leafCollision.x, listLeafTree.getData(i).leafCollision.y);
-                    font.draw(batch, Integer.toString(listLeafTree.getData(i).leafNumber), listLeafTree.getData(i).leafCollision.x + 32, listLeafTree.getData(i).leafCollision.y + 55);
-
-                }
+            if (waitTime <= 0) {
+                waitTime = 0;
             }
-            //Renderizar huecos
-            /*
-            if (!listHueco.isEmpty()){
-            for (int i = 0; i < listHueco.getSize(); i++) {
-                if (listHueco.getData(i) != null) {
-                    Texture huecoTexture = new Texture(Gdx.files.internal("Nodo-faltante.png"));
-                    batch.draw(huecoTexture, listHueco.getData(i).xpos, listHueco.getData(i).ypos);
-                }
         
-            }}*/
-        }
-        if (currentLevel!=0){
-            fontScore.draw(batch,"Puntaje: " + Integer.toString(levelScore),290,585);
-        }
         if (pause == true) {
             Sprite sprite = new Sprite(fondoPause);
             //Aqui se le pone un color en RGB,A. osea color y opacidad.
@@ -649,8 +669,6 @@ public class MainLogic extends ApplicationAdapter {
             sprite.draw(batch);
 
             batch.draw(buttonClose.buttonTexture, 600, 503);
-            batch.draw(buttonHelp.buttonTexture, 220, 250);
-            font.draw(batch, "Info nivel", 310, 290);
             batch.draw(buttonLevelLinearDS.buttonTexture, 220, 370);
             font.draw(batch, "Volver al Menu", 290, 400);
         }
@@ -661,6 +679,7 @@ public class MainLogic extends ApplicationAdapter {
             menu = false;
             pause = false;
             info = false;
+
             batch.draw(volverMenu.buttonTexture, 280, 400);
         }
 
@@ -677,15 +696,48 @@ public class MainLogic extends ApplicationAdapter {
         }
         if (win == true) {
             batch.draw(buttonWin.buttonTexture, 53, 249);
-            batch.draw(buttonClose.buttonTexture, 600, 503);
-
+            batch.draw(buttonNextLevel.buttonTexture, buttonNextLevel.buttonCollision.x, buttonNextLevel.buttonCollision.y);
+            batch.draw(volverMenu.buttonTexture, volverMenu.buttonCollision.x, volverMenu.buttonCollision.y);
         }
         if (lose == true) {
             batch.draw(buttonLose.buttonTexture, 53, 249);
-            batch.draw(buttonClose.buttonTexture, 600, 503);
-
+            batch.draw(buttonRetry.buttonTexture, buttonRetry.buttonCollision.x, buttonRetry.buttonCollision.y);
+            batch.draw(volverMenu.buttonTexture, volverMenu.buttonCollision.x, volverMenu.buttonCollision.y);
         }
         batch.end();
+        }
+        
+                // ELEGIR TEMATICA DE NIVEES
+        if (currentLevel == 0) {
+            //CLICK BOTON NIVELES LINEALES
+            if (touchPos.x > buttonLevelLinearDS.buttonCollision.x - buttonLevelLinearDS.buttonCollision.width && touchPos.x < buttonLevelLinearDS.buttonCollision.x + buttonLevelLinearDS.buttonCollision.width) {
+                if (touchPos.y > buttonLevelLinearDS.buttonCollision.y - buttonLevelLinearDS.buttonCollision.height && touchPos.y < buttonLevelLinearDS.buttonCollision.y + buttonLevelLinearDS.buttonCollision.height) {
+                    clearLevel();
+                    tema = "list";
+                    initiateLevel(1);
+
+                }
+            }
+            // CLICK BOTON NIVELES ARBOLES
+            if (touchPos.x > buttonLevelTrees.buttonCollision.x - buttonLevelTrees.buttonCollision.width && touchPos.x < buttonLevelTrees.buttonCollision.x + buttonLevelTrees.buttonCollision.width) {
+                if (touchPos.y > buttonLevelTrees.buttonCollision.y - buttonLevelTrees.buttonCollision.height && touchPos.y < buttonLevelTrees.buttonCollision.y + buttonLevelTrees.buttonCollision.height) {
+                    //CUANDO HAYA NIVEL DE ARBOLES (DEBERIA SER EL NIVEL 4)
+                    clearLevel();
+                    tema = "tree";
+                    initiateLevel(4);
+                    waitTime=5;
+                }
+            }
+            // DRAW TEXTO PARA ELEGIR TEMATICA
+            batch.enableBlending();
+            batch.begin();
+            batch.draw(buttonLevelLinearDS.buttonTexture, 210, 270);
+            font.draw(batch, "Linear Data Structures", 250, 300);
+            batch.draw(buttonLevelTrees.buttonTexture, 210, 180);
+            font.draw(batch, "Trees and Priority Heaps", 240, 210);
+            batch.end();
+        }
+        
 
         if (debug) {
             // PARTE DE DEBUG
@@ -697,15 +749,17 @@ public class MainLogic extends ApplicationAdapter {
     }
 
     /**
-     *esta funcion se llama al cerrar el juego, elimina los objetos automaticamente
+     * esta funcion se llama al cerrar el juego, elimina los objetos
+     * automaticamente
      */
     @Override
     public void dispose() {
-      clearLevel();
+        clearLevel();
     }
 
     /**
-     * Esta funcion borra de la memoria ram todos los objetos que se vean en pantalla
+     * Esta funcion borra de la memoria ram todos los objetos que se vean en
+     * pantalla
      */
     public void clearLevel() {
         batch.dispose();
@@ -725,17 +779,20 @@ public class MainLogic extends ApplicationAdapter {
         listLeafTree.makeEmpty();
         listHueco.makeEmpty();
         listHuecosUsados.makeEmpty();
-        buttonRestart.dispose();
+        if (buttonRestart!=null) buttonRestart.dispose();
         backgroundTexture.dispose();
-        buttonCannon.dispose();
-        buttonCtrz.dispose();
-        buttonDelete.dispose();
+        if (buttonCannon!=null) buttonCannon.dispose();
+        if (buttonCtrz!=null) buttonCtrz.dispose();
+        if (buttonDelete!= null) buttonDelete.dispose();
 
         System.gc();
 
     }
+
     /**
-     * Esta funcion inicia los niveles segun el numero de nivel enviado, donde cero es el menu.
+     * Esta funcion inicia los niveles segun el numero de nivel enviado, donde
+     * cero es el menu.
+     *
      * @param level nivel a cargar
      */
     public void initiateLevel(int level) {
@@ -744,87 +801,95 @@ public class MainLogic extends ApplicationAdapter {
         //ACA VA LA INFO DE NIVELES. 0=MENU;
         batch = new SpriteBatch();
         backgroundTexture = new Texture(Gdx.files.internal("Fondo_Principal.jpg"));
+        fondoPause = new Texture(Gdx.files.internal("fondoPause.png"));
+        if ("list".equals(tema)) {
+            backgroundTexture = new Texture(Gdx.files.internal("Fondo Pilas-colas.jpg"));
+            infoTexture = new Texture(Gdx.files.internal("Info.png"));
+            buttonShooting = new GenericButton(47, 77, 32, 32, "shooting.png");
+        } else if ("tree".equals(tema)) {
+            backgroundTexture = new Texture(Gdx.files.internal("Fondo_Arboles.jpg"));
+            infoTexture = new Texture(Gdx.files.internal("Info_dos.png"));
+
+        }
+        if (level!=0 && level!=-1){
         volverMenu = new GenericButton(280, 400, 381, 44, "MainMenuButtons.jpg");
-        buttonHelp = new GenericButton(220, 250, 381, 44, "Help.png");
-        buttonPause = new GenericButton(0, 555, 50, 50, "Menu.png");
-        buttonCtrz = new GenericButton(200, 80, 100, 100, "Re-Do.png");
-        buttonDelete = new GenericButton(0, 150, 100, 100, "Basura.png");
+        buttonHelp = new GenericButton(175, 562, 32, 32, "Help.png");
+        buttonPause = new GenericButton(47, 562, 32, 32, "Menu.png");
+        buttonCtrz = new GenericButton(200, 77, 32, 32, "Re-Do.png");
+        if ("list".equals(tema)) {
+            buttonCtrz = new GenericButton(200, 77, 32, 32, "Re-Do.png");
+        } else if ("tree".equals(tema)) {
+            buttonCtrz = new GenericButton(500, 77, 32, 32, "Re-Do.png");
+        }
+
+        buttonDelete = new GenericButton(128, 150, 32, 32, "Basura.png");
         buttonClose = new GenericButton(600, 503, 50, 50, "buttonClose.png");
-        buttonRestart = new GenericButton(0, 0, 50, 50, "Re-Try.png");
+        buttonRestart = new GenericButton(109, 562, 32, 32, "Re-Try.png");
         buttonWin = new GenericButton(100, 100, 100, 100, "Win.png");
         buttonLose = new GenericButton(0, 0, 50, 50, "Lose.png");
+        buttonNextLevel = new GenericButton(250, 250, 128, 64, "buttonNextLevel.jpg");
+        buttonRetry = new GenericButton(250, 250, 128, 64, "Re-Try.png");
 
+        levelScore = 1000 * level;
+        minScore = 100 * level;
+        }
+        currentLevel = level;
         switch (level) {
+            case -1:
+                // ACA EL TEMA DE REGISTRAR USUARIO //
+                break;
+
             case 0:
                 buttonLevelLinearDS = new GenericButton(210, 270, 381, 44, "MainMenuButtons.jpg");
                 buttonLevelTrees = new GenericButton(210, 180, 381, 44, "MainMenuButtons.jpg");
-
-                currentLevel = 0;
-                mode = "fifo";
-                fondoPause = new Texture(Gdx.files.internal("fondoPause.png"));
-                infoTexture = new Texture(Gdx.files.internal("Info.png"));
-                buttonCannon = new Canon(90, 70, 100, 100, "Canon_1.png");
-                // buttonShooting = new GenericButton(10, 80, 50, 50, "shooting.png");
                 break;
             case 1:
-                levelScore=10000;
-                minScore = 9000;
                 mode = "fifo";
-                infoTexture = new Texture(Gdx.files.internal("Info.png"));
-                buttonCannon = new Canon(90, 70, 100, 100, "Canon_1.png");
-                currentLevel = 1;
-                buttonShooting = new GenericButton(10, 80, 50, 50, "shooting.png");
+                buttonCannon = new Canon(70, 32, 100, 100, "Canon_1.png");
                 myArr = strToArr("1,2,3");
                 myArr2 = strToArr("1,2,3");
-
                 OrderBridge = new Bridge<>(myArr);
                 for (int i = 0; i < OrderBridge.getSize(); i++) {
-                    createPlank(100 + i * 45, 400, 44, 117, listPlankBridge, myArr[i]);
+                    createPlank(100 + i * 45, 400, 20, 64, listPlankBridge, myArr[i]);
                 }
                 for (int i = 0; i < myArr2.length; i++) {
-                    createPlank(300 + i * 45, 0, 44, 117, listPlank, myArr2[i]);
+                    createPlank(300 + i * 55, 52, 15, 64, listPlank, myArr2[i]);
                 }
                 break;
 
             case 2:
                 mode = "lifo";
-                infoTexture = new Texture(Gdx.files.internal("Info.png"));
-                buttonCannon = new Canon(90, 70, 100, 100, "Canon_2.png");
-                currentLevel = 2;
-                buttonShooting = new GenericButton(10, 80, 50, 50, "shooting.png");
+                buttonCannon = new Canon(70, 32, 100, 100, "Canon_2.png");
                 myArr = strToArr("4,1,2,3,9");
                 myArr2 = strToArr("4,1,2,3,9");
                 OrderBridge = new Bridge<>(myArr);
                 for (int i = 0; i < OrderBridge.getSize(); i++) {
-                    createPlank(100 + i * 45, 400, 44, 117, listPlankBridge, myArr[i]);
+                    createPlank(100 + i * 45, 400, 20, 64, listPlankBridge, myArr[i]);
                 }
                 for (int i = 0; i < myArr2.length; i++) {
-                    createPlank(300 + i * 45, 0, 44, 117, listPlank, myArr2[i]);
+                    createPlank(300 + i * 55, 52, 15, 64, listPlank, myArr2[i]);
                 }
                 break;
             case 3:
                 mode = "fifo";
-                infoTexture = new Texture(Gdx.files.internal("Info_dos.png"));
-                buttonCannon = new Canon(90, 70, 100, 100, "Canon_1.png");
-                currentLevel = 3;
-                buttonShooting = new GenericButton(10, 80, 50, 50, "shooting.png");
+                buttonCannon = new Canon(70, 32, 100, 100, "Canon_1.png");
                 myArr = strToArr("1,2,3,4,5");
                 OrderBridge = new Bridge<>(myArr);
                 for (int i = 0; i < OrderBridge.getSize(); i++) {
-                    createPlank(100 + i * 45, 400, 44, 117, listPlankBridge, myArr[i]);
+                    createPlank(100 + i * 55, 400, 44, 117, listPlankBridge, myArr[i]);
                 }
 
                 myArr2 = strToArr("4,2,1,3,5");
                 for (int i = 0; i < myArr2.length; i++) {
-                    createPlank(300 + i * 45, 0, 44, 117, listPlank, myArr2[i]);
+                    createPlank(300 + i * 55, 52, 15, 64, listPlank, myArr2[i]);
                 }
                 break;
             case 4:
                 listLeafTreePlayerOrder = new Integer[6];
-                infoTexture = new Texture(Gdx.files.internal("Info_dos.png"));
                 buttonCannon = new Canon(345, 5, 100, 100, "CanonTree.png");
-                currentLevel = 4;
                 treeTexture = new Texture(Gdx.files.internal("nivel_uno.png"));
+                treeX = -130;
+                treeY = -30;
                 AVLTree<Integer> arbol = new AVLTree<>();
                 arbol.insert(50);
                 arbol.insert(40);
@@ -842,20 +907,16 @@ public class MainLogic extends ApplicationAdapter {
                 listLeaf.add(lef);
                 lef = new Leaf(700, 0, 10, 10, 90);
                 listLeaf.add(lef);
-                addHueco(125, 345, 3, 96, 96);
-                addHueco(330, 345, 4, 96, 96);
-                addHueco(623, 345, 5, 96, 96);
-
+                addHueco(114, 233, 3, 96, 96);
+                addHueco(306, 232, 4, 96, 96);
+                addHueco(597, 233, 5, 96, 96);
                 Shootingtime = 0;
 
                 break;
             case 5:
                 listLeafTreePlayerOrder = new Integer[6];
-                infoTexture = new Texture(Gdx.files.internal("Info.png"));
-                infoTexture = new Texture(Gdx.files.internal("Info_dos.png"));
                 buttonCannon = new Canon(345, 5, 100, 100, "CanonTree.png");
-                currentLevel = 5;
-                treeTexture = new Texture(Gdx.files.internal("nivel_uno.png"));
+                treeTexture = new Texture(Gdx.files.internal("nivel2.png"));
                 AVLTree<Integer> arbol2 = new AVLTree<>();
                 arbol2.insert(50);
                 arbol2.insert(40);
@@ -877,19 +938,16 @@ public class MainLogic extends ApplicationAdapter {
                 listLeaf.add(lef2);
                 lef2 = new Leaf(600, 75, 10, 10, 15);
                 listLeaf.add(lef2);
-                addHueco(125, 345, 3, 128, 128);
-                addHueco(330, 345, 4, 128, 128);
-                addHueco(623, 345, 5, 128, 128);
+                addHueco(113, 233, 3, 96, 96);
+                addHueco(305, 233, 4, 96, 96);
+                addHueco(595, 233, 5, 96, 96);
 
                 Shootingtime = 0;
 
                 break;
             case 6:
                 listLeafTreePlayerOrder = new Integer[11];
-                infoTexture = new Texture(Gdx.files.internal("Info.png"));
-                infoTexture = new Texture(Gdx.files.internal("Info_dos.png"));
                 buttonCannon = new Canon(345, 5, 100, 100, "CanonTree.png");
-                currentLevel = 6;
                 treeTexture = new Texture(Gdx.files.internal("nivel2.png"));
                 BinaryTree<Integer> arbol3 = new BinaryTree<>();
                 arbol3.insert(39);
@@ -939,8 +997,11 @@ public class MainLogic extends ApplicationAdapter {
         }
 
     }
+
     /**
-     * Esta funcion crea un objeto hueco con posicion, tamanio y numero y lo aniade a una lista
+     * Esta funcion crea un objeto hueco con posicion, tamanio y numero y lo
+     * aniade a una lista
+     *
      * @param x posicion en el eje x
      * @param y posicion en el eje y
      * @param i numero de hueco
@@ -953,7 +1014,8 @@ public class MainLogic extends ApplicationAdapter {
     }
 
     /**
-     * Esta funcion permite deshacer el ultimo cambio realizado en el juego de tablas o de arboles
+     * Esta funcion permite deshacer el ultimo cambio realizado en el juego de
+     * tablas o de arboles
      */
     private void UndoLast() {
         if ("list".equals(tema)) {
@@ -987,11 +1049,13 @@ public class MainLogic extends ApplicationAdapter {
 
         }
     }
-/**
- * Clase de objeto hueco para colocar en niveles de arboles, esta clase permite interactuar con espacios donde deben ir las hojas
- */
+
+    /**
+     * Clase de objeto hueco para colocar en niveles de arboles, esta clase
+     * permite interactuar con espacios donde deben ir las hojas
+     */
     public class hueco {
-        
+
         int xpos;
         int ypos;
         int index;
@@ -1000,11 +1064,12 @@ public class MainLogic extends ApplicationAdapter {
 
         /**
          * Constructor de la clase
+         *
          * @param x posicion en eje x
          * @param y posicion en eje y
          * @param i numero entero
          * @param cx tamanio en anchura
-         * @param cy tamanio en altura 
+         * @param cy tamanio en altura
          */
         public hueco(int x, int y, int i, int cx, int cy) {
             xpos = x;
@@ -1012,14 +1077,17 @@ public class MainLogic extends ApplicationAdapter {
             index = i;
             collx = cx;
             colly = cy;
-             
-            
+
         }
     }
- // ****** FUNCIONES AUXILIARES PARA CONVERTIR DE UN TIPO DE ESTRUCTURA A OTRO ***** //
+    // ****** FUNCIONES AUXILIARES PARA CONVERTIR DE UN TIPO DE ESTRUCTURA A OTRO ***** //
+
     /**
-     * Esta funcion convierte una lista de clase tablas en una lista de numeros enteros
-     * @param toConvert la lista de clase tablas que se desea convertir a enteros
+     * Esta funcion convierte una lista de clase tablas en una lista de numeros
+     * enteros
+     *
+     * @param toConvert la lista de clase tablas que se desea convertir a
+     * enteros
      * @return devuelve una linkedlist de enteros
      */
     MyDoubleLinkedList<Integer> convertPlankToNumber(MyDoubleLinkedList<Plank> toConvert) {
@@ -1031,7 +1099,9 @@ public class MainLogic extends ApplicationAdapter {
     }
 
     /**
-     * Esta funcion convierte una cadena de texto con numeros separados por comas en un array de enteros
+     * Esta funcion convierte una cadena de texto con numeros separados por
+     * comas en un array de enteros
+     *
      * @param str
      * @return devuelve un array de enteros
      */
@@ -1045,6 +1115,3 @@ public class MainLogic extends ApplicationAdapter {
         return toReturn;
     }
 }
-
-
-   
