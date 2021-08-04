@@ -136,7 +136,8 @@ public class MainLogic extends ApplicationAdapter {
         camera.setToOrtho(false, 800, 600);
 
         //Se inicia el nivel y se pone la fuente que se va a usar
-        font = new BitmapFont(Gdx.files.internal("asd.fnt"));
+        font = new BitmapFont(Gdx.files.internal("segoeprint.fnt"));
+        
         fontScore = new BitmapFont(Gdx.files.internal("test.fnt"));
         
         // PRUEBAS DE TIEMPOS Y MEMORIA PARA DISTINTAS ESTRUCTURAS
@@ -403,8 +404,6 @@ public class MainLogic extends ApplicationAdapter {
                     clearLevel();
                     initiateLevel(4);
                     tema = "tree";
-                    backgroundTexture= new Texture(Gdx.files.internal("Fondo_Arboles.jpg"));
-
                 }
             }
         }
@@ -423,6 +422,8 @@ public class MainLogic extends ApplicationAdapter {
             sprtree.setPosition(treeX,treeY);
             sprtree.setScale(1);
             sprtree.draw(batch);
+            
+
         }
         //RENDERIZADO DE TABLAS
         if (currentLevel != 0) {
@@ -581,14 +582,17 @@ public class MainLogic extends ApplicationAdapter {
             }
             if (!listLeafFired.isEmpty()) {
                 if (Shooting) {
-                    Canon.ShootLeafto(objetivoArboles.xpos, objetivoArboles.ypos + 60, Shootingtime, listLeafFired.getData(0));
+                    Canon.ShootLeafto(objetivoArboles.xpos, objetivoArboles.ypos +60, Shootingtime, listLeafFired.getData(0));
                     batch.draw(listLeafFired.getData((listLeafFired.getSize() + Lastfilled - 1) - Shootingindex).leafTexture, listLeafFired.getData((listLeafFired.getSize() + Lastfilled - 1) - Shootingindex).leafCollision.x, listLeafFired.getData((listLeafFired.getSize() + Lastfilled - 1) - Shootingindex).leafCollision.y);
                     font.draw(batch, Integer.toString(listLeafFired.getData((listLeafFired.getSize() + Lastfilled - 1) - Shootingindex).leafNumber), listLeafFired.getData((listLeafFired.getSize() + Lastfilled - 1) - Shootingindex).leafCollision.x + 10, listLeafFired.getData((listLeafFired.getSize() + Lastfilled - 1) - Shootingindex).leafCollision.y + 70);
                     Shootingtime += Gdx.graphics.getDeltaTime();
 
-                    if (Math.abs(listLeafFired.getData(listLeafFired.getSize() + Lastfilled - 1).leafCollision.y - objetivoArboles.ypos) < 10 && (Math.abs(listLeafFired.getData(listLeafFired.getSize() + Lastfilled - 1).leafCollision.x - objetivoArboles.xpos) < 20)) {
+                    if (Math.abs(listLeafFired.getData(listLeafFired.getSize() + Lastfilled - 1).leafCollision.y - objetivoArboles.ypos) < 25 && (Math.abs(listLeafFired.getData(listLeafFired.getSize() + Lastfilled - 1).leafCollision.x - objetivoArboles.xpos) < 25)) {
                         Shooting = false;
                         Shootingtime = 0;
+                        listLeafFired.getData(listLeafFired.getSize() + Lastfilled -1).leafCollision.y = objetivoArboles.ypos;
+                        listLeafFired.getData(listLeafFired.getSize() + Lastfilled -1).leafCollision.x = objetivoArboles.xpos;
+                        
                         if (objetivoArboles != objetivoBorrar) {
                             listLeafTree.add(listLeafFired.pop());
                             listLeafTreePlayerOrder[objetivoArboles.index] = listLeafTree.getLastData().leafNumber;
@@ -747,7 +751,15 @@ public class MainLogic extends ApplicationAdapter {
         Integer[] myArr2;
         //ACA VA LA INFO DE NIVELES. 0=MENU;
         batch = new SpriteBatch();
+        if (tema == ""){
         backgroundTexture = new Texture(Gdx.files.internal("Fondo_Principal.jpg"));
+        }
+        else if(tema == "list"){
+            backgroundTexture= new Texture(Gdx.files.internal("Fondo Pilas-colas.jpg"));
+        }
+        else if (tema == "tree"){
+            backgroundTexture= new Texture(Gdx.files.internal("Fondo_Arboles.jpg"));
+        }
         volverMenu = new GenericButton(280, 400, 381, 44, "MainMenuButtons.jpg");
         buttonHelp = new GenericButton(220, 250, 381, 44, "Help.png");
         buttonPause = new GenericButton(0, 555, 50, 50, "Menu.png");
@@ -848,9 +860,9 @@ public class MainLogic extends ApplicationAdapter {
                 listLeaf.add(lef);
                 lef = new Leaf(700, 0, 10, 10, 90);
                 listLeaf.add(lef);
-                addHueco(110, 240, 3, 96, 96);
-                addHueco(290, 240, 4, 96, 96);
-                addHueco(590, 240, 5, 96, 96);
+                addHueco(114, 233, 3, 96, 96);
+                addHueco(306, 232, 4, 96, 96);
+                addHueco(597, 233, 5, 96, 96);
 
                 Shootingtime = 0;
 
@@ -883,9 +895,9 @@ public class MainLogic extends ApplicationAdapter {
                 listLeaf.add(lef2);
                 lef2 = new Leaf(600, 75, 10, 10, 15);
                 listLeaf.add(lef2);
-                addHueco(110, 240, 3, 96, 96);
-                addHueco(290, 240, 4, 96, 96);
-                addHueco(590, 240, 5, 96, 96);
+                addHueco(113, 233, 3, 96, 96);
+                addHueco(305, 233, 4, 96, 96);
+                addHueco(595, 233, 5, 96, 96);
 
                 Shootingtime = 0;
 
