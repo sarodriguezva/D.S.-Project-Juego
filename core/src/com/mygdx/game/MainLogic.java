@@ -44,6 +44,7 @@ public class MainLogic extends ApplicationAdapter {
     GenericButton buttonWin = null;
     GenericButton buttonLose = null;
     GenericButton buttonNextLevel = null;
+    GenericButton buttonRetry = null;
     // TEXTURA Y OBJETOS PARA BOTONES
     private Texture infoTexture;
     private Texture fondoPause;
@@ -268,10 +269,12 @@ public class MainLogic extends ApplicationAdapter {
                 if (touchPos.x > volverMenu.buttonCollision.x - volverMenu.buttonCollision.width && touchPos.x < volverMenu.buttonCollision.x + volverMenu.buttonCollision.width) {
                     if (touchPos.y > volverMenu.buttonCollision.y - volverMenu.buttonCollision.height && touchPos.y < volverMenu.buttonCollision.y + volverMenu.buttonCollision.height) {
 
-                        if (pause) {
+                        if (pause || win || lose) {
                             pause = false;
                             menu = true;
                             tema = "";
+                            win = false;
+                            lose= false;
                             backgroundTexture = new Texture(Gdx.files.internal("Fondo_Principal.jpg"));
                         }
 
@@ -348,12 +351,21 @@ public class MainLogic extends ApplicationAdapter {
                     }
                 }
             }
+            // CLICK BOTON REPETIR NIVEL (PERDIO NIVEL)//
+            if (touchPos.x > buttonRetry.buttonCollision.x - buttonRetry.buttonCollision.width && touchPos.x < buttonRetry.buttonCollision.x + buttonRetry.buttonCollision.width) {
+                if (touchPos.y > buttonRetry.buttonCollision.y - buttonRetry.buttonCollision.height && touchPos.y < buttonRetry.buttonCollision.y + buttonRetry.buttonCollision.height) {
 
-            /*
-                        if (lose) {
+                    if (lose) {
                             clearLevel();
                             initiateLevel(currentLevel);
                             canUndo = true;
+                            win= false;
+                            lose= false;
+                    }
+                }
+            }
+            /*
+                        
 
                         }*/
             // MOVIMIENTO DE TABLAS
@@ -511,7 +523,9 @@ public class MainLogic extends ApplicationAdapter {
                             } else {
                                 lose = true;
                                 canUndo = false;
+                               
                             }
+                            volverMenu = new GenericButton(100, 100, 381, 44, "MainMenuButtons.jpg");
                         }
 
                     } else {
@@ -631,7 +645,9 @@ public class MainLogic extends ApplicationAdapter {
                             lose = true;
                             canUndo = false;
                         }
+                    volverMenu = new GenericButton(100, 100, 381, 44, "MainMenuButtons.jpg");
                     }
+                    
                 }
             }
 
@@ -685,6 +701,7 @@ public class MainLogic extends ApplicationAdapter {
             menu = false;
             pause = false;
             info = false;
+            
             batch.draw(volverMenu.buttonTexture, 280, 400);
         }
 
@@ -702,10 +719,12 @@ public class MainLogic extends ApplicationAdapter {
         if (win == true) {
             batch.draw(buttonWin.buttonTexture, 53, 249);
             batch.draw(buttonNextLevel.buttonTexture, buttonNextLevel.buttonCollision.x, buttonNextLevel.buttonCollision.y);
-
+            batch.draw(volverMenu.buttonTexture,volverMenu.buttonCollision.x , volverMenu.buttonCollision.y);
         }
         if (lose == true) {
             batch.draw(buttonLose.buttonTexture, 53, 249);
+            batch.draw(buttonRetry.buttonTexture, buttonRetry.buttonCollision.x, buttonRetry.buttonCollision.y);
+            batch.draw(volverMenu.buttonTexture, volverMenu.buttonCollision.x , volverMenu.buttonCollision.y);
         }
         batch.end();
 
@@ -780,6 +799,7 @@ public class MainLogic extends ApplicationAdapter {
             infoTexture = new Texture(Gdx.files.internal("Info_dos.png"));
 
         }
+        
         volverMenu = new GenericButton(280, 400, 381, 44, "MainMenuButtons.jpg");
         buttonHelp = new GenericButton(175, 562, 32, 32, "Help.png");
         buttonPause = new GenericButton(47, 562, 32, 32, "Menu.png");
@@ -796,6 +816,7 @@ public class MainLogic extends ApplicationAdapter {
         buttonWin = new GenericButton(100, 100, 100, 100, "Win.png");
         buttonLose = new GenericButton(0, 0, 50, 50, "Lose.png");
         buttonNextLevel = new GenericButton(250, 250, 128, 64, "buttonNextLevel.jpg");
+        buttonRetry= new GenericButton(250, 250, 128, 64, "Re-Try.png");
         
         
         levelScore = 1000 * level;
