@@ -68,6 +68,8 @@ public class MainLogic extends ApplicationAdapter {
     int sec = 0;
     int levelScore = 0;
     int minScore = 0;
+    int treeX=0;
+    int treeY=0;
     // MOUSE
     boolean justTouched = false;
     boolean leftPressed;
@@ -417,8 +419,10 @@ public class MainLogic extends ApplicationAdapter {
         sprbc.draw(batch);
         
         if ("tree".equals(tema)) {
-            batch.draw(treeTexture, 0, 0);
-
+            Sprite sprtree = new Sprite(treeTexture);
+            sprtree.setPosition(treeX,treeY);
+            sprtree.setScale(1);
+            sprtree.draw(batch);
         }
         //RENDERIZADO DE TABLAS
         if (currentLevel != 0) {
@@ -611,7 +615,7 @@ public class MainLogic extends ApplicationAdapter {
                 }
             }
 
-            // Renderizar hojas
+            // Renderizado de hojas
             for (int i = 0; i < listLeaf.getSize(); i++) {
                 if (listLeaf.getData(i) != null) {
                     batch.draw(listLeaf.getData(i).leafTexture, listLeaf.getData(i).leafCollision.x, listLeaf.getData(i).leafCollision.y);
@@ -626,8 +630,8 @@ public class MainLogic extends ApplicationAdapter {
 
                 }
             }
-            //Renderizar huecos
-            /*
+            //Renderizado de huecos
+            
             if (!listHueco.isEmpty()){
             for (int i = 0; i < listHueco.getSize(); i++) {
                 if (listHueco.getData(i) != null) {
@@ -635,7 +639,7 @@ public class MainLogic extends ApplicationAdapter {
                     batch.draw(huecoTexture, listHueco.getData(i).xpos, listHueco.getData(i).ypos);
                 }
         
-            }}*/
+            }}
         }
         if (currentLevel!=0){
             fontScore.draw(batch,"Puntaje: " + Integer.toString(levelScore),290,585);
@@ -825,6 +829,8 @@ public class MainLogic extends ApplicationAdapter {
                 buttonCannon = new Canon(345, 5, 100, 100, "CanonTree.png");
                 currentLevel = 4;
                 treeTexture = new Texture(Gdx.files.internal("nivel_uno.png"));
+                treeX=100;
+                treeY=150;
                 AVLTree<Integer> arbol = new AVLTree<>();
                 arbol.insert(50);
                 arbol.insert(40);
