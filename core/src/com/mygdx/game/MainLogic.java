@@ -829,8 +829,8 @@ public class MainLogic extends ApplicationAdapter {
                 buttonCannon = new Canon(345, 5, 100, 100, "CanonTree.png");
                 currentLevel = 4;
                 treeTexture = new Texture(Gdx.files.internal("nivel_uno.png"));
-                treeX=100;
-                treeY=150;
+                treeX=-130;
+                treeY=-30;
                 AVLTree<Integer> arbol = new AVLTree<>();
                 arbol.insert(50);
                 arbol.insert(40);
@@ -848,9 +848,9 @@ public class MainLogic extends ApplicationAdapter {
                 listLeaf.add(lef);
                 lef = new Leaf(700, 0, 10, 10, 90);
                 listLeaf.add(lef);
-                addHueco(125, 345, 3, 96, 96);
-                addHueco(330, 345, 4, 96, 96);
-                addHueco(623, 345, 5, 96, 96);
+                addHueco(110, 240, 3, 96, 96);
+                addHueco(290, 240, 4, 96, 96);
+                addHueco(590, 240, 5, 96, 96);
 
                 Shootingtime = 0;
 
@@ -883,9 +883,9 @@ public class MainLogic extends ApplicationAdapter {
                 listLeaf.add(lef2);
                 lef2 = new Leaf(600, 75, 10, 10, 15);
                 listLeaf.add(lef2);
-                addHueco(125, 345, 3, 128, 128);
-                addHueco(330, 345, 4, 128, 128);
-                addHueco(623, 345, 5, 128, 128);
+                addHueco(110, 240, 3, 96, 96);
+                addHueco(290, 240, 4, 96, 96);
+                addHueco(590, 240, 5, 96, 96);
 
                 Shootingtime = 0;
 
