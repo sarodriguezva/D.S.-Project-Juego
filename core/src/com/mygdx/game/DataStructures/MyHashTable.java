@@ -154,6 +154,28 @@ public class MyHashTable<T> {
         return currentSize;
     }
     
+    @Override
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+        
+        sb.append("{");
+        for (MyDoubleLinkedList<HashTuple<T>> list : listsArray){
+            Node<HashTuple<T>> top = list.getFirst();
+            
+            while (top != null){
+                sb.append("\"");
+                sb.append(top.getData().key);
+                sb.append("\" : \"");
+                String value = (String) top.getData().value;
+                sb.append(value);
+                sb.append("\"");
+            }
+        }
+        sb.append("}");
+        
+        return sb.toString();
+    }
+    
     private static int nextPrime(int n){
         if (n%2 == 0) n++;
         
