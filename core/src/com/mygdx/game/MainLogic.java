@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
+import com.google.cloud.firestore.DocumentReference;
 import com.mygdx.game.DataStructures.*;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
@@ -119,6 +120,7 @@ public class MainLogic extends ApplicationAdapter {
     String userName = "NoName";
     MyStack<Character> userNameStack = new MyStack<>();
     Firebase fbase;
+    DocumentReference docRef;
 
     // FUNCION PARA GUARDAR TEXTO EN UN ARCHIVO .TXT
     /**
@@ -459,17 +461,6 @@ public class MainLogic extends ApplicationAdapter {
                 if (touchPos.y > buttonNextLevel.buttonCollision.y - buttonNextLevel.buttonCollision.height && touchPos.y < buttonNextLevel.buttonCollision.y + buttonNextLevel.buttonCollision.height) {
 
                     if (win) {
-                        maxScoreLevel[currentLevel] = levelScore;
-                        maxScoreLevel[maxScoreLevel.length-1] += levelScore;
-                        
-                        MyHashTable<String> myJson = new MyHashTable<>();
-                        myJson.insert("name", userName);
-                        for (int i = 0; i < maxScoreLevel.length; i++) {
-                            myJson.insert(String.valueOf(i), String.valueOf(maxScoreLevel[i]));
-                        }
-                        Gdx.app.log("JSON: ", myJson.toString());
-                        MyJsonReader toSend = new MyJsonReader(myJson.toString());
-                        fbase.insertData("puntajes",toSend);
 
                         if (currentLevel == maxListLevel[1]) {
                             tema = "tree";
@@ -611,6 +602,7 @@ public class MainLogic extends ApplicationAdapter {
                                 if (OrderBridge.commit(listNumber) && currentLevel > 0) {
                                     win = true;
                                     canUndo = false;
+                                    saveScore();
                                 } else {
                                     lose = true;
                                     canUndo = false;
@@ -733,6 +725,7 @@ public class MainLogic extends ApplicationAdapter {
                                     win = true;
                                     lose = false;
                                     canUndo = false;
+                                    saveScore();
                                 } else {
                                     win = false;
                                     lose = true;
@@ -867,6 +860,27 @@ public class MainLogic extends ApplicationAdapter {
             Gdx.app.log("MEMORY", "total: " + total / 1048576 + "MB used: " + used / 1048576 + "MB");
         }
 
+    }
+
+    void saveScore() {
+
+        maxScoreLevel[currentLevel] = levelScore;
+        maxScoreLevel[maxScoreLevel.length - 1] += levelScore;
+
+        MyHashTable<String> myJson = new MyHashTable<>();
+        myJson.insert("name", userName);
+        for (int i = 0; i < maxScoreLevel.length; i++) {
+            myJson.insert(String.valueOf(i), String.valueOf(maxScoreLevel[i]));
+        }
+        Gdx.app.log("JSON: ", myJson.toString());
+        MyJsonReader toSend = new MyJsonReader(myJson.toString());
+        
+        if (docRef == null){
+        docRef = fbase.insertData("puntajes",toSend);
+        }
+        else{
+            fbase.updateData("puntajes", toSend, docRef);
+        }
     }
 
     /**

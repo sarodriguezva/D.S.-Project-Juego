@@ -59,19 +59,27 @@ public class Firebase {
      * @param data datos guardados en la base de datos
      * @return 
      */
-    public boolean insertData(String col, MyJsonReader data){
+    public DocumentReference insertData(String col,MyJsonReader data){
         try{
             
-            ApiFuture<DocumentReference> result =  bd.collection(col).add(data);
+            ApiFuture<DocumentReference> docRef =  bd.collection(col).add(data);
             System.out.println("Guardado con exito");
-            System.out.println(result);
-        return true;
+            
+        return docRef.get();
         }
         catch (Exception e){
             System.out.println("No guardado: "+ e);
         }
-        return false;
+        return null;
     }
-        
+     public void updateData(String col, MyJsonReader data, DocumentReference docRef){
+         try{
+         ApiFuture<WriteResult> wresult = docRef.set(data);
+             System.out.println("Update exitoso");
+         }
+         catch (Exception e){
+             System.out.println("Update fallido");
+         }
+     }   
     
 }
