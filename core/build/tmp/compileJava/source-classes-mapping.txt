@@ -30,12 +30,14 @@ com/mygdx/game/Plank.java
  com.mygdx.game.Plank
 com/mygdx/game/GenericButton.java
  com.mygdx.game.GenericButton
-com/mygdx/game/Firebase.java
- com.mygdx.game.Firebase
 com/mygdx/game/DataStructures/MyHashTable.java
  com.mygdx.game.DataStructures.HashTuple
  com.mygdx.game.DataStructures.MyHashTable
+com/mygdx/game/Firebase.java
+ com.mygdx.game.Firebase
 com/mygdx/game/MainLogic.java
  com.mygdx.game.MainLogic
  com.mygdx.game.MainLogic$1
  com.mygdx.game.MainLogic$hueco
+com/mygdx/game/MyJsonReader.java
+ com.mygdx.game.MyJsonReader

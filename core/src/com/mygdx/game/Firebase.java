@@ -56,19 +56,19 @@ public class Firebase {
     /**
      * Este metodo guarda datos en la base de datos en una coleccion y documento a elegir
      * @param col coleccion de la base de datos
-     * @param doc documento en la base de datos
      * @param data datos guardados en la base de datos
      * @return 
      */
-    public boolean insertData(String col, MyHashTable<String> data){
+    public boolean insertData(String col, MyJsonReader data){
         try{
+            
             ApiFuture<DocumentReference> result =  bd.collection(col).add(data);
             System.out.println("Guardado con exito");
             System.out.println(result);
         return true;
         }
         catch (Exception e){
-            System.out.println("No guardado");
+            System.out.println("No guardado: "+ e);
         }
         return false;
     }
