@@ -468,12 +468,13 @@ public class MainLogic extends ApplicationAdapter  {
                 if (touchPos.y > buttonNextLevel.buttonCollision.y - buttonNextLevel.buttonCollision.height && touchPos.y < buttonNextLevel.buttonCollision.y + buttonNextLevel.buttonCollision.height) {
 
                     if (win) {
-                        
+        
         MyHashTable<String> myJson = new MyHashTable<>();
         myJson.insert("name", userName);
         for (int i=0; i<maxScoreLevel.length; i++){
             myJson.insert(String.valueOf(i),String.valueOf( maxScoreLevel[i]));
         }
+        Gdx.app.log("asdafsd", myJson.toString());
                         fbase.insertData("puntajes", myJson);
 
                         if (currentLevel == maxListLevel[1]) {

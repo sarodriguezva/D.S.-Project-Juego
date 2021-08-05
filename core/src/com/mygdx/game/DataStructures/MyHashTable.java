@@ -168,12 +168,14 @@ public class MyHashTable<T> {
                 sb.append("\" : \"");
                 String value = (String) top.getData().value;
                 sb.append(value);
-                sb.append("\"");
+                sb.append("\",\n");
+                
+                top = top.getNext();
             }
         }
-        sb.append("}");
-        
-        return sb.toString();
+        String toReturn;
+        toReturn = sb.substring(0, sb.length() -2);
+        return toReturn + "\n}";
     }
     
     private static int nextPrime(int n){
