@@ -12,6 +12,9 @@ import com.google.cloud.firestore.WriteResult;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.mygdx.game.DataStructures.MyHashTable;
 import java.util.Map;
 
 /**
@@ -19,7 +22,7 @@ import java.util.Map;
  * @author 3200g
  */
 public class Firebase {
-    Firestore bd;
+    Firestore bd; 
     
     /**
      * Este metodo inicializa clase
@@ -57,11 +60,11 @@ public class Firebase {
      * @param data datos guardados en la base de datos
      * @return 
      */
-    public boolean insertData(String col, String doc, Map<String,String> data){
+    public boolean insertData(String col, MyHashTable<String> data){
         try{
-            DocumentReference docRef = bd.collection(col).document(doc);
-            ApiFuture<WriteResult> result = docRef.set(data);
+            ApiFuture<DocumentReference> result =  bd.collection(col).add(data);
             System.out.println("Guardado con exito");
+            System.out.println(result);
         return true;
         }
         catch (Exception e){
@@ -69,7 +72,6 @@ public class Firebase {
         }
         return false;
     }
-    
-    
+        
     
 }

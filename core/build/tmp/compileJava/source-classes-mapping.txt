@@ -1,7 +1,7 @@
 com/mygdx/game/DataStructures/BinaryHeap.java
  com.mygdx.game.DataStructures.BinaryHeap
-com/mygdx/game/Firebase.java
- com.mygdx.game.Firebase
+com/mygdx/game/DataStructures/MyDoubleLinkedList.java
+ com.mygdx.game.DataStructures.MyDoubleLinkedList
 com/mygdx/game/Canon.java
  com.mygdx.game.Canon
 com/mygdx/game/GenericButton.java
@@ -33,8 +33,8 @@ com/mygdx/game/Test.java
  com.mygdx.game.Test
 com/mygdx/game/Bridge.java
  com.mygdx.game.Bridge
-com/mygdx/game/DataStructures/MyDoubleLinkedList.java
- com.mygdx.game.DataStructures.MyDoubleLinkedList
+com/mygdx/game/Firebase.java
+ com.mygdx.game.Firebase
 com/mygdx/game/MainLogic.java
  com.mygdx.game.MainLogic
  com.mygdx.game.MainLogic$1

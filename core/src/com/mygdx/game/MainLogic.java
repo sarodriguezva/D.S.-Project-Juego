@@ -43,6 +43,7 @@ public class MainLogic extends ApplicationAdapter  {
     GenericButton buttonLose = null;
     GenericButton buttonNextLevel = null;
     GenericButton buttonRetry = null;
+    GenericButton buttonAcceptPlay = null;
     // TEXTURA Y OBJETOS PARA BOTONES
     private Texture infoTexture;
     private Texture fondoPause;
@@ -75,7 +76,9 @@ public class MainLogic extends ApplicationAdapter  {
     int treeY = 0;
     int waitTime = 0;
     // MAX LIST LEVEL NOS DICE CUANTOS NIVELES DE LISTA HAY
-    int maxListLevel = 3;
+    int maxListLevel[] = new int[3];
+    int maxScoreLevel[];
+    
     // MOUSE
     boolean justTouched = false;
     boolean leftPressed;
@@ -205,7 +208,8 @@ public class MainLogic extends ApplicationAdapter  {
 
             @Override
             public boolean scrolled(float arg0, float arg1) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+               return false;
+               
             }
     });
         // FIN PROCESADOR TECLADO
@@ -221,6 +225,12 @@ public class MainLogic extends ApplicationAdapter  {
         font = new BitmapFont(Gdx.files.internal("segoeprint.fnt"));
         fontScore = new BitmapFont(Gdx.files.internal("test.fnt"));
        
+        // max ListLevel es donde cambia de tema. 0 pilas colas, 1 arboles, 2 grafos
+        maxListLevel[0] = 0;
+        maxListLevel[1] = 3;
+        maxListLevel[2] = 6;
+        maxScoreLevel = new int[9];
+        
         if (debug == false) {
             initiateLevel(-1);
         }
@@ -308,18 +318,43 @@ public class MainLogic extends ApplicationAdapter  {
         sprbc.setPosition(0, 0);
         sprbc.setSize(800, 600);
         sprbc.draw(batch);
+        batch.end();
         
         if (currentLevel == -1){
+        
+            batch.enableBlending();
+        batch.begin();
         
         font.draw(batch, userName,500,100);
         font.draw(batch, "Su nombre de usuario: ",100,100);
         
-        // Si le da al boton Jugar, isregistering = false. Queda el userName guardado, posiblemente la edad y lo manda al nivel 0 menu
+        batch.draw(buttonAcceptPlay.buttonTexture,buttonAcceptPlay.buttonCollision.x,buttonAcceptPlay.buttonCollision.y);
+        batch.end();
         
+        
+                //justTouched me dice si el mouse ha sido recientemente presionado, leftpressed si esta continuamente presionado
+        justTouched = Gdx.input.justTouched();
+        leftPressed = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
+
+        // Si esta continuamente presionado, guardeme las coordenadas del mouse
+        if (leftPressed) {
+            touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+            camera.unproject(touchPos);
+        }
+        // Si le da al boton Jugar, isregistering = false. Queda el userName guardado, posiblemente la edad y lo manda al nivel 0 menu
+                            // CLICK BOTON ACCEPT PLAY
+                    if (touchPos.x > buttonAcceptPlay.buttonCollision.x - buttonAcceptPlay.buttonCollision.width && touchPos.x < buttonAcceptPlay.buttonCollision.x + buttonAcceptPlay.buttonCollision.width) {
+                        if (touchPos.y > buttonAcceptPlay.buttonCollision.y - buttonAcceptPlay.buttonCollision.height && touchPos.y < buttonAcceptPlay.buttonCollision.y + buttonAcceptPlay.buttonCollision.height) {
+                            clearLevel();
+                            initiateLevel(0);
+                            isRegistering=false;
+                        }
+                    }
+                    // FIN CURRENT LEVEL = -1
         }
         
         
-        batch.end();
+        
         // PARTE DE LOGICA
         //justTouched me dice si el mouse ha sido recientemente presionado, leftpressed si esta continuamente presionado
         justTouched = Gdx.input.justTouched();
@@ -369,6 +404,7 @@ public class MainLogic extends ApplicationAdapter  {
                             win = false;
                             lose = false;
                             backgroundTexture = new Texture(Gdx.files.internal("Fondo_Principal.jpg"));
+                            canUndo=true;
                         }
 
                     }
@@ -432,14 +468,21 @@ public class MainLogic extends ApplicationAdapter  {
                 if (touchPos.y > buttonNextLevel.buttonCollision.y - buttonNextLevel.buttonCollision.height && touchPos.y < buttonNextLevel.buttonCollision.y + buttonNextLevel.buttonCollision.height) {
 
                     if (win) {
-                        String userName = "Prueba1";
-                        Map<String, String> data = new HashMap<>();
-                        data.put(Integer.toString(currentLevel), Integer.toString(levelScore));
-                        fbase.insertData(tema, userName, data);
+                        
+        MyHashTable<String> myJson = new MyHashTable<>();
+        myJson.insert("name", userName);
+        for (int i=0; i<maxScoreLevel.length; i++){
+            myJson.insert(String.valueOf(i),String.valueOf( maxScoreLevel[i]));
+        }
+                        fbase.insertData("puntajes", myJson);
 
-                        if (currentLevel == maxListLevel) {
+                        if (currentLevel == maxListLevel[1]) {
                             tema = "tree";
                         }
+                        if (currentLevel == maxListLevel[2]) {
+                            tema = "graphs";
+                        }
+                        
                         waitTime = 17;
                         clearLevel();
                         initiateLevel(currentLevel + 1);
@@ -741,7 +784,7 @@ public class MainLogic extends ApplicationAdapter  {
             if (waitTime > 0) {
                 waitTime--;
             }
-            if (waitTime <= 0) {
+            if (waitTime <= 1) {
                 waitTime = 0;
             }
         
@@ -809,8 +852,9 @@ public class MainLogic extends ApplicationAdapter  {
                     //CUANDO HAYA NIVEL DE ARBOLES (DEBERIA SER EL NIVEL 4)
                     clearLevel();
                     tema = "tree";
+                    waitTime=10;
                     initiateLevel(4);
-                    waitTime=5;
+                    
                 }
             }
             // DRAW TEXTO PARA ELEGIR TEMATICA
@@ -923,6 +967,7 @@ public class MainLogic extends ApplicationAdapter  {
             case -1:
                 // ACA EL TEMA DE REGISTRAR USUARIO //
                 isRegistering=true;
+                buttonAcceptPlay = new GenericButton(300,400,64,64,"Play-button.png");
                 break;
 
             case 0:
