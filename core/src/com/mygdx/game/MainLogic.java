@@ -231,7 +231,7 @@ public class MainLogic extends ApplicationAdapter {
         maxScoreLevel = new int[10];
 
         if (debug == false) {
-            initiateLevel(-1);
+            initiateLevel(-100);
         } // PRUEBAS DE TIEMPOS Y MEMORIA PARA DISTINTAS ESTRUCTURAS
         /// DATA TIME PARA DISTINTAS ESTRUCTURAS DE DATOS
         else {
@@ -316,7 +316,7 @@ public class MainLogic extends ApplicationAdapter {
         sprbc.draw(batch);
         batch.end();
 
-        if (currentLevel == -1) {
+        if (currentLevel == -100) {
 
             batch.enableBlending();
             batch.begin();
@@ -341,13 +341,51 @@ public class MainLogic extends ApplicationAdapter {
             if (touchPos.x > buttonAcceptPlay.buttonCollision.x - buttonAcceptPlay.buttonCollision.width && touchPos.x < buttonAcceptPlay.buttonCollision.x + buttonAcceptPlay.buttonCollision.width) {
                 if (touchPos.y > buttonAcceptPlay.buttonCollision.y - buttonAcceptPlay.buttonCollision.height && touchPos.y < buttonAcceptPlay.buttonCollision.y + buttonAcceptPlay.buttonCollision.height) {
                     clearLevel();
-                    initiateLevel(0);
+                    initiateLevel(-4);
                     isRegistering = false;
                 }
             }
-            // FIN CURRENT LEVEL = -1
+            // FIN CURRENT LEVEL = -100
+        }
+        
+        // MENU PRINCIPAL
+        if(currentLevel==-4){
+            
         }
 
+        // ELEGIR TEMATICA DE NIVEES
+        if (currentLevel == 0) {
+            //CLICK BOTON NIVELES LINEALES
+            if (touchPos.x > buttonLevelLinearDS.buttonCollision.x - buttonLevelLinearDS.buttonCollision.width && touchPos.x < buttonLevelLinearDS.buttonCollision.x + buttonLevelLinearDS.buttonCollision.width) {
+                if (touchPos.y > buttonLevelLinearDS.buttonCollision.y - buttonLevelLinearDS.buttonCollision.height && touchPos.y < buttonLevelLinearDS.buttonCollision.y + buttonLevelLinearDS.buttonCollision.height) {
+                    clearLevel();
+                    tema = "list";
+                    initiateLevel(1);
+
+                }
+            }
+            // CLICK BOTON NIVELES ARBOLES
+            if (touchPos.x > buttonLevelTrees.buttonCollision.x - buttonLevelTrees.buttonCollision.width && touchPos.x < buttonLevelTrees.buttonCollision.x + buttonLevelTrees.buttonCollision.width) {
+                if (touchPos.y > buttonLevelTrees.buttonCollision.y - buttonLevelTrees.buttonCollision.height && touchPos.y < buttonLevelTrees.buttonCollision.y + buttonLevelTrees.buttonCollision.height) {
+                    //CUANDO HAYA NIVEL DE ARBOLES (DEBERIA SER EL NIVEL 4)
+                    clearLevel();
+                    tema = "tree";
+                    waitTime = 10;
+                    initiateLevel(4);
+
+                }
+            }
+            // DRAW TEXTO PARA ELEGIR TEMATICA
+            batch.enableBlending();
+            batch.begin();
+            batch.draw(buttonLevelLinearDS.buttonTexture, 210, 270);
+            font.draw(batch, "Linear Data Structures", 250, 300);
+            batch.draw(buttonLevelTrees.buttonTexture, 210, 180);
+            font.draw(batch, "Trees and Priority Heaps", 240, 210);
+            batch.end();
+        }
+        
+        
         // PARTE DE LOGICA
         //justTouched me dice si el mouse ha sido recientemente presionado, leftpressed si esta continuamente presionado
         justTouched = Gdx.input.justTouched();
@@ -359,7 +397,7 @@ public class MainLogic extends ApplicationAdapter {
             camera.unproject(touchPos);
         }
 
-        if (currentLevel != 0 && currentLevel != -1) {
+        if (currentLevel >0) {
             // Si ha sido recientemente presionado compruebe si ya esta arrastrando un objeto, si no hay objeto, busca el que el mouse presiona en esas coordenadas.
             if (justTouched && currentPick == null) {
                 ///AQUI VA SI CLICKEA ALGO MIENTRAS NO ARRASTRA NADA
@@ -820,39 +858,6 @@ public class MainLogic extends ApplicationAdapter {
             }
             batch.end();
         }
-
-        // ELEGIR TEMATICA DE NIVEES
-        if (currentLevel == 0) {
-            //CLICK BOTON NIVELES LINEALES
-            if (touchPos.x > buttonLevelLinearDS.buttonCollision.x - buttonLevelLinearDS.buttonCollision.width && touchPos.x < buttonLevelLinearDS.buttonCollision.x + buttonLevelLinearDS.buttonCollision.width) {
-                if (touchPos.y > buttonLevelLinearDS.buttonCollision.y - buttonLevelLinearDS.buttonCollision.height && touchPos.y < buttonLevelLinearDS.buttonCollision.y + buttonLevelLinearDS.buttonCollision.height) {
-                    clearLevel();
-                    tema = "list";
-                    initiateLevel(1);
-
-                }
-            }
-            // CLICK BOTON NIVELES ARBOLES
-            if (touchPos.x > buttonLevelTrees.buttonCollision.x - buttonLevelTrees.buttonCollision.width && touchPos.x < buttonLevelTrees.buttonCollision.x + buttonLevelTrees.buttonCollision.width) {
-                if (touchPos.y > buttonLevelTrees.buttonCollision.y - buttonLevelTrees.buttonCollision.height && touchPos.y < buttonLevelTrees.buttonCollision.y + buttonLevelTrees.buttonCollision.height) {
-                    //CUANDO HAYA NIVEL DE ARBOLES (DEBERIA SER EL NIVEL 4)
-                    clearLevel();
-                    tema = "tree";
-                    waitTime = 10;
-                    initiateLevel(4);
-
-                }
-            }
-            // DRAW TEXTO PARA ELEGIR TEMATICA
-            batch.enableBlending();
-            batch.begin();
-            batch.draw(buttonLevelLinearDS.buttonTexture, 210, 270);
-            font.draw(batch, "Linear Data Structures", 250, 300);
-            batch.draw(buttonLevelTrees.buttonTexture, 210, 180);
-            font.draw(batch, "Trees and Priority Heaps", 240, 210);
-            batch.end();
-        }
-
         if (debug) {
             // PARTE DE DEBUG
             long total = Runtime.getRuntime().totalMemory();
@@ -872,7 +877,6 @@ public class MainLogic extends ApplicationAdapter {
         for (int i = 0; i < maxScoreLevel.length; i++) {
             myJson.insert(String.valueOf(i), String.valueOf(maxScoreLevel[i]));
         }
-        Gdx.app.log("JSON: ", myJson.toString());
         MyJsonReader toSend = new MyJsonReader(myJson.toString());
         
         if (docRef == null){
@@ -954,7 +958,7 @@ public class MainLogic extends ApplicationAdapter {
             infoTexture = new Texture(Gdx.files.internal("Info_dos.png"));
 
         }
-        if (level != 0 && level != -1) {
+        if (level >0) {
             volverMenu = new GenericButton(280, 400, 381, 44, "MainMenuButtons.jpg");
             buttonHelp = new GenericButton(175, 562, 32, 32, "Help.png");
             buttonPause = new GenericButton(47, 562, 32, 32, "Menu.png");
@@ -978,13 +982,26 @@ public class MainLogic extends ApplicationAdapter {
         }
         currentLevel = level;
         switch (level) {
-            case -1:
+             case -100:
                 // ACA EL TEMA DE REGISTRAR USUARIO //
                 isRegistering = true;
                 buttonAcceptPlay = new GenericButton(300, 400, 64, 64, "Play-button.png");
                 break;
-
+                
+            case -1:
+                //Seleccionar niveles tablas
+                break;
+            case -2:
+                // seleccionar niveles arboles
+                break;
+            case -3:
+                // ACA VA EL TEMA DE TOP PUNTAJSE //
+                break;
+            case -4:
+                // ACA VA EL MENU PRINCIPAL
+                break;
             case 0:
+                // SELECTOR DE TEMA NIVELES
                 buttonLevelLinearDS = new GenericButton(210, 270, 381, 44, "MainMenuButtons.jpg");
                 buttonLevelTrees = new GenericButton(210, 180, 381, 44, "MainMenuButtons.jpg");
                 break;
