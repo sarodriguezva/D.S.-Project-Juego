@@ -60,6 +60,7 @@ public class MainLogic extends ApplicationAdapter  {
     boolean debug = false;
     boolean win = false;
     boolean lose = false;
+    boolean isRegistering;
 
     // VARIABLES DE TEXTO
     String tema;
@@ -112,7 +113,7 @@ public class MainLogic extends ApplicationAdapter  {
     hueco objetivoBorrar = new hueco(1, 150, 0, 89, 92);
     private BitmapFont font;
     private BitmapFont fontScore;
-    String userName="Nombre de usuario: ";
+    String userName="NoName";
     MyStack<Character> userNameStack = new MyStack<>();
     Firebase fbase;
 
@@ -180,7 +181,8 @@ public class MainLogic extends ApplicationAdapter  {
 
         @Override
         public boolean keyTyped(char arg0) {
-            // si esta en el menu pa escribir entonces 
+            
+            if (isRegistering){
             int key = Integer.valueOf(arg0);
             if (key == 127 || key == 8){
             userNameStack.pop();
@@ -190,8 +192,8 @@ public class MainLogic extends ApplicationAdapter  {
                     userNameStack.add(arg0);
                 }
 }
-            userName ="Nombre de usuario: " + userNameStack.toStringUnite();
-            
+            userName =userNameStack.toStringUnite();
+            }
             return false;
         }
 
@@ -306,8 +308,17 @@ public class MainLogic extends ApplicationAdapter  {
         sprbc.setPosition(0, 0);
         sprbc.setSize(800, 600);
         sprbc.draw(batch);
-        font.draw(batch, userName,100,100);
-
+        
+        if (currentLevel == -1){
+        
+        font.draw(batch, userName,500,100);
+        font.draw(batch, "Su nombre de usuario: ",100,100);
+        
+        // Si le da al boton Jugar, isregistering = false. Queda el userName guardado, posiblemente la edad y lo manda al nivel 0 menu
+        
+        }
+        
+        
         batch.end();
         // PARTE DE LOGICA
         //justTouched me dice si el mouse ha sido recientemente presionado, leftpressed si esta continuamente presionado
@@ -911,6 +922,7 @@ public class MainLogic extends ApplicationAdapter  {
         switch (level) {
             case -1:
                 // ACA EL TEMA DE REGISTRAR USUARIO //
+                isRegistering=true;
                 break;
 
             case 0:
