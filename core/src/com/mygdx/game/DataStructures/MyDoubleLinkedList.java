@@ -330,4 +330,14 @@ public class MyDoubleLinkedList<E> {
     public void print(boolean reverse) {
         System.out.println(this.toString(reverse));
     }
+    public String toStringUnite(){
+                StringBuilder sb = new StringBuilder();
+        Node<E> aux = this.first;
+        while (aux != null){
+            sb.append(aux.getData());
+            aux=aux.next;
+        }
+        String toReturn = sb.toString();
+        return toReturn;
+    }
 }

@@ -3,22 +3,20 @@ package com.mygdx.game;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.DataStructures.*;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import static java.lang.System.currentTimeMillis;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.lang.reflect.Array;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,7 +25,7 @@ import java.util.Map;
  *
  * @author 3200g
  */
-public class MainLogic extends ApplicationAdapter {
+public class MainLogic extends ApplicationAdapter  {
 
     //////// **** VARIABLES **** ////////
     // BOTONES
@@ -114,6 +112,8 @@ public class MainLogic extends ApplicationAdapter {
     hueco objetivoBorrar = new hueco(1, 150, 0, 89, 92);
     private BitmapFont font;
     private BitmapFont fontScore;
+    String userName="Nombre de usuario: ";
+    MyStack<Character> userNameStack = new MyStack<>();
     Firebase fbase;
 
     // FUNCION PARA GUARDAR TEXTO EN UN ARCHIVO .TXT
@@ -140,7 +140,76 @@ public class MainLogic extends ApplicationAdapter {
      * variables antes de renderizar la pantalla
      */
     public void create() {
+        
+        // SE CREA UN NUEVO PROCESADOR DE TECLADO PARA SABER QUE HACER CON LAS TECLAS.
+        Gdx.input.setInputProcessor(new InputProcessor() {
+        @Override
+        public boolean touchUp(int arg0, int arg1, int arg2, int arg3) {
+            // TODO Auto-generated method stub
+            return false;
+        }
 
+        @Override
+        public boolean touchDragged(int arg0, int arg1, int arg2) {
+            // TODO Auto-generated method stub
+            return false;
+        }
+
+        @Override
+        public boolean touchDown(int arg0, int arg1, int arg2, int arg3) {
+            // TODO Auto-generated method stub
+            return false;
+        }
+
+        public boolean scrolled(int arg0) {
+            // TODO Auto-generated method stub
+            return false;
+        }
+
+        @Override
+        public boolean mouseMoved(int arg0, int arg1) {
+            // TODO Auto-generated method stub
+            return false;
+        }
+
+        @Override
+        public boolean keyUp(int arg0) {
+            // TODO Auto-generated method stub
+            return false;
+        }
+
+        @Override
+        public boolean keyTyped(char arg0) {
+            // si esta en el menu pa escribir entonces 
+            int key = Integer.valueOf(arg0);
+            if (key == 127 || key == 8){
+            userNameStack.pop();
+            }
+            else if (userNameStack.getSize()<11){
+                if (key>31 && key<123) {
+                    userNameStack.add(arg0);
+                }
+}
+            userName ="Nombre de usuario: " + userNameStack.toStringUnite();
+            
+            return false;
+        }
+
+        @Override
+        public boolean keyDown(int arg0) {
+            // TODO Auto-generated method stub
+            return false;
+        }
+
+            @Override
+            public boolean scrolled(float arg0, float arg1) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+    });
+        // FIN PROCESADOR TECLADO
+        
+        
+        
         // ESTA FUNCION ES MUY IMPORTANTE, SE LLAMA AL INICIO DEL JUEGO Y SE ENCARGA DE INICIALIZARLO TODO
         // SE CREA LA CAMARA  Y SE PONE EN ORTOGONAL Y LAS DIMENSIONES DE LA PANTALLA
         camera = new OrthographicCamera();
@@ -149,9 +218,11 @@ public class MainLogic extends ApplicationAdapter {
         //Se inicia el nivel y se pone la fuente que se va a usar
         font = new BitmapFont(Gdx.files.internal("segoeprint.fnt"));
         fontScore = new BitmapFont(Gdx.files.internal("test.fnt"));
-          if (debug == false) {
-            initiateLevel(0);
+       
+        if (debug == false) {
+            initiateLevel(-1);
         }
+         
         // PRUEBAS DE TIEMPOS Y MEMORIA PARA DISTINTAS ESTRUCTURAS
        /// DATA TIME PARA DISTINTAS ESTRUCTURAS DE DATOS
         else {
@@ -223,7 +294,8 @@ public class MainLogic extends ApplicationAdapter {
      * pantalla, se llama en un ciclo infinito hasta cerrar el juego
      */
     public void render() {
-
+     
+     
         // ESTA FUNCION MUESTRA TODO EN PANTALLA, TAMBIEN ES UNA FUNCION QUE SE LLAMA REPETIDAMENTE
         // aca se usa lo de batch es un objeto que se encarga de manejar el tema de opengl para renderizar todo de manera eficiente
         camera.update();
@@ -234,6 +306,8 @@ public class MainLogic extends ApplicationAdapter {
         sprbc.setPosition(0, 0);
         sprbc.setSize(800, 600);
         sprbc.draw(batch);
+        font.draw(batch, userName,100,100);
+
         batch.end();
         // PARTE DE LOGICA
         //justTouched me dice si el mouse ha sido recientemente presionado, leftpressed si esta continuamente presionado
@@ -1115,3 +1189,4 @@ public class MainLogic extends ApplicationAdapter {
         return toReturn;
     }
 }
+
