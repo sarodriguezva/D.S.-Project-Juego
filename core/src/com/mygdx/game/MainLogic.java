@@ -11,6 +11,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.google.cloud.firestore.DocumentReference;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.mygdx.game.DataStructures.*;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
@@ -86,7 +88,7 @@ public class MainLogic extends ApplicationAdapter {
     // MAX LIST LEVEL NOS DICE CUANTOS NIVELES DE LISTA HAY
     int maxListLevel[] = new int[3];
     int maxScoreLevel[];
-
+    BinaryHeap<MyTuple<String,String>> scoreHeap = new BinaryHeap<>();
     // MOUSE
     boolean justTouched = false;
     boolean leftPressed;
@@ -930,9 +932,9 @@ public class MainLogic extends ApplicationAdapter {
     }
 
     void saveScore() {
-
+        maxScoreLevel[maxScoreLevel.length - 1] -= maxScoreLevel[currentLevel];
         maxScoreLevel[currentLevel] = levelScore;
-        maxScoreLevel[maxScoreLevel.length - 1] += levelScore;
+        maxScoreLevel[maxScoreLevel.length - 1] += maxScoreLevel[currentLevel];
 
         MyHashTable<String> myJson = new MyHashTable<>();
         myJson.insert("name", userName);
@@ -1062,10 +1064,18 @@ public class MainLogic extends ApplicationAdapter {
                 // ACA VA EL TEMA DE TOP PUNTAJSE //
                 buttonBack = new GenericButton(300,300,64,64,"Re-Do.png");
                 try{
+                    scoreHeap = new BinaryHeap<>();
                     MyDoubleLinkedList<MyTuple<String,String>> res = fbase.searchData("puntajes");
+                    for (int i=0; i<res.getSize() ; i++) {
+                        JsonElement root = new JsonParser().parse(res.getData(i).value);
+                        String strScore = root.getAsJsonObject().get("9").getAsString();
+                        MyTuple<String,String> tp = new MyTuple<>(res.getData(i).key, strScore);
+                        scoreHeap.insert(tp);
+                    }
                 }
                 catch (Exception e){
                 }
+
                 break;
             case -4:
                 // ACA VA EL MENU PRINCIPAL
