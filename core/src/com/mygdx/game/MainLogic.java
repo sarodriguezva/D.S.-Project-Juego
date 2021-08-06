@@ -997,16 +997,16 @@ public class MainLogic extends ApplicationAdapter {
                 break;
             case -3:
                 // ACA VA EL TEMA DE TOP PUNTAJSE //
+                try{
+                    MyDoubleLinkedList<MyTuple<String,String>> res = fbase.searchData("puntajes");
+                }
+                catch (Exception e){
+
+                }
                 break;
             case -4:
                 // ACA VA EL MENU PRINCIPAL
-                try{
-                MyDoubleLinkedList<Pair<String,String>> res = fbase.searchData("puntajes");
-                }
-                catch (Exception e){
-                    
-                }
-                
+
                 break;
             case 0:
                 // SELECTOR DE TEMA NIVELES

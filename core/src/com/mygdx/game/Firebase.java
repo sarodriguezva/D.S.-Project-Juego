@@ -21,6 +21,8 @@ import com.mygdx.game.DataStructures.MyDoubleLinkedList;
 import com.mygdx.game.DataStructures.MyHashTable;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+
+import com.mygdx.game.DataStructures.MyTuple;
 import jdk.internal.net.http.common.Pair;
 
 /**
@@ -87,15 +89,15 @@ public class Firebase {
              System.out.println("Update fallido");
          }
      }   
-     public MyDoubleLinkedList<Pair<String,String>> searchData(String col) throws InterruptedException, ExecutionException{
-         MyDoubleLinkedList<Pair<String,String>> toReturn = new MyDoubleLinkedList<>();
+     public MyDoubleLinkedList<MyTuple<String,String>> searchData(String col) throws InterruptedException, ExecutionException{
+         MyDoubleLinkedList<MyTuple<String,String>> toReturn = new MyDoubleLinkedList<>();
          CollectionReference puntajes = bd.collection(col);
          ApiFuture<QuerySnapshot> qp = puntajes.get();
          
          for (DocumentSnapshot dc : qp.get().getDocuments()){
              String id = dc.getId();
              String json = (String) dc.get("json");
-             Pair<String,String> tuple = new Pair<>(id,json);
+             MyTuple<String,String> tuple = new MyTuple<>(id,json);
              toReturn.add(tuple);
          }     
          return toReturn;
