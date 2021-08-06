@@ -46,6 +46,12 @@ public class MainLogic extends ApplicationAdapter {
     GenericButton buttonNextLevel = null;
     GenericButton buttonRetry = null;
     GenericButton buttonAcceptPlay = null;
+    GenericButton buttonPlay = null;
+    GenericButton buttonScore = null;
+    GenericButton buttonExit = null;
+    GenericButton buttonCredits = null;
+    GenericButton buttonBack = null;
+
     // TEXTURA Y OBJETOS PARA BOTONES
     private Texture infoTexture;
     private Texture fondoPause;
@@ -317,6 +323,16 @@ public class MainLogic extends ApplicationAdapter {
         sprbc.draw(batch);
         batch.end();
 
+        //justTouched me dice si el mouse ha sido recientemente presionado, leftpressed si esta continuamente presionado
+        justTouched = Gdx.input.justTouched();
+        leftPressed = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
+
+        // Si esta continuamente presionado, guardeme las coordenadas del mouse
+        if (leftPressed) {
+            touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+            camera.unproject(touchPos);
+        }
+
         if (currentLevel == -100) {
 
             batch.enableBlending();
@@ -328,15 +344,6 @@ public class MainLogic extends ApplicationAdapter {
             batch.draw(buttonAcceptPlay.buttonTexture, buttonAcceptPlay.buttonCollision.x, buttonAcceptPlay.buttonCollision.y);
             batch.end();
 
-            //justTouched me dice si el mouse ha sido recientemente presionado, leftpressed si esta continuamente presionado
-            justTouched = Gdx.input.justTouched();
-            leftPressed = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
-
-            // Si esta continuamente presionado, guardeme las coordenadas del mouse
-            if (leftPressed) {
-                touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-                camera.unproject(touchPos);
-            }
             // Si le da al boton Jugar, isregistering = false. Queda el userName guardado, posiblemente la edad y lo manda al nivel 0 menu
             // CLICK BOTON ACCEPT PLAY
             if (touchPos.x > buttonAcceptPlay.buttonCollision.x - buttonAcceptPlay.buttonCollision.width && touchPos.x < buttonAcceptPlay.buttonCollision.x + buttonAcceptPlay.buttonCollision.width) {
@@ -346,13 +353,49 @@ public class MainLogic extends ApplicationAdapter {
                     isRegistering = false;
                 }
             }
-            // FIN CURRENT LEVEL = -100
         }
-        
+        // FIN CURRENT LEVEL = -100
+
         // MENU PRINCIPAL
-        if(currentLevel==-4){
-            
+        if(currentLevel==-4) {
+            batch.enableBlending();
+            batch.begin();
+            batch.draw(buttonPlay.buttonTexture, buttonPlay.buttonCollision.x, buttonPlay.buttonCollision.y);
+            batch.draw(buttonScore.buttonTexture, buttonScore.buttonCollision.x, buttonScore.buttonCollision.y);
+            batch.draw(buttonExit.buttonTexture, buttonExit.buttonCollision.x, buttonExit.buttonCollision.y);
+            batch.draw(buttonCredits.buttonTexture, buttonCredits.buttonCollision.x, buttonCredits.buttonCollision.y);
+            batch.end();
+
+            // CLICK BOTON PLAY
+            if (touchPos.x > buttonPlay.buttonCollision.x - buttonPlay.buttonCollision.width && touchPos.x < buttonPlay.buttonCollision.x + buttonPlay.buttonCollision.width) {
+                if (touchPos.y > buttonPlay.buttonCollision.y - buttonPlay.buttonCollision.height && touchPos.y < buttonPlay.buttonCollision.y + buttonPlay.buttonCollision.height) {
+                    clearLevel();
+                    initiateLevel(0);
+                }
+            }
+
+            //CLICK BOTON SCORE
+            if (touchPos.x > buttonScore.buttonCollision.x - buttonScore.buttonCollision.width && touchPos.x < buttonScore.buttonCollision.x + buttonScore.buttonCollision.width) {
+                if (touchPos.y > buttonScore.buttonCollision.y - buttonScore.buttonCollision.height && touchPos.y < buttonScore.buttonCollision.y + buttonScore.buttonCollision.height) {
+                    clearLevel();
+                    initiateLevel(-3);
+                }
+            }
+            // CLICK BOTON EXIT
+            if (touchPos.x > buttonExit.buttonCollision.x - buttonExit.buttonCollision.width && touchPos.x < buttonExit.buttonCollision.x + buttonExit.buttonCollision.width) {
+                if (touchPos.y > buttonExit.buttonCollision.y - buttonExit.buttonCollision.height && touchPos.y < buttonExit.buttonCollision.y + buttonExit.buttonCollision.height) {
+                    Gdx.app.exit();
+                }
+            }
+            // CLICK BOTON CREDITOS
+            if (touchPos.x > buttonCredits.buttonCollision.x - buttonCredits.buttonCollision.width && touchPos.x < buttonCredits.buttonCollision.x + buttonCredits.buttonCollision.width) {
+                if (touchPos.y > buttonCredits.buttonCollision.y - buttonCredits.buttonCollision.height && touchPos.y < buttonCredits.buttonCollision.y + buttonCredits.buttonCollision.height) {
+                    clearLevel();
+                    initiateLevel(-5);
+                }
+            }
         }
+// FIN CURRENT LEVEL = -4
 
         // ELEGIR TEMATICA DE NIVEES
         if (currentLevel == 0) {
@@ -385,8 +428,26 @@ public class MainLogic extends ApplicationAdapter {
             font.draw(batch, "Trees and Priority Heaps", 240, 210);
             batch.end();
         }
-        
-        
+        // FIN CURRENT LEVEL 0
+
+        //NIVEL DE PUNTAJE O CREDITOS
+        if (currentLevel == -3 || currentLevel == -5) {
+
+            batch.begin();
+            batch.draw(buttonBack.buttonTexture, buttonBack.buttonCollision.x, buttonBack.buttonCollision.y);
+            batch.end();
+
+            // CLICK BOTON BACK
+            if (touchPos.x > buttonBack.buttonCollision.x - buttonBack.buttonCollision.width && touchPos.x < buttonBack.buttonCollision.x + buttonBack.buttonCollision.width) {
+                if (touchPos.y > buttonBack.buttonCollision.y - buttonBack.buttonCollision.height && touchPos.y < buttonBack.buttonCollision.y + buttonBack.buttonCollision.height) {
+                    clearLevel();
+                    initiateLevel(-4);
+                }
+            }
+        }
+        // FIN CURRENT LEVEL = -100
+
+
         // PARTE DE LOGICA
         //justTouched me dice si el mouse ha sido recientemente presionado, leftpressed si esta continuamente presionado
         justTouched = Gdx.input.justTouched();
@@ -932,6 +993,8 @@ public class MainLogic extends ApplicationAdapter {
         if (buttonDelete != null) {
             buttonDelete.dispose();
         }
+        if (buttonBack != null) buttonBack.dispose();
+        if ( buttonAcceptPlay != null) buttonAcceptPlay.dispose();
 
         System.gc();
 
@@ -997,16 +1060,23 @@ public class MainLogic extends ApplicationAdapter {
                 break;
             case -3:
                 // ACA VA EL TEMA DE TOP PUNTAJSE //
+                buttonBack = new GenericButton(300,300,64,64,"Re-Do.png");
                 try{
                     MyDoubleLinkedList<MyTuple<String,String>> res = fbase.searchData("puntajes");
                 }
                 catch (Exception e){
-
                 }
                 break;
             case -4:
                 // ACA VA EL MENU PRINCIPAL
-
+                buttonPlay = new GenericButton(300,200,64,64,"Play-button.png");
+                buttonScore = new GenericButton(300,100,64,64,"Points.png");
+                buttonExit = new GenericButton(300,000,64,64,"Exit-button.png");
+                buttonCredits = new GenericButton(300,350,64,64,"Credits2.png");
+                break;
+            case -5:
+                // ACA VAN LOS CREDITOS
+                buttonBack = new GenericButton(300,300,64,64,"Re-Do.png");
                 break;
             case 0:
                 // SELECTOR DE TEMA NIVELES

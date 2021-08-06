@@ -40,9 +40,9 @@ com/mygdx/game/Bridge.java
  com.mygdx.game.Bridge
 com/mygdx/game/Firebase.java
  com.mygdx.game.Firebase
+com/mygdx/game/DataStructures/MyTuple.java
+ com.mygdx.game.DataStructures.MyTuple
 com/mygdx/game/MainLogic.java
  com.mygdx.game.MainLogic
  com.mygdx.game.MainLogic$1
  com.mygdx.game.MainLogic$hueco
-com/mygdx/game/DataStructures/MyTuple.java
- com.mygdx.game.DataStructures.MyTuple
