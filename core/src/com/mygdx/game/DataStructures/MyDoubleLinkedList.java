@@ -331,7 +331,7 @@ public class MyDoubleLinkedList<E> {
         System.out.println(this.toString(reverse));
     }
     public String toStringUnite(){
-                StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         Node<E> aux = this.first;
         while (aux != null){
             sb.append(aux.getData());
