@@ -20,6 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.HashMap;
 import java.util.Map;
+import jdk.internal.net.http.common.Pair;
 
 /**
  * Clase que contiene toda la logica del juego y su funcionamiento interno
@@ -999,6 +1000,13 @@ public class MainLogic extends ApplicationAdapter {
                 break;
             case -4:
                 // ACA VA EL MENU PRINCIPAL
+                try{
+                MyDoubleLinkedList<Pair<String,String>> res = fbase.searchData("puntajes");
+                }
+                catch (Exception e){
+                    
+                }
+                
                 break;
             case 0:
                 // SELECTOR DE TEMA NIVELES
