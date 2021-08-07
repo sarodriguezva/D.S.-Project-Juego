@@ -8,6 +8,7 @@ package com.mygdx.game.DataStructures;
 public class MyGraph<T>{
     MyDoubleLinkedList<MyDoubleLinkedList<GraphNode<T>>> adj_list = new MyDoubleLinkedList<>();
     private int vertexCount, edgesCount;
+    int INFINITY = Integer.MAX_VALUE;
     
     
     public MyGraph(){
@@ -104,14 +105,100 @@ public class MyGraph<T>{
         System.out.println("No se ha encontrado el nodo.");
         return null;
     }
+    
+    public GraphNode<T> getVertex(T data) {
+        return getVertexList(data).getFirst().getData();
+    }
+    
+    public void printShortestPath(T src, T dst){
+        shortestPath(src);
+        
+        StringBuilder sb = new StringBuilder();
+        GraphNode<T> dstVertex = getVertex(dst);
+        GraphNode<T> path = dstVertex.getPath();
+        while (!dstVertex.value.equals(path.value)){
+            sb.append(dstVertex.value);
+            sb.append(" < ");
+            dstVertex = getVertex(path.value);
+            path = dstVertex.getPath();
+        }
+        
+        String shortestPath = sb.toString();
+        shortestPath = shortestPath.substring(0, shortestPath.length() - 3);
+        
+        System.out.println(shortestPath);
+    }
+    
+    private void shortestPath(T s){
+        if (!containsVertex(s)) return;
+        
+        MyQueue<MyDoubleLinkedList<GraphNode<T>>> q = new MyQueue<>();
+        
+        Node<MyDoubleLinkedList<GraphNode<T>>> top = adj_list.getFirst();
+        
+        while (top != null){
+            GraphNode<T> vertex = top.getData().getFirst().getData();
+            vertex.setDistance(INFINITY);
+            
+            if (vertex.value.equals(s)){
+                vertex.setDistance(0);
+                q.enqueue(top.getData());
+            }
+            
+            top = top.getNext();
+        }
+        
+        while (!q.isEmpty()){
+            Node<GraphNode<T>> vertexNode = q.dequeue().getFirst();
+            Node<GraphNode<T>> adjVertexNode = vertexNode.getNext();
+            
+            GraphNode<T> vertex = vertexNode.getData();
+            
+            while(adjVertexNode != null){
+                GraphNode<T> adjVertex = adjVertexNode.getData();
+                
+                
+                if (adjVertex.getDistance() == INFINITY) {
+                    adjVertex.setDistance(vertex.getDistance() + 1);
+                    adjVertex.setPath(vertex);
+                    
+                    MyDoubleLinkedList<GraphNode<T>> adjVertexList;
+                    adjVertexList = getVertexList(adjVertex.value);
+                    q.enqueue(adjVertexList);
+                }
+                
+                adjVertexNode = adjVertexNode.getNext();
+            }
+        }
+    }
+    
+    
 }
 
 class GraphNode<T>{
     T value;
     int weight;
+    private int dist;
+    private GraphNode<T> path;
     
     public GraphNode(T v, int w){
         this.value = v;
         this.weight = w;
+    }
+    
+    public void setDistance(int distance){
+        this.dist = distance;
+    }
+    
+    public int getDistance(){
+        return this.dist;
+    }
+    
+    public void setPath(GraphNode<T> path){
+        this.path = path;
+    }
+    
+    public GraphNode<T> getPath(){
+        return this.path;
     }
 }
