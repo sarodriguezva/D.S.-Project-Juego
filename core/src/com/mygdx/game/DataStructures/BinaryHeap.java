@@ -59,9 +59,8 @@ public class BinaryHeap<T extends Comparable <? super T>> {
     /**
      * Método que inserta un elemento al montí­culo binario.
      * @param data Elemento a insertar.
-     * @param heap Valor booleano. Si es verdadero, se maneja un minHeap.
      */
-    public void insert(T data, boolean heap){
+    public void insert(T data){
         /*
         * Si el arreglo está lleno, se debe crear uno nuevo con el doble de capacidad.
         * Conservando los elementos actuales.
@@ -79,7 +78,7 @@ public class BinaryHeap<T extends Comparable <? super T>> {
         * Al encontrar el nivel de prioridad adecuado, se procede a asignar el valor al nodo libre.
         */
         int hole = ++currentSize;
-        for (array[0] = data; heap ? (data.compareTo(array[hole/2]) < 0) : (data.compareTo(array[hole/2]) > 0); hole /= 2) {
+        for (array[0] = data; minHeap ? (data.compareTo(array[hole/2]) < 0) : (data.compareTo(array[hole/2]) > 0); hole /= 2) {
             array[hole] = array[hole/2];
         }
         array[hole] = data;
@@ -87,10 +86,9 @@ public class BinaryHeap<T extends Comparable <? super T>> {
 
     /**
      * Método que elimina el elemento con mayor prioridad (menor valor).
-     * @param heap Valor booleano. Si es verdadero, se maneja un minHeap.
      * @return Valor del elemento.
      */
-    public T deleteTop(boolean heap){
+    public T deleteTop(){
         if (this.isEmpty()) {
             System.out.println("Montí­culo Vací­o.");
             return null;
@@ -117,7 +115,7 @@ public class BinaryHeap<T extends Comparable <? super T>> {
          */
         for (; hole * 2 <= currentSize; hole = child){
             child = hole*2;
-            if (child != currentSize && heap ? (array[child + 1].compareTo(array[child]) < 0) : (array[child + 1].compareTo(array[child]) > 0)) child++;
+            if (child != currentSize && minHeap ? (array[child + 1].compareTo(array[child]) < 0) : (array[child + 1].compareTo(array[child]) > 0)) child++;
             if (array[child].compareTo(tmp) < 0) array[hole] = array[child];
             else break;
         }
