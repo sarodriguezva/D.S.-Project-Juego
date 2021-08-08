@@ -86,7 +86,7 @@ public class MainLogic extends ApplicationAdapter {
     // MAX LIST LEVEL NOS DICE CUANTOS NIVELES DE LISTA HAY
     int maxListLevel[] = new int[3];
     int maxScoreLevel[];
-    BinaryHeap<MyTuple<Integer,String>> scoreHeap = new BinaryHeap<>();
+    BinaryHeap<MyTuple<Integer,String>> scoreHeap = new BinaryHeap<>(false);
     // MOUSE
     boolean justTouched = false;
     boolean leftPressed;
@@ -335,180 +335,214 @@ public class MainLogic extends ApplicationAdapter {
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             camera.unproject(touchPos);
         }
-
-        if (currentLevel == -100) {
-
-            batch.enableBlending();
-            batch.begin();
-
-            font.draw(batch, userName, 500, 100);
-            font.draw(batch, "Su nombre de usuario: ", 100, 100);
-
-            batch.draw(buttonAcceptPlay.buttonTexture, buttonAcceptPlay.buttonCollision.x, buttonAcceptPlay.buttonCollision.y);
-            batch.end();
-
-            // Si le da al boton Jugar, isregistering = false. Queda el userName guardado, posiblemente la edad y lo manda al nivel 0 menu
-            // CLICK BOTON ACCEPT PLAY
-            if (touchPos.x > buttonAcceptPlay.buttonCollision.x - buttonAcceptPlay.buttonCollision.width && touchPos.x < buttonAcceptPlay.buttonCollision.x + buttonAcceptPlay.buttonCollision.width) {
-                if (touchPos.y > buttonAcceptPlay.buttonCollision.y - buttonAcceptPlay.buttonCollision.height && touchPos.y < buttonAcceptPlay.buttonCollision.y + buttonAcceptPlay.buttonCollision.height) {
-                    clearLevel();
-                    initiateLevel(-4);
-                    isRegistering = false;
-                }
-            }
+        if (waitTime > 0) {
+            waitTime--;
         }
-        // FIN CURRENT LEVEL = -100
-
-        // MENU PRINCIPAL
-        if(currentLevel==-4) {
-            batch.enableBlending();
-            batch.begin();
-            batch.draw(buttonPlay.buttonTexture, buttonPlay.buttonCollision.x, buttonPlay.buttonCollision.y);
-            batch.draw(buttonScore.buttonTexture, buttonScore.buttonCollision.x, buttonScore.buttonCollision.y);
-            batch.draw(buttonExit.buttonTexture, buttonExit.buttonCollision.x, buttonExit.buttonCollision.y);
-            batch.draw(buttonCredits.buttonTexture, buttonCredits.buttonCollision.x, buttonCredits.buttonCollision.y);
-            batch.end();
-
-            // CLICK BOTON PLAY
-            if (touchPos.x > buttonPlay.buttonCollision.x - buttonPlay.buttonCollision.width && touchPos.x < buttonPlay.buttonCollision.x + buttonPlay.buttonCollision.width) {
-                if (touchPos.y > buttonPlay.buttonCollision.y - buttonPlay.buttonCollision.height && touchPos.y < buttonPlay.buttonCollision.y + buttonPlay.buttonCollision.height) {
-                    clearLevel();
-                    initiateLevel(0);
-                }
-            }
-
-            //CLICK BOTON SCORE
-            if (touchPos.x > buttonScore.buttonCollision.x - buttonScore.buttonCollision.width && touchPos.x < buttonScore.buttonCollision.x + buttonScore.buttonCollision.width) {
-                if (touchPos.y > buttonScore.buttonCollision.y - buttonScore.buttonCollision.height && touchPos.y < buttonScore.buttonCollision.y + buttonScore.buttonCollision.height) {
-                    clearLevel();
-                    initiateLevel(-3);
-                }
-            }
-            // CLICK BOTON EXIT
-            if (touchPos.x > buttonExit.buttonCollision.x - buttonExit.buttonCollision.width && touchPos.x < buttonExit.buttonCollision.x + buttonExit.buttonCollision.width) {
-                if (touchPos.y > buttonExit.buttonCollision.y - buttonExit.buttonCollision.height && touchPos.y < buttonExit.buttonCollision.y + buttonExit.buttonCollision.height) {
-                    Gdx.app.exit();
-                }
-            }
-            // CLICK BOTON CREDITOS
-            if (touchPos.x > buttonCredits.buttonCollision.x - buttonCredits.buttonCollision.width && touchPos.x < buttonCredits.buttonCollision.x + buttonCredits.buttonCollision.width) {
-                if (touchPos.y > buttonCredits.buttonCollision.y - buttonCredits.buttonCollision.height && touchPos.y < buttonCredits.buttonCollision.y + buttonCredits.buttonCollision.height) {
-                    clearLevel();
-                    initiateLevel(-5);
-                }
-            }
+        if (waitTime == 1) {
+            waitTime = 0;
+            touchPos.set(-10,-10,-10);
         }
-// FIN CURRENT LEVEL = -4
-        // NIVEL PARA MOSTRAR PUNTAJES
-        if ( currentLevel==-3){
-            batch.enableBlending();
-            batch.begin();
 
-            for (int i = 0 ; i<listButtonScore.getSize();i++){
-                ScoreButton bt = listButtonScore.getData(i);
-                batch.draw(bt.buttonTexture, bt.buttonCollision.x, bt.buttonCollision.y);
-                String score = bt.buttonTuple.value;
-                JsonElement root = new JsonParser().parse(res.getData(bt.buttonTuple.key).value);
-                String name = root.getAsJsonObject().get("name").getAsString();
-                fontScore.draw(batch, name ,bt.buttonCollision.x, bt.buttonCollision.y);
-                fontScore.draw(batch, score ,bt.buttonCollision.x+200, bt.buttonCollision.y+50);
-            }
-            batch.end();
+        // Todos los botones de menu tendran una variable wait para no tomar colision hasta que pase ese tiempo
+            if (currentLevel == -100) {
 
-            // Al dar click en un boton
-            for (int i = 0 ; i<listButtonScore.getSize();i++) {
-                ScoreButton bt = listButtonScore.getData(i);
-                if (touchPos.x > bt.buttonCollision.x - bt.buttonCollision.width && touchPos.x < bt.buttonCollision.x + bt.buttonCollision.width) {
-                    if (touchPos.y > bt.buttonCollision.y - bt.buttonCollision.height && touchPos.y < bt.buttonCollision.y + bt.buttonCollision.height) {
+                batch.enableBlending();
+                batch.begin();
+
+                font.draw(batch, userName, 500, 100);
+                font.draw(batch, "Su nombre de usuario: ", 100, 100);
+
+                batch.draw(buttonAcceptPlay.buttonTexture, buttonAcceptPlay.buttonCollision.x, buttonAcceptPlay.buttonCollision.y);
+                batch.end();
+
+                // Si le da al boton Jugar, isregistering = false. Queda el userName guardado, posiblemente la edad y lo manda al nivel 0 menu
+                if (waitTime == 0) {
+                // CLICK BOTON ACCEPT PLAY
+                if (touchPos.x > buttonAcceptPlay.buttonCollision.x - buttonAcceptPlay.buttonCollision.width && touchPos.x < buttonAcceptPlay.buttonCollision.x + buttonAcceptPlay.buttonCollision.width) {
+                    if (touchPos.y > buttonAcceptPlay.buttonCollision.y - buttonAcceptPlay.buttonCollision.height && touchPos.y < buttonAcceptPlay.buttonCollision.y + buttonAcceptPlay.buttonCollision.height) {
                         clearLevel();
-                        selectedScore = res.getData( Integer.valueOf(bt.buttonTuple.key)).value;
-                        initiateLevel(-6);
+                        initiateLevel(-4);
+                        isRegistering = false;
+                    }
+                }
+                }
+            }
+            // FIN CURRENT LEVEL = -100
+
+            // MENU PRINCIPAL
+            if (currentLevel == -4) {
+                batch.enableBlending();
+                batch.begin();
+                batch.draw(buttonPlay.buttonTexture, buttonPlay.buttonCollision.x, buttonPlay.buttonCollision.y);
+                batch.draw(buttonScore.buttonTexture, buttonScore.buttonCollision.x, buttonScore.buttonCollision.y);
+                batch.draw(buttonExit.buttonTexture, buttonExit.buttonCollision.x, buttonExit.buttonCollision.y);
+                batch.draw(buttonCredits.buttonTexture, buttonCredits.buttonCollision.x, buttonCredits.buttonCollision.y);
+                batch.end();
+                if (waitTime == 0) {
+                // CLICK BOTON PLAY
+                if (touchPos.x > buttonPlay.buttonCollision.x - buttonPlay.buttonCollision.width && touchPos.x < buttonPlay.buttonCollision.x + buttonPlay.buttonCollision.width) {
+                    if (touchPos.y > buttonPlay.buttonCollision.y - buttonPlay.buttonCollision.height && touchPos.y < buttonPlay.buttonCollision.y + buttonPlay.buttonCollision.height) {
+                        clearLevel();
+                        initiateLevel(0);
+                    }
+                }
+
+                //CLICK BOTON SCORE
+                if (touchPos.x > buttonScore.buttonCollision.x - buttonScore.buttonCollision.width && touchPos.x < buttonScore.buttonCollision.x + buttonScore.buttonCollision.width) {
+                    if (touchPos.y > buttonScore.buttonCollision.y - buttonScore.buttonCollision.height && touchPos.y < buttonScore.buttonCollision.y + buttonScore.buttonCollision.height) {
+                        clearLevel();
+                        initiateLevel(-3);
+                    }
+                }
+                // CLICK BOTON EXIT
+                if (touchPos.x > buttonExit.buttonCollision.x - buttonExit.buttonCollision.width && touchPos.x < buttonExit.buttonCollision.x + buttonExit.buttonCollision.width) {
+                    if (touchPos.y > buttonExit.buttonCollision.y - buttonExit.buttonCollision.height && touchPos.y < buttonExit.buttonCollision.y + buttonExit.buttonCollision.height) {
+                        Gdx.app.exit();
+                    }
+                }
+                // CLICK BOTON CREDITOS
+                if (touchPos.x > buttonCredits.buttonCollision.x - buttonCredits.buttonCollision.width && touchPos.x < buttonCredits.buttonCollision.x + buttonCredits.buttonCollision.width) {
+                    if (touchPos.y > buttonCredits.buttonCollision.y - buttonCredits.buttonCollision.height && touchPos.y < buttonCredits.buttonCollision.y + buttonCredits.buttonCollision.height) {
+                        clearLevel();
+                        initiateLevel(-5);
+                    }
+                }
+                }
+            }
+// FIN CURRENT LEVEL = -4
+            // NIVEL PARA MOSTRAR PUNTAJES
+            if (currentLevel == -3) {
+                batch.enableBlending();
+                batch.begin();
+
+                for (int i = 0; i < listButtonScore.getSize(); i++) {
+                    ScoreButton bt = listButtonScore.getData(i);
+                    batch.draw(bt.buttonTexture, bt.buttonCollision.x, bt.buttonCollision.y);
+                    String score = bt.buttonTuple.value;
+                    JsonElement root = new JsonParser().parse(res.getData(bt.buttonTuple.key).value);
+                    String name = root.getAsJsonObject().get("name").getAsString();
+                    fontScore.draw(batch, name, bt.buttonCollision.x, bt.buttonCollision.y);
+                    fontScore.draw(batch, score, bt.buttonCollision.x + 200, bt.buttonCollision.y + 50);
+                }
+                batch.draw(buttonBack.buttonTexture, buttonBack.buttonCollision.x, buttonBack.buttonCollision.y);
+                batch.end();
+                if (waitTime == 0) {
+                    // Al dar click en un boton
+                    for (int i = 0; i < listButtonScore.getSize(); i++) {
+                        ScoreButton bt = listButtonScore.getData(i);
+                        if (touchPos.x > bt.buttonCollision.x - bt.buttonCollision.width && touchPos.x < bt.buttonCollision.x + bt.buttonCollision.width) {
+                            if (touchPos.y > bt.buttonCollision.y - bt.buttonCollision.height && touchPos.y < bt.buttonCollision.y + bt.buttonCollision.height) {
+                                clearLevel();
+                                selectedScore = res.getData(Integer.valueOf(bt.buttonTuple.key)).value;
+                                initiateLevel(-6);
+                            }
+                        }
+                    }
+
+                    // CLICK BOTON BACK
+                    if (touchPos.x > buttonBack.buttonCollision.x - buttonBack.buttonCollision.width && touchPos.x < buttonBack.buttonCollision.x + buttonBack.buttonCollision.width) {
+                        if (touchPos.y > buttonBack.buttonCollision.y - buttonBack.buttonCollision.height && touchPos.y < buttonBack.buttonCollision.y + buttonBack.buttonCollision.height) {
+                            clearLevel();
+                            initiateLevel(-4);
+                        }
                     }
                 }
             }
-        }
-        // FIN CURRENT LEVEL =-3
-        if (currentLevel == -6){
-            batch.enableBlending();
-            batch.begin();
-            JsonElement root = new JsonParser().parse(selectedScore);
-            String name = root.getAsJsonObject().get("name").getAsString();
-            String scoreglobal = root.getAsJsonObject().get("9").getAsString();
-            String lvl1 = root.getAsJsonObject().get("0").getAsString();
-            String lvl2 = root.getAsJsonObject().get("1").getAsString();
-            String lvl3 = root.getAsJsonObject().get("2").getAsString();
-            String lvl4 = root.getAsJsonObject().get("3").getAsString();
-            String lvl5 = root.getAsJsonObject().get("4").getAsString();
-            String lvl6 = root.getAsJsonObject().get("5").getAsString();
-            String lvl7 = root.getAsJsonObject().get("6").getAsString();
-            String lvl8 = root.getAsJsonObject().get("7").getAsString();
-            String lvl9 = root.getAsJsonObject().get("8").getAsString();
-
-
-            fontScore.draw(batch, "Nombre: " + name ,200,600);
-            fontScore.draw(batch, "Puntaje global: " + scoreglobal ,200,550);
-            fontScore.draw(batch, "level 1: " + lvl1 ,200,500);
-            fontScore.draw(batch, "level 2: " + lvl2 ,200,450);
-            fontScore.draw(batch, "level 3: " + lvl3 ,200,400);
-            fontScore.draw(batch, "level 4: " + lvl4 ,200,350);
-            fontScore.draw(batch, "level 5: " + lvl5 ,200,300);
-            fontScore.draw(batch, "level 6: " + lvl6 ,200,250);
-            fontScore.draw(batch, "level 7: " + lvl7 ,200,200);
-            fontScore.draw(batch, "level 8: " + lvl8 ,200,150);
-            fontScore.draw(batch, "level 9: " + lvl9 ,200,100);
-
-            batch.end();
-        }
-
-        // ELEGIR TEMATICA DE NIVEES
-        if (currentLevel == 0) {
-            //CLICK BOTON NIVELES LINEALES
-            if (touchPos.x > buttonLevelLinearDS.buttonCollision.x - buttonLevelLinearDS.buttonCollision.width && touchPos.x < buttonLevelLinearDS.buttonCollision.x + buttonLevelLinearDS.buttonCollision.width) {
-                if (touchPos.y > buttonLevelLinearDS.buttonCollision.y - buttonLevelLinearDS.buttonCollision.height && touchPos.y < buttonLevelLinearDS.buttonCollision.y + buttonLevelLinearDS.buttonCollision.height) {
-                    clearLevel();
-                    tema = "list";
-                    initiateLevel(1);
-
+            // FIN CURRENT LEVEL =-3
+        // ACA VAN LOS CREDITOS
+            if (currentLevel==-5){
+                batch.enableBlending();
+                batch.begin();
+                batch.draw(buttonBack.buttonTexture, buttonBack.buttonCollision.x, buttonBack.buttonCollision.y);
+                batch.end();
+                // CLICK BOTON BACK
+                if (waitTime == 0) {
+                if (touchPos.x > buttonBack.buttonCollision.x - buttonBack.buttonCollision.width && touchPos.x < buttonBack.buttonCollision.x + buttonBack.buttonCollision.width) {
+                    if (touchPos.y > buttonBack.buttonCollision.y - buttonBack.buttonCollision.height && touchPos.y < buttonBack.buttonCollision.y + buttonBack.buttonCollision.height) {
+                        clearLevel();
+                        initiateLevel(-4);
+                    }
+                }
                 }
             }
-            // CLICK BOTON NIVELES ARBOLES
-            if (touchPos.x > buttonLevelTrees.buttonCollision.x - buttonLevelTrees.buttonCollision.width && touchPos.x < buttonLevelTrees.buttonCollision.x + buttonLevelTrees.buttonCollision.width) {
-                if (touchPos.y > buttonLevelTrees.buttonCollision.y - buttonLevelTrees.buttonCollision.height && touchPos.y < buttonLevelTrees.buttonCollision.y + buttonLevelTrees.buttonCollision.height) {
-                    //CUANDO HAYA NIVEL DE ARBOLES (DEBERIA SER EL NIVEL 4)
-                    clearLevel();
-                    tema = "tree";
-                    waitTime = 10;
-                    initiateLevel(4);
 
+            // ACA VA SI SE CLICKEA ALGUN PUNTAJE
+
+            if (currentLevel == -6) {
+
+                // CLICK BOTON BACK
+                if (waitTime == 0) {
+                    if (touchPos.x > buttonBack.buttonCollision.x - buttonBack.buttonCollision.width && touchPos.x < buttonBack.buttonCollision.x + buttonBack.buttonCollision.width) {
+                        if (touchPos.y > buttonBack.buttonCollision.y - buttonBack.buttonCollision.height && touchPos.y < buttonBack.buttonCollision.y + buttonBack.buttonCollision.height) {
+                            clearLevel();
+                            initiateLevel(-3);
+                        }
+                    }
                 }
+                JsonElement root = new JsonParser().parse(selectedScore);
+                String name = root.getAsJsonObject().get("name").getAsString();
+                String scoreglobal = root.getAsJsonObject().get("9").getAsString();
+                String lvl1 = root.getAsJsonObject().get("0").getAsString();
+                String lvl2 = root.getAsJsonObject().get("1").getAsString();
+                String lvl3 = root.getAsJsonObject().get("2").getAsString();
+                String lvl4 = root.getAsJsonObject().get("3").getAsString();
+                String lvl5 = root.getAsJsonObject().get("4").getAsString();
+                String lvl6 = root.getAsJsonObject().get("5").getAsString();
+                String lvl7 = root.getAsJsonObject().get("6").getAsString();
+                String lvl8 = root.getAsJsonObject().get("7").getAsString();
+                String lvl9 = root.getAsJsonObject().get("8").getAsString();
+
+                batch.enableBlending();
+                batch.begin();
+                batch.draw(buttonBack.buttonTexture, buttonBack.buttonCollision.x, buttonBack.buttonCollision.y);
+                fontScore.draw(batch, "Nombre: " + name, 200, 600);
+                fontScore.draw(batch, "Puntaje global: " + scoreglobal, 200, 550);
+                fontScore.draw(batch, "level 1: " + lvl1, 200, 500);
+                fontScore.draw(batch, "level 2: " + lvl2, 200, 450);
+                fontScore.draw(batch, "level 3: " + lvl3, 200, 400);
+                fontScore.draw(batch, "level 4: " + lvl4, 200, 350);
+                fontScore.draw(batch, "level 5: " + lvl5, 200, 300);
+                fontScore.draw(batch, "level 6: " + lvl6, 200, 250);
+                fontScore.draw(batch, "level 7: " + lvl7, 200, 200);
+                fontScore.draw(batch, "level 8: " + lvl8, 200, 150);
+                fontScore.draw(batch, "level 9: " + lvl9, 200, 100);
+                batch.end();
             }
-            // DRAW TEXTO PARA ELEGIR TEMATICA
-            batch.enableBlending();
-            batch.begin();
-            batch.draw(buttonLevelLinearDS.buttonTexture, 210, 270);
-            font.draw(batch, "Linear Data Structures", 250, 300);
-            batch.draw(buttonLevelTrees.buttonTexture, 210, 180);
-            font.draw(batch, "Trees and Priority Heaps", 240, 210);
-            batch.end();
-        }
-        // FIN CURRENT LEVEL 0
 
-        //NIVEL DE PUNTAJE O CREDITOS
-        if (currentLevel == -3 || currentLevel == -5) {
+            // ELEGIR TEMATICA DE NIVEES
+            if (currentLevel == 0) {
+                if (waitTime == 0) {
+                    //CLICK BOTON NIVELES LINEALES
+                    if (touchPos.x > buttonLevelLinearDS.buttonCollision.x - buttonLevelLinearDS.buttonCollision.width && touchPos.x < buttonLevelLinearDS.buttonCollision.x + buttonLevelLinearDS.buttonCollision.width) {
+                        if (touchPos.y > buttonLevelLinearDS.buttonCollision.y - buttonLevelLinearDS.buttonCollision.height && touchPos.y < buttonLevelLinearDS.buttonCollision.y + buttonLevelLinearDS.buttonCollision.height) {
+                            clearLevel();
+                            tema = "list";
+                            initiateLevel(1);
 
-            batch.begin();
-            batch.draw(buttonBack.buttonTexture, buttonBack.buttonCollision.x, buttonBack.buttonCollision.y);
-            batch.end();
+                        }
+                    }
+                    // CLICK BOTON NIVELES ARBOLES
+                    if (touchPos.x > buttonLevelTrees.buttonCollision.x - buttonLevelTrees.buttonCollision.width && touchPos.x < buttonLevelTrees.buttonCollision.x + buttonLevelTrees.buttonCollision.width) {
+                        if (touchPos.y > buttonLevelTrees.buttonCollision.y - buttonLevelTrees.buttonCollision.height && touchPos.y < buttonLevelTrees.buttonCollision.y + buttonLevelTrees.buttonCollision.height) {
+                            //CUANDO HAYA NIVEL DE ARBOLES (DEBERIA SER EL NIVEL 4)
+                            clearLevel();
+                            tema = "tree";
+                            waitTime = 10;
+                            initiateLevel(4);
 
-            // CLICK BOTON BACK
-            if (touchPos.x > buttonBack.buttonCollision.x - buttonBack.buttonCollision.width && touchPos.x < buttonBack.buttonCollision.x + buttonBack.buttonCollision.width) {
-                if (touchPos.y > buttonBack.buttonCollision.y - buttonBack.buttonCollision.height && touchPos.y < buttonBack.buttonCollision.y + buttonBack.buttonCollision.height) {
-                    clearLevel();
-                    initiateLevel(-4);
+                        }
+                    }
                 }
+                // DRAW TEXTO PARA ELEGIR TEMATICA
+                batch.enableBlending();
+                batch.begin();
+                batch.draw(buttonLevelLinearDS.buttonTexture, 210, 270);
+                font.draw(batch, "Linear Data Structures", 250, 300);
+                batch.draw(buttonLevelTrees.buttonTexture, 210, 180);
+                font.draw(batch, "Trees and Priority Heaps", 240, 210);
+                batch.end();
             }
-        }
-        // FIN CURRENT LEVEL = -100
+            // FIN CURRENT LEVEL 0
 
 
         // PARTE DE LOGICA
@@ -930,12 +964,7 @@ public class MainLogic extends ApplicationAdapter {
             }
             fontScore.draw(batch, "Puntaje: " + Integer.toString(levelScore), 290, 585);
             batch.draw(buttonHelp.buttonTexture, buttonHelp.buttonCollision.x - 32, buttonHelp.buttonCollision.y - 32);
-            if (waitTime > 0) {
-                waitTime--;
-            }
-            if (waitTime <= 1) {
-                waitTime = 0;
-            }
+
 
             if (pause == true) {
                 Sprite sprite = new Sprite(fondoPause);
@@ -1113,32 +1142,36 @@ public class MainLogic extends ApplicationAdapter {
                 // ACA EL TEMA DE REGISTRAR USUARIO //
                 isRegistering = true;
                 buttonAcceptPlay = new GenericButton(300, 400, 64, 64, "Play-button.png");
+                waitTime=15;
                 break;
                 
             case -1:
                 //Seleccionar niveles tablas
+                waitTime=15;
                 break;
             case -2:
                 // seleccionar niveles arboles
+                waitTime=15;
                 break;
             case -3:
                 // ACA VA EL TEMA DE TOP PUNTAJSE //
                 buttonBack = new GenericButton(300,300,64,64,"Re-Do.png");
+                waitTime=15;
                 try{
-                    scoreHeap = new BinaryHeap<>();
+                    scoreHeap = new BinaryHeap<>(false);
                     res = fbase.searchData("puntajes");
                     for (int i=0; i<res.getSize() ; i++) {
                         JsonElement root = new JsonParser().parse(res.getData(i).value);
                         String strScore = root.getAsJsonObject().get("9").getAsString();
                         MyTuple<Integer,String> tp = new MyTuple<>(i, strScore);
-                        scoreHeap.insert(tp);
+                        scoreHeap.insert(tp,false);
 
                     }
                     // ACA VA MOSTRAR CADA COSITA DE UN PUNTAJE SI SE LE DA CLICK
                     int topSize = 10;
                     if (scoreHeap.getCurrentSize() < 10) topSize=scoreHeap.getCurrentSize();
                     for (int i = 0; i < topSize; i++){
-                        ScoreButton buttonShowScore = new ScoreButton(300,400-100*i,64,64,"MainMenuButtons.jpg",scoreHeap.deleteMin());
+                        ScoreButton buttonShowScore = new ScoreButton(300,400-100*i,64,64,"MainMenuButtons.jpg",scoreHeap.deleteTop(false));
                         listButtonScore.add(buttonShowScore);
                     }
                 }
@@ -1148,6 +1181,7 @@ public class MainLogic extends ApplicationAdapter {
                 break;
             case -4:
                 // ACA VA EL MENU PRINCIPAL
+                waitTime=15;
                 buttonPlay = new GenericButton(300,200,64,64,"Play-button.png");
                 buttonScore = new GenericButton(300,100,64,64,"Points.png");
                 buttonExit = new GenericButton(300,000,64,64,"Exit-button.png");
@@ -1155,14 +1189,17 @@ public class MainLogic extends ApplicationAdapter {
                 break;
             case -5:
                 // ACA VAN LOS CREDITOS
+                waitTime=15;
                 buttonBack = new GenericButton(300,300,64,64,"Re-Do.png");
                 break;
             case -6:
                 // ACA VA SI SE SELECCIONA UN PUNTAJE
+                waitTime=15;
                 buttonBack = new GenericButton(300,300,64,64,"Re-Do.png");
                 break;
             case 0:
                 // SELECTOR DE TEMA NIVELES
+                waitTime=15;
                 buttonLevelLinearDS = new GenericButton(210, 270, 381, 44, "MainMenuButtons.jpg");
                 buttonLevelTrees = new GenericButton(210, 180, 381, 44, "MainMenuButtons.jpg");
                 break;
