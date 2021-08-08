@@ -73,6 +73,7 @@ public class MainLogic extends ApplicationAdapter {
     // VARIABLES DE TEXTO
     String tema;
     String mode;
+    String selectedScore;
     // VARIABLE DE ENTEROS
     int Lastfilled;
     int currentLevel = 0;
@@ -410,8 +411,52 @@ public class MainLogic extends ApplicationAdapter {
                 JsonElement root = new JsonParser().parse(res.getData(bt.buttonTuple.key).value);
                 String name = root.getAsJsonObject().get("name").getAsString();
                 fontScore.draw(batch, name ,bt.buttonCollision.x, bt.buttonCollision.y);
-                fontScore.draw(batch, score ,bt.buttonCollision.x+200, bt.buttonCollision.y-100);
+                fontScore.draw(batch, score ,bt.buttonCollision.x+200, bt.buttonCollision.y+50);
             }
+            batch.end();
+
+            // Al dar click en un boton
+            for (int i = 0 ; i<listButtonScore.getSize();i++) {
+                ScoreButton bt = listButtonScore.getData(i);
+                if (touchPos.x > bt.buttonCollision.x - bt.buttonCollision.width && touchPos.x < bt.buttonCollision.x + bt.buttonCollision.width) {
+                    if (touchPos.y > bt.buttonCollision.y - bt.buttonCollision.height && touchPos.y < bt.buttonCollision.y + bt.buttonCollision.height) {
+                        clearLevel();
+                        selectedScore = res.getData( Integer.valueOf(bt.buttonTuple.key)).value;
+                        initiateLevel(-6);
+                    }
+                }
+            }
+        }
+        // FIN CURRENT LEVEL =-3
+        if (currentLevel == -6){
+            batch.enableBlending();
+            batch.begin();
+            JsonElement root = new JsonParser().parse(selectedScore);
+            String name = root.getAsJsonObject().get("name").getAsString();
+            String scoreglobal = root.getAsJsonObject().get("9").getAsString();
+            String lvl1 = root.getAsJsonObject().get("0").getAsString();
+            String lvl2 = root.getAsJsonObject().get("1").getAsString();
+            String lvl3 = root.getAsJsonObject().get("2").getAsString();
+            String lvl4 = root.getAsJsonObject().get("3").getAsString();
+            String lvl5 = root.getAsJsonObject().get("4").getAsString();
+            String lvl6 = root.getAsJsonObject().get("5").getAsString();
+            String lvl7 = root.getAsJsonObject().get("6").getAsString();
+            String lvl8 = root.getAsJsonObject().get("7").getAsString();
+            String lvl9 = root.getAsJsonObject().get("8").getAsString();
+
+
+            fontScore.draw(batch, "Nombre: " + name ,200,600);
+            fontScore.draw(batch, "Puntaje global: " + scoreglobal ,200,550);
+            fontScore.draw(batch, "level 1: " + lvl1 ,200,500);
+            fontScore.draw(batch, "level 2: " + lvl2 ,200,450);
+            fontScore.draw(batch, "level 3: " + lvl3 ,200,400);
+            fontScore.draw(batch, "level 4: " + lvl4 ,200,350);
+            fontScore.draw(batch, "level 5: " + lvl5 ,200,300);
+            fontScore.draw(batch, "level 6: " + lvl6 ,200,250);
+            fontScore.draw(batch, "level 7: " + lvl7 ,200,200);
+            fontScore.draw(batch, "level 8: " + lvl8 ,200,150);
+            fontScore.draw(batch, "level 9: " + lvl9 ,200,100);
+
             batch.end();
         }
 
@@ -1113,7 +1158,8 @@ public class MainLogic extends ApplicationAdapter {
                 buttonBack = new GenericButton(300,300,64,64,"Re-Do.png");
                 break;
             case -6:
-
+                // ACA VA SI SE SELECCIONA UN PUNTAJE
+                buttonBack = new GenericButton(300,300,64,64,"Re-Do.png");
                 break;
             case 0:
                 // SELECTOR DE TEMA NIVELES
