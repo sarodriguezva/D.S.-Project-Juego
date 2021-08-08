@@ -1,7 +1,7 @@
 package com.mygdx.game;
 
 import com.google.api.core.ApiFuture;
-import com.google.api.core.ApiFutures;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import com.google.auth.oauth2.GoogleCredentials;
@@ -15,15 +15,11 @@ import com.google.cloud.firestore.WriteResult;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.mygdx.game.DataStructures.MyDoubleLinkedList;
-import com.mygdx.game.DataStructures.MyHashTable;
-import java.util.Map;
+
 import java.util.concurrent.ExecutionException;
 
 import com.mygdx.game.DataStructures.MyTuple;
-import jdk.internal.net.http.common.Pair;
 
 /**
  * Clase para hacer una integracion muy simple con Firebase
@@ -101,5 +97,12 @@ public class Firebase {
              toReturn.add(tuple);
          }     
          return toReturn;
+     }
+     public String searchByID (String col, String id) throws  InterruptedException,ExecutionException {
+         DocumentReference docRef = bd.collection(col).document(id);
+         ApiFuture<DocumentSnapshot> future = docRef.get();
+         DocumentSnapshot document = future.get();
+         String json = document.getData().toString();
+         return json;
      }
 }

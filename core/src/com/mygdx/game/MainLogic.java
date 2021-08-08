@@ -20,9 +20,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.HashMap;
-import java.util.Map;
-import jdk.internal.net.http.common.Pair;
 
 /**
  * Clase que contiene toda la logica del juego y su funcionamiento interno
@@ -88,7 +85,7 @@ public class MainLogic extends ApplicationAdapter {
     // MAX LIST LEVEL NOS DICE CUANTOS NIVELES DE LISTA HAY
     int maxListLevel[] = new int[3];
     int maxScoreLevel[];
-    BinaryHeap<MyTuple<String,String>> scoreHeap = new BinaryHeap<>();
+    BinaryHeap<MyTuple<Integer,String>> scoreHeap = new BinaryHeap<>();
     // MOUSE
     boolean justTouched = false;
     boolean leftPressed;
@@ -122,6 +119,9 @@ public class MainLogic extends ApplicationAdapter {
     private Integer[] listLeafTreePlayerOrder = new Integer[1];
     // LISTA PARA PODER HACER UN-DO
     private MyDoubleLinkedList<Leaf> LastDeleted = new MyDoubleLinkedList<>();
+    // Lista de scores
+    private MyDoubleLinkedList<ScoreButton> listButtonScore = new MyDoubleLinkedList<>();
+    private MyDoubleLinkedList<MyTuple<String,String>> res =new MyDoubleLinkedList<>();
     hueco objetivoArboles = new hueco(0, 0, 0, 0, 0);
     hueco objetivoBorrar = new hueco(1, 150, 0, 89, 92);
     private BitmapFont font;
@@ -398,6 +398,22 @@ public class MainLogic extends ApplicationAdapter {
             }
         }
 // FIN CURRENT LEVEL = -4
+        // NIVEL PARA MOSTRAR PUNTAJES
+        if ( currentLevel==-3){
+            batch.enableBlending();
+            batch.begin();
+
+            for (int i = 0 ; i<listButtonScore.getSize();i++){
+                ScoreButton bt = listButtonScore.getData(i);
+                batch.draw(bt.buttonTexture, bt.buttonCollision.x, bt.buttonCollision.y);
+                String score = bt.buttonTuple.value;
+                JsonElement root = new JsonParser().parse(res.getData(bt.buttonTuple.key).value);
+                String name = root.getAsJsonObject().get("name").getAsString();
+                fontScore.draw(batch, name ,bt.buttonCollision.x, bt.buttonCollision.y);
+                fontScore.draw(batch, score ,bt.buttonCollision.x+200, bt.buttonCollision.y-100);
+            }
+            batch.end();
+        }
 
         // ELEGIR TEMATICA DE NIVEES
         if (currentLevel == 0) {
@@ -1065,12 +1081,20 @@ public class MainLogic extends ApplicationAdapter {
                 buttonBack = new GenericButton(300,300,64,64,"Re-Do.png");
                 try{
                     scoreHeap = new BinaryHeap<>();
-                    MyDoubleLinkedList<MyTuple<String,String>> res = fbase.searchData("puntajes");
+                    res = fbase.searchData("puntajes");
                     for (int i=0; i<res.getSize() ; i++) {
                         JsonElement root = new JsonParser().parse(res.getData(i).value);
                         String strScore = root.getAsJsonObject().get("9").getAsString();
-                        MyTuple<String,String> tp = new MyTuple<>(res.getData(i).key, strScore);
+                        MyTuple<Integer,String> tp = new MyTuple<>(i, strScore);
                         scoreHeap.insert(tp);
+
+                    }
+                    // ACA VA MOSTRAR CADA COSITA DE UN PUNTAJE SI SE LE DA CLICK
+                    int topSize = 10;
+                    if (scoreHeap.getCurrentSize() < 10) topSize=scoreHeap.getCurrentSize();
+                    for (int i = 0; i < topSize; i++){
+                        ScoreButton buttonShowScore = new ScoreButton(300,400-100*i,64,64,"MainMenuButtons.jpg",scoreHeap.deleteMin());
+                        listButtonScore.add(buttonShowScore);
                     }
                 }
                 catch (Exception e){
@@ -1087,6 +1111,9 @@ public class MainLogic extends ApplicationAdapter {
             case -5:
                 // ACA VAN LOS CREDITOS
                 buttonBack = new GenericButton(300,300,64,64,"Re-Do.png");
+                break;
+            case -6:
+
                 break;
             case 0:
                 // SELECTOR DE TEMA NIVELES

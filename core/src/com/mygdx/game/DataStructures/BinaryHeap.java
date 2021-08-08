@@ -152,4 +152,8 @@ public class BinaryHeap<T extends Comparable <? super T>> {
         }
         System.out.println(array[currentSize]);
     }
+
+    public int getCurrentSize(){
+        return currentSize;
+    }
 }
