@@ -112,19 +112,7 @@ public class MyGraph<T>{
     
     public void printShortestPath(T src, T dst){
         shortestPath(src);
-        
-        StringBuilder sb = new StringBuilder();
-        GraphNode<T> dstVertex = getVertex(dst);
-        GraphNode<T> path = dstVertex.getPath();
-        while (!dstVertex.value.equals(path.value)){
-            sb.append(dstVertex.value);
-            sb.append(" < ");
-            dstVertex = getVertex(path.value);
-            path = dstVertex.getPath();
-        }
-        
-        String shortestPath = sb.toString();
-        shortestPath = shortestPath.substring(0, shortestPath.length() - 3);
+        String shortestPath = getPath(dst);
         
         System.out.println(shortestPath);
     }
@@ -172,7 +160,93 @@ public class MyGraph<T>{
         }
     }
     
+    public void printCheapestPath(T src, T dst){
+        cheapestPath(src);
+        String cheapestPath = getPath(dst);
+        
+        System.out.println(cheapestPath);
+    }
     
+    private String getPath(T v){
+        StringBuilder sb = new StringBuilder();
+        GraphNode<T> dstVertex = getVertex(v);
+        GraphNode<T> path = dstVertex.getPath();
+        while (!dstVertex.value.equals(path.value)){
+            sb.append(dstVertex.value);
+            sb.append(" < ");
+            dstVertex = getVertex(path.value);
+            path = dstVertex.getPath();
+        }
+        
+        String finalPath = sb.toString();
+        finalPath = finalPath.substring(0, finalPath.length() - 3);
+        
+        return finalPath;
+    }
+    
+    private void cheapestPath(T s){
+        if (!containsVertex(s)) return;
+        Node<MyDoubleLinkedList<GraphNode<T>>> top = adj_list.getFirst();
+        
+        while (top != null){
+            GraphNode<T> vertex = top.getData().getFirst().getData();
+            vertex.setDistance(INFINITY);
+            vertex.setUnknown();
+            
+            if (vertex.value.equals(s)) vertex.setDistance(0);
+            
+            top = top.getNext();
+        }
+        
+        top = adj_list.getFirst();
+        
+        while (top != null){
+            Node<GraphNode<T>> minVertexNode = findMinDistanceVertex();
+            GraphNode<T> minVertex = minVertexNode.getData();
+            minVertex.setKnown();
+            
+            
+            Node<GraphNode<T>> ptr = minVertexNode;
+            
+            while (ptr != null){
+                GraphNode<T> adjVertex = ptr.getData();
+                boolean known = adjVertex.isKnown();
+                
+                if (!known){
+                    int minVertexDistance = minVertex.getDistance();
+                    int adjVertexCost = adjVertex.weight;
+                    int newDist = minVertexDistance + adjVertexCost;
+                    
+                    if (newDist < adjVertex.getDistance()){
+                        adjVertex.setDistance(newDist);
+                        adjVertex.setPath(minVertex);
+                    }
+                }
+            }
+        }
+    }
+    
+    private Node<GraphNode<T>> findMinDistanceVertex(){
+        int minDistance = INFINITY;
+        Node<GraphNode<T>> minVertex = null;
+        
+        Node<MyDoubleLinkedList<GraphNode<T>>> top = adj_list.getFirst();
+        
+        while (top != null){
+            Node<GraphNode<T>> currentVertexNode = top.getData().getFirst();
+            GraphNode<T> currentVertex = currentVertexNode.getData();
+            boolean known = currentVertex.isKnown();
+            int currentDistance = currentVertex.getDistance();
+            if (!known && (minDistance == -1 || currentDistance < minDistance)){
+                minVertex = currentVertexNode;
+                minDistance = currentDistance;
+            }
+            
+            top = top.getNext();
+        }
+        
+        return minVertex;
+    }
 }
 
 class GraphNode<T>{
@@ -180,6 +254,7 @@ class GraphNode<T>{
     int weight;
     private int dist;
     private GraphNode<T> path;
+    private boolean known;
     
     public GraphNode(T v, int w){
         this.value = v;
@@ -200,5 +275,17 @@ class GraphNode<T>{
     
     public GraphNode<T> getPath(){
         return this.path;
+    }
+    
+    public void setKnown(){
+        this.known = true;
+    }
+    
+    public void setUnknown(){
+        this.known = false;
+    }
+    
+    public boolean isKnown(){
+        return this.known;
     }
 }
