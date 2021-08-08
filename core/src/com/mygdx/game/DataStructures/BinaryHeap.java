@@ -15,22 +15,27 @@ public class BinaryHeap<T extends Comparable <? super T>> {
     //Número de elementos que tiene actualmente el montí­culo binario.
     private int currentSize;
     private T[] array;
+    
+    boolean minHeap = true;
 
     /**
      * Constructor de BinaryHeap.
+     * @param heap Valor booleano. Si es verdadero, se maneja un minHeap.
      */
-    public BinaryHeap(){
+    public BinaryHeap(boolean heap){
         //Crea un montí­culo binario con la capacidad por defecto.
-        this(DEFAULT_CAPACITY);
+        this(DEFAULT_CAPACITY, heap);
     }
 
     /**
      * Constructor para crear un montí­culo binario con una capacidad definida.
      * 
      * @param capacity Tamaño del arreglo que representa al montí­culo binario.
+     * @param heap Valor booleano. Si es verdadero, se maneja un minHeap.
      */
-    public BinaryHeap(int capacity){
+    public BinaryHeap(int capacity, boolean heap){
         currentSize = 0;
+        minHeap = heap;
         array = (T[]) new Comparable[capacity + 1];
     }
 
@@ -54,8 +59,9 @@ public class BinaryHeap<T extends Comparable <? super T>> {
     /**
      * Método que inserta un elemento al montí­culo binario.
      * @param data Elemento a insertar.
+     * @param heap Valor booleano. Si es verdadero, se maneja un minHeap.
      */
-    public void insert(T data){
+    public void insert(T data, boolean heap){
         /*
         * Si el arreglo está lleno, se debe crear uno nuevo con el doble de capacidad.
         * Conservando los elementos actuales.
@@ -73,7 +79,7 @@ public class BinaryHeap<T extends Comparable <? super T>> {
         * Al encontrar el nivel de prioridad adecuado, se procede a asignar el valor al nodo libre.
         */
         int hole = ++currentSize;
-        for (array[0] = data; data.compareTo(array[hole/2]) < 0 ; hole /= 2) {
+        for (array[0] = data; heap ? (data.compareTo(array[hole/2]) < 0) : (data.compareTo(array[hole/2]) > 0); hole /= 2) {
             array[hole] = array[hole/2];
         }
         array[hole] = data;
@@ -81,15 +87,16 @@ public class BinaryHeap<T extends Comparable <? super T>> {
 
     /**
      * Método que elimina el elemento con mayor prioridad (menor valor).
+     * @param heap Valor booleano. Si es verdadero, se maneja un minHeap.
      * @return Valor del elemento.
      */
-    public T deleteMin(){
+    public T deleteTop(boolean heap){
         if (this.isEmpty()) {
-            System.out.println("MontÃ­culo VacÃ­o.");
+            System.out.println("Montí­culo Vací­o.");
             return null;
         }
         //Se obtiene el valor mí­nimo
-        T min = findMin();
+        T top = getTop();
         //Almacena temporalmente el último elemento guardado en el montí­culo en la cima.
         array[1] = array[currentSize--];
         
@@ -110,20 +117,20 @@ public class BinaryHeap<T extends Comparable <? super T>> {
          */
         for (; hole * 2 <= currentSize; hole = child){
             child = hole*2;
-            if (child != currentSize && array[child + 1].compareTo(array[child]) < 0) child++;
+            if (child != currentSize && heap ? (array[child + 1].compareTo(array[child]) < 0) : (array[child + 1].compareTo(array[child]) > 0)) child++;
             if (array[child].compareTo(tmp) < 0) array[hole] = array[child];
             else break;
         }
         array[hole] = tmp;
-        return min;
+        return top;
     }
 
     /**
-     * Método que busca el nodo con el mínimo valor en el montí­culo.
+     * Método que busca el nodo con el mínimo o máximo valor en el montí­culo.
      * @return El valor mínimo del montí­culo.
      */
-    public T findMin(){
-        if (this.isEmpty()) System.out.println("MontÃ­culo VacÃ­o.");
+    public T getTop(){
+        if (this.isEmpty()) System.out.println("Montí­culo Vací­o.");
         return array[1];
     }
 
