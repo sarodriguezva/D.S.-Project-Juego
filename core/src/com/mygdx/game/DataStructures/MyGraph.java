@@ -64,6 +64,20 @@ public class MyGraph<T>{
         return false;
     }
     
+    public boolean containsEdgeOneWay(T src, T dst){
+        if (!containsVertex(src) || !containsVertex(dst)) return false;
+        
+        Node<GraphNode<T>> srcListTop = getVertexList(src).getFirst();
+        
+        while (srcListTop != null){
+            if (srcListTop.getData().value.equals(dst)) return true;
+            srcListTop = srcListTop.getNext();
+        }
+        
+        System.out.println("No hay camino entre estos dos nodos");
+        return false;
+    }
+    
     public int getCost(T src, T dst){
         Node<GraphNode<T>> srcListTop = getVertexList(src).getFirst();
         
@@ -78,6 +92,19 @@ public class MyGraph<T>{
             if (dstListTop.getData().value.equals(src)) 
                 return dstListTop.getData().weight;
             dstListTop = dstListTop.getNext();
+        }
+        
+        System.out.println("No existe arista entre estos nodos");
+        return Integer.MIN_VALUE;
+    }
+    
+    public int getCostOneWay(T src, T dst){
+        Node<GraphNode<T>> srcListTop = getVertexList(src).getFirst();
+        
+        while (srcListTop != null){
+            if (srcListTop.getData().value.equals(dst)) 
+                return srcListTop.getData().weight;
+            srcListTop = srcListTop.getNext();
         }
         
         System.out.println("No existe arista entre estos nodos");
