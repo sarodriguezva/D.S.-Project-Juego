@@ -120,11 +120,14 @@ public class MainLogic extends ApplicationAdapter {
     private Integer[] listLeafTreePlayerOrder = new Integer[1];
     // LISTA PARA PODER HACER UN-DO
     private MyDoubleLinkedList<Leaf> LastDeleted = new MyDoubleLinkedList<>();
+    //Lista posiciones posibles para las hojas
+    private MyDoubleLinkedList<MyTuple<Integer,Integer>> ListaPosicionesHojas = new MyDoubleLinkedList<>();
+    private int PrimeraPos = 8;
     // Lista de scores
     private MyDoubleLinkedList<ScoreButton> listButtonScore = new MyDoubleLinkedList<>();
     private MyDoubleLinkedList<MyTuple<String,String>> res =new MyDoubleLinkedList<>();
     hueco objetivoArboles = new hueco(0, 0, 0, 0, 0);
-    hueco objetivoBorrar = new hueco(1, 150, 0, 89, 92);
+    hueco objetivoBorrar = new hueco(1, 1, 0, 64, 64);
     private BitmapFont font;
     private BitmapFont fontScore;
     String userName = "NoName";
@@ -239,7 +242,17 @@ public class MainLogic extends ApplicationAdapter {
         maxListLevel[1] = 3;
         maxListLevel[2] = 6;
         maxScoreLevel = new int[10];
-
+        
+        //Se crean las tuplas para la lista de posiciones para las hojas
+        ListaPosicionesHojas.add(new MyTuple<Integer,Integer>(500, 0));
+        ListaPosicionesHojas.add(new MyTuple<Integer,Integer>(600, 0));
+        ListaPosicionesHojas.add(new MyTuple<Integer,Integer>(700, 0));
+        ListaPosicionesHojas.add(new MyTuple<Integer,Integer>(500, 75));
+        ListaPosicionesHojas.add(new MyTuple<Integer,Integer>(600, 75));
+        ListaPosicionesHojas.add(new MyTuple<Integer,Integer>(700, 75));
+        ListaPosicionesHojas.add(new MyTuple<Integer,Integer>(500, 150));
+        ListaPosicionesHojas.add(new MyTuple<Integer,Integer>(600, 150));
+        ListaPosicionesHojas.add(new MyTuple<Integer,Integer>(700, 150));
         if (debug == false) {
             initiateLevel(-100);
         } // PRUEBAS DE TIEMPOS Y MEMORIA PARA DISTINTAS ESTRUCTURAS
@@ -847,6 +860,7 @@ public class MainLogic extends ApplicationAdapter {
                 }
             }
             if ("tree".equals(tema)) {
+                
                 // Rotacion del canon
                 double rotx = -(double) Gdx.input.getX() / 4.8;
                 if (waitTime == 0) {
@@ -863,7 +877,7 @@ public class MainLogic extends ApplicationAdapter {
                     }
 
                     // DISPARAR A LAS HOJAS
-                    if (justTouched && touchPos.y > 100 && currentPick == null && !listLeaf.isEmpty() && !Shooting && canUndo) {
+                    if (justTouched && currentPick == null && !listLeaf.isEmpty() && !Shooting && canUndo) {
 
                         //Colision de huecos y hojas
                         for (int i = 0; i < listHueco.getSize(); i++) {
@@ -878,6 +892,7 @@ public class MainLogic extends ApplicationAdapter {
 
                         }
 
+              
                         if (touchPos.x > objetivoBorrar.xpos && touchPos.x < objetivoBorrar.xpos + objetivoBorrar.collx) {
                             if (touchPos.y > objetivoBorrar.ypos && touchPos.y < objetivoBorrar.ypos + objetivoBorrar.colly) {
                                 objetivoArboles = objetivoBorrar;
@@ -1072,6 +1087,8 @@ public class MainLogic extends ApplicationAdapter {
         listLeafTree.makeEmpty();
         listHueco.makeEmpty();
         listHuecosUsados.makeEmpty();
+        LastDeleted.makeEmpty();
+        PrimeraPos = 8;
         if (buttonRestart != null) {
             buttonRestart.dispose();
         }
@@ -1125,7 +1142,7 @@ public class MainLogic extends ApplicationAdapter {
                 buttonCtrz = new GenericButton(500, 77, 32, 32, "Re-Do.png");
             }
 
-            buttonDelete = new GenericButton(128, 150, 32, 32, "Basura.png");
+            buttonDelete = new GenericButton(32, 32, 32, 32, "Basura.png");
             buttonClose = new GenericButton(600, 503, 50, 50, "buttonClose.png");
             buttonRestart = new GenericButton(109, 562, 32, 32, "Re-Try.png");
             buttonWin = new GenericButton(100, 100, 100, 100, "Win.png");
@@ -1164,14 +1181,14 @@ public class MainLogic extends ApplicationAdapter {
                         JsonElement root = new JsonParser().parse(res.getData(i).value);
                         String strScore = root.getAsJsonObject().get("9").getAsString();
                         MyTuple<Integer,String> tp = new MyTuple<>(i, strScore);
-                        scoreHeap.insert(tp,false);
+                        scoreHeap.insert(tp);
 
                     }
                     // ACA VA MOSTRAR CADA COSITA DE UN PUNTAJE SI SE LE DA CLICK
                     int topSize = 10;
                     if (scoreHeap.getCurrentSize() < 10) topSize=scoreHeap.getCurrentSize();
                     for (int i = 0; i < topSize; i++){
-                        ScoreButton buttonShowScore = new ScoreButton(300,400-100*i,64,64,"MainMenuButtons.jpg",scoreHeap.deleteTop(false));
+                        ScoreButton buttonShowScore = new ScoreButton(300,400-100*i,64,64,"MainMenuButtons.jpg",scoreHeap.deleteTop());
                         listButtonScore.add(buttonShowScore);
                     }
                 }
@@ -1244,12 +1261,12 @@ public class MainLogic extends ApplicationAdapter {
                     createPlank(300 + i * 55, 52, 15, 64, listPlank, myArr2[i]);
                 }
                 break;
-            case 4:
+            case 6:
                 listLeafTreePlayerOrder = new Integer[6];
                 buttonCannon = new Canon(345, 5, 100, 100, "CanonTree.png");
                 treeTexture = new Texture(Gdx.files.internal("nivel_uno.png"));
-                treeX = -130;
-                treeY = -30;
+                treeX = 110;
+                treeY = 220;
                 AVLTree<Integer> arbol = new AVLTree<>();
                 arbol.insert(50);
                 arbol.insert(40);
@@ -1260,7 +1277,7 @@ public class MainLogic extends ApplicationAdapter {
                 listLeafTreeOrder = arbol.toArray();
                 listLeafTreePlayerOrder[0] = 50;
                 listLeafTreePlayerOrder[1] = 40;
-                listLeafTreePlayerOrder[2] = 80;
+                listLeafTreePlayerOrder[2] = 80; 
                 Leaf lef = new Leaf(500, 0, 10, 10, 35);
                 listLeaf.add(lef);
                 lef = new Leaf(600, 0, 10, 10, 45);
@@ -1276,7 +1293,9 @@ public class MainLogic extends ApplicationAdapter {
             case 5:
                 listLeafTreePlayerOrder = new Integer[6];
                 buttonCannon = new Canon(345, 5, 100, 100, "CanonTree.png");
-                treeTexture = new Texture(Gdx.files.internal("nivel2.png"));
+                treeTexture = new Texture(Gdx.files.internal("nivel_uno.png"));
+                treeX = 110;
+                treeY = 220;
                 AVLTree<Integer> arbol2 = new AVLTree<>();
                 arbol2.insert(50);
                 arbol2.insert(40);
@@ -1305,10 +1324,12 @@ public class MainLogic extends ApplicationAdapter {
                 Shootingtime = 0;
 
                 break;
-            case 6:
+            case 4:
                 listLeafTreePlayerOrder = new Integer[11];
                 buttonCannon = new Canon(345, 5, 100, 100, "CanonTree.png");
                 treeTexture = new Texture(Gdx.files.internal("nivel2.png"));
+                treeX = 0;
+                treeY = 160;
                 BinaryTree<Integer> arbol3 = new BinaryTree<>();
                 arbol3.insert(39);
                 arbol3.insert(22);
@@ -1345,11 +1366,11 @@ public class MainLogic extends ApplicationAdapter {
                 lef3 = new Leaf(600, 150, 10, 10, 25);
                 listLeaf.add(lef3);
 
-                addHueco(163, 310, 6, 45, 54);
-                addHueco(265, 304, 7, 50, 49);
-                addHueco(406, 303, 8, 40, 51);
-                addHueco(461, 303, 9, 50, 51);
-                addHueco(556, 290, 10, 63, 61);
+                addHueco(9, 175, 6, 45, 54);
+                addHueco(190, 175, 7, 50, 49);
+                addHueco(408, 174, 8, 40, 51);
+                addHueco(525, 173, 9, 50, 51);
+                addHueco(705, 173, 10, 63, 61);
 
                 Shootingtime = 0;
 
@@ -1387,18 +1408,20 @@ public class MainLogic extends ApplicationAdapter {
                 listPlank.add(myLastPlank);
             }
         } else if ("tree".equals(tema)) {
+            int xpos = ListaPosicionesHojas.getData(PrimeraPos).key;
+            int ypos = ListaPosicionesHojas.getData(PrimeraPos).value;
             if (!LastDeleted.isEmpty()) {
                 Leaf myLastLeaf = LastDeleted.getData(0);
-                myLastLeaf.leafCollision.x = 700;
-                myLastLeaf.leafCollision.y = 150;
+                myLastLeaf.leafCollision.x = xpos;
+                myLastLeaf.leafCollision.y = ypos;
 
                 listLeaf.add(myLastLeaf);
                 LastDeleted.makeEmpty();
             }
             if (listLeafTree.getSize() != 0) {
                 Leaf myLastLeaf = listLeafTree.pop();
-                myLastLeaf.leafCollision.x = 700;
-                myLastLeaf.leafCollision.y = 150;
+                myLastLeaf.leafCollision.x = xpos;
+                myLastLeaf.leafCollision.y = ypos;
 
                 listLeaf.add(myLastLeaf);
 
@@ -1406,7 +1429,8 @@ public class MainLogic extends ApplicationAdapter {
             if (!listHuecosUsados.isEmpty()) {
                 listHueco.add(listHuecosUsados.pop());
             }
-
+            PrimeraPos++;
+            PrimeraPos = PrimeraPos%9;
         }
     }
 
