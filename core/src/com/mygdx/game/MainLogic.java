@@ -885,12 +885,13 @@ public class MainLogic extends ApplicationAdapter {
 
                     // DISPARAR A LAS HOJAS
                     if (justTouched && currentPick == null && !listLeaf.isEmpty() && !Shooting && canUndo) {
-
+                        Gdx.app.log("E","touchPos.x = " + touchPos.x);
+                        Gdx.app.log("E","touchPos.y = " + touchPos.y);
                         //Colision de huecos y hojas
                         for (int i = 0; i < listHueco.getSize(); i++) {
                             hueco auxh = listHueco.getData(i);
-                            if (touchPos.x > auxh.xpos && touchPos.x < auxh.xpos + auxh.collx) {
-                                if (touchPos.y > auxh.ypos && touchPos.y < auxh.ypos + auxh.colly) {
+                            if (touchPos.x > auxh.xpos + auxh.collx/3 && touchPos.x < auxh.xpos +  2 * auxh.collx) {
+                                if (touchPos.y > auxh.ypos + auxh.colly/3 && touchPos.y < auxh.ypos + 2 * auxh.colly) {
                                     objetivoArboles = auxh;
                                     listHuecosUsados.add(listHueco.getData(i));
                                     listHueco.delete(i);
@@ -1412,10 +1413,12 @@ public class MainLogic extends ApplicationAdapter {
         if ("list".equals(tema)) {
             if (listPlankCannon.getSize() != 0) {
                 Plank myLastPlank = listPlankCannon.pop();
-                myLastPlank.plankCollision.x = 400;
-                myLastPlank.plankCollision.y = 0;
+                myLastPlank.plankCollision.x = 525 + ((PrimeraPos-7) * 50 );
+                myLastPlank.plankCollision.y = 50;
 
                 listPlank.add(myLastPlank);
+                PrimeraPos++;
+                if(PrimeraPos >12) PrimeraPos = 8;
             }
         } else if ("tree".equals(tema)) {
             int xpos = ListaPosicionesHojas.getData(PrimeraPos).key;
