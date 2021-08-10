@@ -17,10 +17,11 @@ com/mygdx/game/DataStructures/DisjointSet.java
  com.mygdx.game.DataStructures.DisjointSet
 com/mygdx/game/Leaf.java
  com.mygdx.game.Leaf
+com/mygdx/game/DataStructures/GraphNode.java
+ com.mygdx.game.DataStructures.GraphNode
 com/mygdx/game/ScoreButton.java
  com.mygdx.game.ScoreButton
 com/mygdx/game/DataStructures/MyGraph.java
- com.mygdx.game.DataStructures.GraphNode
  com.mygdx.game.DataStructures.MyGraph
 com/mygdx/game/Firebase.java
  com.mygdx.game.Firebase
@@ -47,4 +48,5 @@ com/mygdx/game/DataStructures/BinaryTree.java
 com/mygdx/game/MainLogic.java
  com.mygdx.game.MainLogic
  com.mygdx.game.MainLogic$1
+ com.mygdx.game.MainLogic$ciudad
  com.mygdx.game.MainLogic$hueco

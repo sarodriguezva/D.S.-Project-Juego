@@ -20,6 +20,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import com.mygdx.game.DataStructures.MyGraph;
+import com.mygdx.game.DataStructures.GraphNode;
 
 /**
  * Clase que contiene toda la logica del juego y su funcionamiento interno
@@ -37,6 +39,7 @@ public class MainLogic extends ApplicationAdapter {
     GenericButton buttonClose = null;
     GenericButton buttonLevelTrees = null;
     GenericButton buttonLevelLinearDS = null;
+    GenericButton buttonLevelGraphs = null;
     GenericButton buttonPause = null;
     GenericButton volverMenu = null;
     GenericButton buttonShooting = null;
@@ -120,9 +123,20 @@ public class MainLogic extends ApplicationAdapter {
     private Integer[] listLeafTreePlayerOrder = new Integer[1];
     // LISTA PARA PODER HACER UN-DO
     private MyDoubleLinkedList<Leaf> LastDeleted = new MyDoubleLinkedList<>();
-    //Lista posiciones posibles para las hojas
+    //Lista posicionActualGrafoses posibles para las hojas
     private MyDoubleLinkedList<MyTuple<Integer,Integer>> ListaPosicionesHojas = new MyDoubleLinkedList<>();
     private int PrimeraPos = 8;
+    
+    //LISTA Y GRAFO CIUDADES PARA GRAFOS
+    private MyDoubleLinkedList<ciudad> listaCiudades = new MyDoubleLinkedList<>();
+    private MyGraph<ciudad> GrafoCiudades = new MyGraph<>();
+    
+    //VARIABLES PARA NIVELES DE GRAFOS 
+    private int combustible = 0;
+    private ciudad ciudadDestinoGrafos = null;
+    private ciudad posicionActualGrafos = null;
+    private int waitStart = 0;
+            
     // Lista de scores
     private MyDoubleLinkedList<ScoreButton> listButtonScore = new MyDoubleLinkedList<>();
     private MyDoubleLinkedList<MyTuple<String,String>> res =new MyDoubleLinkedList<>();
@@ -243,7 +257,7 @@ public class MainLogic extends ApplicationAdapter {
         maxListLevel[2] = 6;
         maxScoreLevel = new int[10];
         
-        //Se crean las tuplas para la lista de posiciones para las hojas
+        //Se crean las tuplas para la lista de posicionActualGrafoses para las hojas
         ListaPosicionesHojas.add(new MyTuple<Integer,Integer>(500, 0));
         ListaPosicionesHojas.add(new MyTuple<Integer,Integer>(600, 0));
         ListaPosicionesHojas.add(new MyTuple<Integer,Integer>(700, 0));
@@ -304,11 +318,11 @@ public class MainLogic extends ApplicationAdapter {
 
     // Funcion para crear un plank y anadirlo a la lista automaticamente
     /**
-     * Esta funcion se utiliza para crear una tabla con posicion, tamanio y
+     * Esta funcion se utiliza para crear una tabla con posicionActualGrafos, tamanio y
      * numero ademas lo aniade a una lista de tablas
      *
-     * @param x posicion de la tabla en el eje x
-     * @param y posicion de la tabla en el eje y
+     * @param x posicionActualGrafos de la tabla en el eje x
+     * @param y posicionActualGrafos de la tabla en el eje y
      * @param w tamanio de anchura
      * @param h tamanio de altura
      * @param list lista a la cual aniadirse
@@ -544,6 +558,20 @@ public class MainLogic extends ApplicationAdapter {
 
                         }
                     }
+                    
+                    // CLICK BOTON NIVELES GRAFOS
+                    if (touchPos.x > buttonLevelGraphs.buttonCollision.x - buttonLevelGraphs.buttonCollision.width && touchPos.x < buttonLevelGraphs.buttonCollision.x + buttonLevelGraphs.buttonCollision.width) {
+                        if (touchPos.y > buttonLevelGraphs.buttonCollision.y - buttonLevelGraphs.buttonCollision.height && touchPos.y < buttonLevelGraphs.buttonCollision.y + buttonLevelGraphs.buttonCollision.height) {
+                            //CUANDO HAYA NIVEL DE ARBOLES (DEBERIA SER EL NIVEL 4)
+                            clearLevel();
+                            tema = "graphs";
+                            waitTime = 10;
+                            waitStart = 45;
+                            initiateLevel(7);
+
+                        }
+                    }
+                    
                     // CLICK BACK
                     if (touchPos.x > buttonBack.buttonCollision.x - buttonBack.buttonCollision.width && touchPos.x < buttonBack.buttonCollision.x + buttonBack.buttonCollision.width) {
                         if (touchPos.y > buttonBack.buttonCollision.y - buttonBack.buttonCollision.height && touchPos.y < buttonBack.buttonCollision.y + buttonBack.buttonCollision.height) {
@@ -559,6 +587,8 @@ public class MainLogic extends ApplicationAdapter {
                 font.draw(batch, "Linear Data Structures", 250, 300);
                 batch.draw(buttonLevelTrees.buttonTexture, 210, 180);
                 font.draw(batch, "Trees and Priority Heaps", 240, 210);
+                batch.draw(buttonLevelGraphs.buttonTexture, 210, 90);
+                font.draw(batch, "Graphs", 340, 120);
                 batch.draw(buttonBack.buttonTexture, buttonBack.buttonCollision.x-32, buttonBack.buttonCollision.y-32);
                 batch.end();
             }
@@ -794,7 +824,9 @@ public class MainLogic extends ApplicationAdapter {
             // RENDERIZADO DE BOTONES
             batch.draw(buttonRestart.buttonTexture, buttonRestart.buttonCollision.x - 32, buttonRestart.buttonCollision.y - 32);
             batch.draw(buttonPause.buttonTexture, buttonPause.buttonCollision.x - 32, buttonPause.buttonCollision.y - 32);
+            if("list".equals(tema) || "tree".equals(tema)){
             batch.draw(buttonCtrz.buttonTexture, buttonCtrz.buttonCollision.x - 32, buttonCtrz.buttonCollision.y - 32);
+            }
             if ("list".equals(tema)) {
                 // Render canon lista 
                 Sprite spr = new Sprite(buttonCannon.cannonTexture);
@@ -885,8 +917,6 @@ public class MainLogic extends ApplicationAdapter {
 
                     // DISPARAR A LAS HOJAS
                     if (justTouched && currentPick == null && !listLeaf.isEmpty() && !Shooting && canUndo) {
-                        Gdx.app.log("E","touchPos.x = " + touchPos.x);
-                        Gdx.app.log("E","touchPos.y = " + touchPos.y);
                         //Colision de huecos y hojas
                         for (int i = 0; i < listHueco.getSize(); i++) {
                             hueco auxh = listHueco.getData(i);
@@ -984,6 +1014,58 @@ public class MainLogic extends ApplicationAdapter {
                         }
                     }
                 }
+            }
+            if("graphs".equals(tema)){
+                
+                //RENDERIZADO DE CIUDADES Y COSTOS
+                Texture ciudadTexture = new Texture(Gdx.files.internal("city.png"));
+                Texture flagTexture = new Texture(Gdx.files.internal("flag.png"));
+                for(int i= 0; i <listaCiudades.getSize(); i++){
+                    ciudad auxCity = listaCiudades.getData(i);
+                    if(auxCity.xpos == ciudadDestinoGrafos.xpos && auxCity.ypos == ciudadDestinoGrafos.ypos){
+                        batch.draw(flagTexture,ciudadDestinoGrafos.xpos,ciudadDestinoGrafos.ypos + 50);
+                    }
+                    batch.draw(ciudadTexture, auxCity.xpos, auxCity.ypos);
+                    MyDoubleLinkedList<GraphNode<ciudad>> listaConectadas = GrafoCiudades.getVertexList(listaCiudades.getData(i));
+                    for(int j = 1; j <listaConectadas.getSize(); j++){
+                        ciudad objCity = listaConectadas.getData(j).getValue();
+                        int middleX = (auxCity.xpos + objCity.xpos)/2;
+                        int middleY = (auxCity.ypos + objCity.ypos)/2 + 50;
+                        font.draw(batch, "Cost = " + GrafoCiudades.getCostOneWay(auxCity, objCity), middleX, middleY);
+                    }
+                }
+                batch.draw(buttonCannon.cannonTexture, buttonCannon.cannonCollision.x, buttonCannon.cannonCollision.y );
+                fontScore.draw(batch, "Combustible: " + Integer.toString(combustible), 290, 535);
+                
+                //MOVIMIENTO DEL CARRITO
+                if( waitStart > 0){
+                    waitStart--;
+                }
+                if(combustible > 0 && !win && !lose && waitStart <= 0){
+                    
+                    if (justTouched && currentPick == null) {
+                        for (int i = 0; i < listaCiudades.getSize(); i++) {          
+                            ciudad auxc = listaCiudades.getData(i);
+                            if(GrafoCiudades.containsEdgeOneWay(posicionActualGrafos, auxc)){
+                            if (touchPos.x > auxc.xpos - 20 && touchPos.x < auxc.xpos + auxc.collx) {
+                                if (touchPos.y > auxc.ypos - 20 && touchPos.y < auxc.ypos + auxc.colly) {
+                                    buttonCannon.cannonCollision.x = auxc.xpos;
+                                    buttonCannon.cannonCollision.y = auxc.ypos;
+                                    combustible -= GrafoCiudades.getCostOneWay(posicionActualGrafos,auxc);
+                                    posicionActualGrafos = auxc;
+                                    if(posicionActualGrafos.xpos == ciudadDestinoGrafos.xpos && posicionActualGrafos.ypos == ciudadDestinoGrafos.ypos){
+                                        win = true;
+                                    }
+                                }
+                            }
+                        }
+
+                        }
+                }
+                } else if(combustible < 0){
+                    lose = true;
+                }
+                
             }
             fontScore.draw(batch, "Puntaje: " + Integer.toString(levelScore), 290, 585);
             batch.draw(buttonHelp.buttonTexture, buttonHelp.buttonCollision.x - 32, buttonHelp.buttonCollision.y - 32);
@@ -1138,6 +1220,8 @@ public class MainLogic extends ApplicationAdapter {
             backgroundTexture = new Texture(Gdx.files.internal("Fondo_Arboles.jpg"));
             infoTexture = new Texture(Gdx.files.internal("Info_dos.png"));
 
+        } else if ("graphs".equals(tema)){
+            backgroundTexture = new Texture(Gdx.files.internal("Fondo_Grafos.jpg"));
         }
         if (level >0) {
             volverMenu = new GenericButton(280, 400, 381, 44, "volverNiveles.jpg");
@@ -1229,6 +1313,7 @@ public class MainLogic extends ApplicationAdapter {
                 waitTime=15;
                 buttonLevelLinearDS = new GenericButton(210, 270, 381, 44, "MainMenuButtons.jpg");
                 buttonLevelTrees = new GenericButton(210, 180, 381, 44, "MainMenuButtons.jpg");
+                buttonLevelGraphs = new GenericButton(210, 90, 381, 44, "MainMenuButtons.jpg");
                 buttonBack = new GenericButton(800-32,600-32,64,64,"Re-Do.png");
                 break;
             case 1:
@@ -1272,7 +1357,7 @@ public class MainLogic extends ApplicationAdapter {
                     createPlank(300 + i * 55, 52, 15, 64, listPlank, myArr2[i]);
                 }
                 break;
-            case 6:
+            case 4:
                 listLeafTreePlayerOrder = new Integer[6];
                 buttonCannon = new Canon(345, 5, 100, 100, "CanonTree.png");
                 treeTexture = new Texture(Gdx.files.internal("nivel_uno.png"));
@@ -1335,7 +1420,7 @@ public class MainLogic extends ApplicationAdapter {
                 Shootingtime = 0;
 
                 break;
-            case 4:
+            case 6:
                 listLeafTreePlayerOrder = new Integer[11];
                 buttonCannon = new Canon(345, 5, 100, 100, "CanonTree.png");
                 treeTexture = new Texture(Gdx.files.internal("nivel2.png"));
@@ -1386,16 +1471,30 @@ public class MainLogic extends ApplicationAdapter {
                 Shootingtime = 0;
 
                 break;
+            case 7:
+                addCiudad(0,100,80,80,0);
+                addCiudad(400,100,80,70,1);
+                addCiudad(200,200,80,70,2);
+                addCiudad(500,200,80,70,3);
+                GrafoCiudades.addEdge(listaCiudades.getData(0), listaCiudades.getData(1), 10, false);
+                GrafoCiudades.addEdge(listaCiudades.getData(0), listaCiudades.getData(2), 5, false);
+                GrafoCiudades.addEdge(listaCiudades.getData(1), listaCiudades.getData(3), 10, false);
+                GrafoCiudades.addEdge(listaCiudades.getData(2), listaCiudades.getData(3), 5, false);
+                buttonCannon = new Canon(0,100, 100, 100, "car.png");
+                combustible = 15;
+                ciudadDestinoGrafos = listaCiudades.getData(3);
+                posicionActualGrafos = listaCiudades.getData(0);
+                break;
         }
 
     }
 
     /**
-     * Esta funcion crea un objeto hueco con posicion, tamanio y numero y lo
+     * Esta funcion crea un objeto hueco con posicionActualGrafos, tamanio y numero y lo
      * aniade a una lista
      *
-     * @param x posicion en el eje x
-     * @param y posicion en el eje y
+     * @param x posicionActualGrafos en el eje x
+     * @param y posicionActualGrafos en el eje y
      * @param i numero de hueco
      * @param cx tamanio del hueco en anchura
      * @param cy tamanio del hueco en altura
@@ -1403,6 +1502,22 @@ public class MainLogic extends ApplicationAdapter {
     void addHueco(int x, int y, int i, int cx, int cy) {
         hueco auxhueco = new hueco(x, y, i, cx, cy);
         listHueco.add(auxhueco);
+    }
+    
+    /**
+     * Esta funcion crea un objeto ciudad con posicionActualGrafos, tamanio y numero y lo
+     * aniade a una lista y un grafo
+     *
+     * @param x posicionActualGrafos en el eje x
+     * @param y posicionActualGrafos en el eje y
+     * @param cx tamanio de la ciudad en anchura
+     * @param cy tamanio de la ciudad en altura
+     * @param k key de la ciudad
+     */
+    void addCiudad(int x, int y, int cx, int cy, int k) {
+        ciudad auxcity = new ciudad(x,y,cx,cy,k);
+        listaCiudades.add(auxcity);
+        GrafoCiudades.addVertex(auxcity);
     }
 
     /**
@@ -1462,8 +1577,8 @@ public class MainLogic extends ApplicationAdapter {
         /**
          * Constructor de la clase
          *
-         * @param x posicion en eje x
-         * @param y posicion en eje y
+         * @param x posicionActualGrafos en eje x
+         * @param y posicionActualGrafos en eje y
          * @param i numero entero
          * @param cx tamanio en anchura
          * @param cy tamanio en altura
@@ -1474,6 +1589,33 @@ public class MainLogic extends ApplicationAdapter {
             index = i;
             collx = cx;
             colly = cy;
+
+        }
+    }
+    
+    public class ciudad {
+
+        int xpos;
+        int ypos;
+        int collx;
+        int colly;
+        int key;
+
+        /**
+         * Constructor de la clase
+         *
+         * @param x posicionActualGrafos en eje x
+         * @param y posicionActualGrafos en eje y
+         * @param cx tamanio en anchura
+         * @param cy tamanio en altura
+         * @param k numero entero
+         */
+        public ciudad(int x, int y, int cx, int cy, int k) {
+            xpos = x;
+            ypos = y;
+            collx = cx;
+            colly = cy;
+            key = k;
 
         }
     }

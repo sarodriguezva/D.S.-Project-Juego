@@ -119,7 +119,7 @@ public class MyGraph<T>{
         return edgesCount;
     }
     
-    private MyDoubleLinkedList<GraphNode<T>> getVertexList(T data){
+    public MyDoubleLinkedList<GraphNode<T>> getVertexList(T data){
         Node<MyDoubleLinkedList<GraphNode<T>>> top = adj_list.getFirst();
         
         while (top != null){
@@ -276,43 +276,3 @@ public class MyGraph<T>{
     }
 }
 
-class GraphNode<T>{
-    T value;
-    int weight;
-    private int dist;
-    private GraphNode<T> path;
-    private boolean known;
-    
-    public GraphNode(T v, int w){
-        this.value = v;
-        this.weight = w;
-    }
-    
-    public void setDistance(int distance){
-        this.dist = distance;
-    }
-    
-    public int getDistance(){
-        return this.dist;
-    }
-    
-    public void setPath(GraphNode<T> path){
-        this.path = path;
-    }
-    
-    public GraphNode<T> getPath(){
-        return this.path;
-    }
-    
-    public void setKnown(){
-        this.known = true;
-    }
-    
-    public void setUnknown(){
-        this.known = false;
-    }
-    
-    public boolean isKnown(){
-        return this.known;
-    }
-}
