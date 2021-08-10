@@ -430,14 +430,13 @@ public class MainLogic extends ApplicationAdapter {
 
                 for (int i = 0; i < listButtonScore.getSize(); i++) {
                     ScoreButton bt = listButtonScore.getData(i);
-                    batch.draw(bt.buttonTexture, bt.buttonCollision.x, bt.buttonCollision.y);
+                    batch.draw(bt.buttonTexture, bt.buttonCollision.x-200, bt.buttonCollision.y-25);
                     String score = bt.buttonTuple.value;
                     JsonElement root = new JsonParser().parse(res.getData(bt.buttonTuple.key).value);
                     String name = root.getAsJsonObject().get("name").getAsString();
-                    fontScore.draw(batch, name, bt.buttonCollision.x, bt.buttonCollision.y);
-                    fontScore.draw(batch, score, bt.buttonCollision.x + 200, bt.buttonCollision.y + 50);
+                    fontScore.draw(batch, name+ "      " + score, bt.buttonCollision.x-150, bt.buttonCollision.y+39-25);
                 }
-                batch.draw(buttonBack.buttonTexture, buttonBack.buttonCollision.x, buttonBack.buttonCollision.y);
+                batch.draw(buttonBack.buttonTexture, buttonBack.buttonCollision.x-32, buttonBack.buttonCollision.y-32);
                 batch.end();
                 if (waitTime == 0) {
                     // Al dar click en un boton
@@ -466,7 +465,7 @@ public class MainLogic extends ApplicationAdapter {
             if (currentLevel==-5){
                 batch.enableBlending();
                 batch.begin();
-                batch.draw(buttonBack.buttonTexture, buttonBack.buttonCollision.x, buttonBack.buttonCollision.y);
+                batch.draw(buttonBack.buttonTexture, buttonBack.buttonCollision.x-32, buttonBack.buttonCollision.y-32);
                 batch.end();
                 // CLICK BOTON BACK
                 if (waitTime == 0) {
@@ -507,7 +506,7 @@ public class MainLogic extends ApplicationAdapter {
 
                 batch.enableBlending();
                 batch.begin();
-                batch.draw(buttonBack.buttonTexture, buttonBack.buttonCollision.x, buttonBack.buttonCollision.y);
+                batch.draw(buttonBack.buttonTexture, buttonBack.buttonCollision.x-32, buttonBack.buttonCollision.y-32);
                 fontScore.draw(batch, "Nombre: " + name, 200, 600);
                 fontScore.draw(batch, "Puntaje global: " + scoreglobal, 200, 550);
                 fontScore.draw(batch, "level 1: " + lvl1, 200, 500);
@@ -545,6 +544,13 @@ public class MainLogic extends ApplicationAdapter {
 
                         }
                     }
+                    // CLICK BACK
+                    if (touchPos.x > buttonBack.buttonCollision.x - buttonBack.buttonCollision.width && touchPos.x < buttonBack.buttonCollision.x + buttonBack.buttonCollision.width) {
+                        if (touchPos.y > buttonBack.buttonCollision.y - buttonBack.buttonCollision.height && touchPos.y < buttonBack.buttonCollision.y + buttonBack.buttonCollision.height) {
+                            clearLevel();
+                            initiateLevel(-4);
+                        }
+                    }
                 }
                 // DRAW TEXTO PARA ELEGIR TEMATICA
                 batch.enableBlending();
@@ -553,6 +559,7 @@ public class MainLogic extends ApplicationAdapter {
                 font.draw(batch, "Linear Data Structures", 250, 300);
                 batch.draw(buttonLevelTrees.buttonTexture, 210, 180);
                 font.draw(batch, "Trees and Priority Heaps", 240, 210);
+                batch.draw(buttonBack.buttonTexture, buttonBack.buttonCollision.x-32, buttonBack.buttonCollision.y-32);
                 batch.end();
             }
             // FIN CURRENT LEVEL 0
@@ -818,7 +825,7 @@ public class MainLogic extends ApplicationAdapter {
                                     canUndo = false;
 
                                 }
-                                volverMenu = new GenericButton(100, 100, 381, 44, "MainMenuButtons.jpg");
+                                volverMenu = new GenericButton(100, 100, 381, 44, "volverNiveles.jpg");
                             }
 
                         } else {
@@ -943,7 +950,7 @@ public class MainLogic extends ApplicationAdapter {
                                     lose = true;
                                     canUndo = false;
                                 }
-                                volverMenu = new GenericButton(100, 100, 381, 44, "MainMenuButtons.jpg");
+                                volverMenu = new GenericButton(100, 100, 381, 44, "volverNiveles.jpg");
                             }
 
                         }
@@ -1132,7 +1139,7 @@ public class MainLogic extends ApplicationAdapter {
 
         }
         if (level >0) {
-            volverMenu = new GenericButton(280, 400, 381, 44, "MainMenuButtons.jpg");
+            volverMenu = new GenericButton(280, 400, 381, 44, "volverNiveles.jpg");
             buttonHelp = new GenericButton(175, 562, 32, 32, "Help.png");
             buttonPause = new GenericButton(47, 562, 32, 32, "Menu.png");
             buttonCtrz = new GenericButton(200, 77, 32, 32, "Re-Do.png");
@@ -1172,7 +1179,8 @@ public class MainLogic extends ApplicationAdapter {
                 break;
             case -3:
                 // ACA VA EL TEMA DE TOP PUNTAJSE //
-                buttonBack = new GenericButton(300,300,64,64,"Re-Do.png");
+                backgroundTexture = new Texture(Gdx.files.internal("Fondo-Top.png"));
+                buttonBack = new GenericButton(800-32,600-32,64,64,"Re-Do.png");
                 waitTime=15;
                 try{
                     scoreHeap = new BinaryHeap<>(false);
@@ -1185,10 +1193,10 @@ public class MainLogic extends ApplicationAdapter {
 
                     }
                     // ACA VA MOSTRAR CADA COSITA DE UN PUNTAJE SI SE LE DA CLICK
-                    int topSize = 10;
-                    if (scoreHeap.getCurrentSize() < 10) topSize=scoreHeap.getCurrentSize();
+                    int topSize = 5;
+                    if (scoreHeap.getCurrentSize() < 5) topSize=scoreHeap.getCurrentSize();
                     for (int i = 0; i < topSize; i++){
-                        ScoreButton buttonShowScore = new ScoreButton(300,400-100*i,64,64,"MainMenuButtons.jpg",scoreHeap.deleteTop());
+                        ScoreButton buttonShowScore = new ScoreButton(390,470-80*i,200,25,"Tabla-Puntaje.png",scoreHeap.deleteTop());
                         listButtonScore.add(buttonShowScore);
                     }
                 }
@@ -1207,18 +1215,20 @@ public class MainLogic extends ApplicationAdapter {
             case -5:
                 // ACA VAN LOS CREDITOS
                 waitTime=15;
-                buttonBack = new GenericButton(300,300,64,64,"Re-Do.png");
+                buttonBack = new GenericButton(800-32,600-32,64,64,"Re-Do.png");
                 break;
             case -6:
                 // ACA VA SI SE SELECCIONA UN PUNTAJE
                 waitTime=15;
-                buttonBack = new GenericButton(300,300,64,64,"Re-Do.png");
+                buttonBack = new GenericButton(800-32,600-32,64,64,"Re-Do.png");
+                backgroundTexture = new Texture(Gdx.files.internal("Fondo-Top.png"));
                 break;
             case 0:
                 // SELECTOR DE TEMA NIVELES
                 waitTime=15;
                 buttonLevelLinearDS = new GenericButton(210, 270, 381, 44, "MainMenuButtons.jpg");
                 buttonLevelTrees = new GenericButton(210, 180, 381, 44, "MainMenuButtons.jpg");
+                buttonBack = new GenericButton(800-32,600-32,64,64,"Re-Do.png");
                 break;
             case 1:
                 mode = "fifo";
