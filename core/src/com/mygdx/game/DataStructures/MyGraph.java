@@ -16,7 +16,7 @@ public class MyGraph<T>{
     }
     
     public void makeEmpty(){
-        MyDoubleLinkedList<MyDoubleLinkedList<GraphNode<T>>> adj_list = new MyDoubleLinkedList<>();
+        adj_list = new MyDoubleLinkedList<>();
         vertexCount = 0;
         edgesCount = 0;
     }
