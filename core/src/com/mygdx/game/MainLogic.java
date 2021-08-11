@@ -1235,6 +1235,8 @@ public class MainLogic extends ApplicationAdapter {
 
         } else if ("graphs".equals(tema)){
             backgroundTexture = new Texture(Gdx.files.internal("Fondo_Grafos.jpg"));
+        } else if("gg".equals(tema)){
+            backgroundTexture = new Texture(Gdx.files.internal("Fondo_Principal.jpg"));
         }
         if (level >0) {
             volverMenu = new GenericButton(280, 400, 381, 44, "volverNiveles.jpg");
@@ -1263,7 +1265,7 @@ public class MainLogic extends ApplicationAdapter {
              case -100:
                 // ACA EL TEMA DE REGISTRAR USUARIO //
                 isRegistering = true;
-                buttonAcceptPlay = new GenericButton(300, 400, 64, 64, "Play-button.png");
+                buttonAcceptPlay = new GenericButton(300, 400, 128, 64, "Play-button.png");
                 waitTime=15;
                 break;
                 
@@ -1487,7 +1489,7 @@ public class MainLogic extends ApplicationAdapter {
             case 7:
                 addCiudad(0,100,80,80,0);
                 addCiudad(400,100,80,70,1);
-                addCiudad(200,200,80,70,2);
+                addCiudad(160,200,80,70,2);
                 addCiudad(500,200,80,70,3);
                 GrafoCiudades.addEdge(listaCiudades.getData(0), listaCiudades.getData(1), 10, true);
                 GrafoCiudades.addEdge(listaCiudades.getData(0), listaCiudades.getData(2), 5, true);
@@ -1501,9 +1503,9 @@ public class MainLogic extends ApplicationAdapter {
             case 8:
                 addCiudad(0,100,80,80,0);
                 addCiudad(400,100,80,70,1);
-                addCiudad(200,200,80,70,2);
-                addCiudad(500,200,80,70,3);
-                addCiudad(700,175,80,70,4);
+                addCiudad(160,200,80,70,2);
+                addCiudad(480,240,80,70,3);
+                addCiudad(700,225,80,70,4);
                 addCiudad(700,75,80,70,5);
                 GrafoCiudades.addEdge(listaCiudades.getData(0), listaCiudades.getData(1), 10, true);
                 GrafoCiudades.addEdge(listaCiudades.getData(0), listaCiudades.getData(2), 5, true);
@@ -1519,11 +1521,11 @@ public class MainLogic extends ApplicationAdapter {
                 break;
             case 9:
                 addCiudad(0,100,80,80,0);
-                addCiudad(400,100,80,70,1);
-                addCiudad(200,200,80,70,2);
-                addCiudad(500,200,80,70,3);
-                addCiudad(700,175,80,70,4);
-                addCiudad(700,75,80,70,5);
+                addCiudad(400,50,80,70,1);
+                addCiudad(160,200,80,70,2);
+                addCiudad(480,240,80,70,3);
+                addCiudad(710,225,80,70,4);
+                addCiudad(700,50,80,70,5);
                 GrafoCiudades.addEdge(listaCiudades.getData(0), listaCiudades.getData(1), 5, true);
                 GrafoCiudades.addEdge(listaCiudades.getData(0), listaCiudades.getData(2), 11, true);
                 GrafoCiudades.addEdge(listaCiudades.getData(1), listaCiudades.getData(3), 8, true);
@@ -1535,6 +1537,10 @@ public class MainLogic extends ApplicationAdapter {
                 combustible = 18;
                 ciudadDestinoGrafos = listaCiudades.getData(2);
                 posicionActualGrafos = listaCiudades.getData(5);
+                break;
+            //Nivel de GG    
+            case 10:
+                tema = "gg";
                 break;
         }
 
