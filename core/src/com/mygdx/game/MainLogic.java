@@ -1144,10 +1144,15 @@ public class MainLogic extends ApplicationAdapter {
                 // Sprite es un tipo de objeto que deja cambiar algunas caracteristicas ed las texturas x eso se crea un sprite con la textura
                 Sprite sprite = new Sprite(infoTexture);
                 //Aqui se le pone un color en RGB,A. osea color y opacidad.
-                sprite.setPosition(150, 100);
-                sprite.setSize(500, 450);
+                /*
+                
+                
                 sprite.setColor(1, 1, 1, 0.8f);
+                */
+                sprite.setSize(500, 450);
+                sprite.setPosition(150, 100);
                 sprite.draw(batch);
+                
                 batch.draw(buttonClose.buttonTexture, 600, 503);
 
             }
@@ -1278,6 +1283,7 @@ public class MainLogic extends ApplicationAdapter {
 
         } else if ("graphs".equals(tema)){
             backgroundTexture = new Texture(Gdx.files.internal("Fondo_Grafos.jpg"));
+            infoTexture = new Texture(Gdx.files.internal("Info_tres.png"));
         }
         if (level >0) {
             
