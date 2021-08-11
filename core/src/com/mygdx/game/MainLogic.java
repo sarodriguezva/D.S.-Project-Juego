@@ -84,7 +84,7 @@ public class MainLogic extends ApplicationAdapter {
     String selectedScore;
     // VARIABLE DE ENTEROS
     int Lastfilled;
-    int currentLevel = 0;
+    int currentLevel = -100;
     int sec = 0;
     int levelScore = 0;
     int minScore = 0;
@@ -1172,7 +1172,7 @@ public class MainLogic extends ApplicationAdapter {
             }
             if (lose == true) {
                 batch.draw(buttonLose.buttonTexture, 53, 249);
-                batch.draw(buttonRetry.buttonTexture, buttonRetry.buttonCollision.x, buttonRetry.buttonCollision.y);
+                batch.draw(buttonRetry.buttonTexture, buttonRetry.buttonCollision.x-32, buttonRetry.buttonCollision.y-32);
                 batch.draw(volverMenu.buttonTexture, volverMenu.buttonCollision.x, volverMenu.buttonCollision.y);
             }
             
@@ -1300,30 +1300,32 @@ public class MainLogic extends ApplicationAdapter {
                 break;
         }
         if (level >0) {
-            
-            if(level != 10){
-            volverMenu = new GenericButton(65, 300, 381, 44, "volverNiveles.jpg");
-            buttonHelp = new GenericButton(175, 562, 32, 32, "Help.png");
-            buttonPause = new GenericButton(47, 562, 32, 32, "Menu.png");
-            
-            buttonCtrz = new GenericButton(200, 77, 32, 32, "Re-Do.png");
-            if ("list".equals(tema)) {
+
+            if (level != 10) {
+                volverMenu = new GenericButton(65, 300, 381, 44, "volverNiveles.jpg");
+                buttonHelp = new GenericButton(175, 562, 32, 32, "Help.png");
+                buttonPause = new GenericButton(47, 562, 32, 32, "Menu.png");
+
                 buttonCtrz = new GenericButton(200, 77, 32, 32, "Re-Do.png");
-            } else if ("tree".equals(tema)) {
-                buttonCtrz = new GenericButton(500, 77, 32, 32, "Re-Do.png");
+                if ("list".equals(tema)) {
+                    buttonCtrz = new GenericButton(200, 77, 32, 32, "Re-Do.png");
+                } else if ("tree".equals(tema)) {
+                    buttonCtrz = new GenericButton(500, 77, 32, 32, "Re-Do.png");
+                }
+
+                buttonDelete = new GenericButton(32, 32, 32, 32, "Basura.png");
+                buttonClose = new GenericButton(600, 503, 50, 50, "buttonClose.png");
+                buttonRestart = new GenericButton(109, 562, 32, 32, "Re-Try.png");
+                buttonWin = new GenericButton(100, 100, 100, 100, "Win.png");
+                buttonLose = new GenericButton(0, 0, 50, 50, "Lose.png");
+                buttonNextLevel = new GenericButton(65, 380, 128, 64, "buttonNextLevel.jpg");
+                buttonRetry = new GenericButton(350, 400, 128, 64, "Re-Try.png");
+
+                levelScore = 1000 * level;
+                minScore = 100 * level;
             }
 
-            buttonDelete = new GenericButton(32, 32, 32, 32, "Basura.png");
-            buttonClose = new GenericButton(600, 503, 50, 50, "buttonClose.png");
-            buttonRestart = new GenericButton(109, 562, 32, 32, "Re-Try.png");
-            buttonWin = new GenericButton(100, 100, 100, 100, "Win.png");
-            buttonLose = new GenericButton(0, 0, 50, 50, "Lose.png");
-            buttonNextLevel = new GenericButton(65, 380, 128, 64, "buttonNextLevel.jpg");
-            buttonRetry = new GenericButton(250, 250, 128, 64, "Re-Try.png");
 
-            levelScore = 1000 * level;
-            minScore = 100 * level;
-            }
         }
         currentLevel = level;
         switch (level) {
