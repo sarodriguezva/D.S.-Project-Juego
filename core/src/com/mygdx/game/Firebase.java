@@ -1,7 +1,10 @@
 package com.mygdx.game;
 
 import com.google.api.core.ApiFuture;
+<<<<<<< Updated upstream
 import com.google.api.core.ApiFutures;
+=======
+>>>>>>> Stashed changes
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import com.google.auth.oauth2.GoogleCredentials;
@@ -37,7 +40,7 @@ public class Firebase {
         FileInputStream serviceAccount
                 = new FileInputStream("datastructuregame-firebase-adminsdk-1sfhu-a69b0c7dd8.json");
         try{
-        FirebaseOptions options = new FirebaseOptions.Builder()
+            FirebaseOptions options = FirebaseOptions.builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                 .build();
 
