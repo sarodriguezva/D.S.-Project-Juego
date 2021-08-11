@@ -15,6 +15,12 @@ public class MyGraph<T>{
         
     }
     
+    public void makeEmpty(){
+        MyDoubleLinkedList<MyDoubleLinkedList<GraphNode<T>>> adj_list = new MyDoubleLinkedList<>();
+        vertexCount = 0;
+        edgesCount = 0;
+    }
+    
     public void addVertex(T data){
         this.addVertex(data, 0);
     }

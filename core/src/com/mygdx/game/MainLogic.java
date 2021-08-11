@@ -1016,7 +1016,10 @@ public class MainLogic extends ApplicationAdapter {
                 }
             }
             if("graphs".equals(tema)){
-                
+                if(posicionActualGrafos != null){
+                buttonCannon.cannonCollision.x = posicionActualGrafos.xpos;
+                buttonCannon.cannonCollision.y = posicionActualGrafos.ypos;
+                }
                 //RENDERIZADO DE CIUDADES Y COSTOS
                 Texture ciudadTexture = new Texture(Gdx.files.internal("city.png"));
                 Texture flagTexture = new Texture(Gdx.files.internal("flag.png"));
@@ -1029,7 +1032,7 @@ public class MainLogic extends ApplicationAdapter {
                     MyDoubleLinkedList<GraphNode<ciudad>> listaConectadas = GrafoCiudades.getVertexList(listaCiudades.getData(i));
                     for(int j = 1; j <listaConectadas.getSize(); j++){
                         ciudad objCity = listaConectadas.getData(j).getValue();
-                        int middleX = (auxCity.xpos + objCity.xpos)/2;
+                        int middleX = (auxCity.xpos + objCity.xpos)/2 - 20;
                         int middleY = (auxCity.ypos + objCity.ypos)/2 + 50;
                         font.draw(batch, "Cost = " + GrafoCiudades.getCostOneWay(auxCity, objCity), middleX, middleY);
                     }
@@ -1053,8 +1056,10 @@ public class MainLogic extends ApplicationAdapter {
                                     buttonCannon.cannonCollision.y = auxc.ypos;
                                     combustible -= GrafoCiudades.getCostOneWay(posicionActualGrafos,auxc);
                                     posicionActualGrafos = auxc;
+                                    if(combustible >= 0){
                                     if(posicionActualGrafos.xpos == ciudadDestinoGrafos.xpos && posicionActualGrafos.ypos == ciudadDestinoGrafos.ypos){
                                         win = true;
+                                    }
                                     }
                                 }
                             }
@@ -1063,6 +1068,9 @@ public class MainLogic extends ApplicationAdapter {
                         }
                 }
                 } else if(combustible < 0){
+                    lose = true;
+                } else if(combustible <= 0 && (posicionActualGrafos.xpos == ciudadDestinoGrafos.xpos && posicionActualGrafos.ypos == ciudadDestinoGrafos.ypos)){
+                    win = false;
                     lose = true;
                 }
                 
@@ -1179,6 +1187,10 @@ public class MainLogic extends ApplicationAdapter {
         listHuecosUsados.makeEmpty();
         LastDeleted.makeEmpty();
         PrimeraPos = 8;
+        ciudadDestinoGrafos = null;
+        posicionActualGrafos = null;
+        listaCiudades.makeEmpty();
+        GrafoCiudades.makeEmpty();
         if (buttonRestart != null) {
             buttonRestart.dispose();
         }
@@ -1476,14 +1488,52 @@ public class MainLogic extends ApplicationAdapter {
                 addCiudad(400,100,80,70,1);
                 addCiudad(200,200,80,70,2);
                 addCiudad(500,200,80,70,3);
-                GrafoCiudades.addEdge(listaCiudades.getData(0), listaCiudades.getData(1), 10, false);
-                GrafoCiudades.addEdge(listaCiudades.getData(0), listaCiudades.getData(2), 5, false);
-                GrafoCiudades.addEdge(listaCiudades.getData(1), listaCiudades.getData(3), 10, false);
-                GrafoCiudades.addEdge(listaCiudades.getData(2), listaCiudades.getData(3), 5, false);
+                GrafoCiudades.addEdge(listaCiudades.getData(0), listaCiudades.getData(1), 10, true);
+                GrafoCiudades.addEdge(listaCiudades.getData(0), listaCiudades.getData(2), 5, true);
+                GrafoCiudades.addEdge(listaCiudades.getData(1), listaCiudades.getData(3), 10, true);
+                GrafoCiudades.addEdge(listaCiudades.getData(2), listaCiudades.getData(3), 5, true);
                 buttonCannon = new Canon(0,100, 100, 100, "car.png");
                 combustible = 15;
                 ciudadDestinoGrafos = listaCiudades.getData(3);
                 posicionActualGrafos = listaCiudades.getData(0);
+                break;
+            case 8:
+                addCiudad(0,100,80,80,0);
+                addCiudad(400,100,80,70,1);
+                addCiudad(200,200,80,70,2);
+                addCiudad(500,200,80,70,3);
+                addCiudad(700,175,80,70,4);
+                addCiudad(700,75,80,70,5);
+                GrafoCiudades.addEdge(listaCiudades.getData(0), listaCiudades.getData(1), 10, true);
+                GrafoCiudades.addEdge(listaCiudades.getData(0), listaCiudades.getData(2), 5, true);
+                GrafoCiudades.addEdge(listaCiudades.getData(1), listaCiudades.getData(3), 10, true);
+                GrafoCiudades.addEdge(listaCiudades.getData(2), listaCiudades.getData(3), 5, true);
+                GrafoCiudades.addEdge(listaCiudades.getData(3), listaCiudades.getData(4), 20, true);
+                GrafoCiudades.addEdge(listaCiudades.getData(5), listaCiudades.getData(4), 1, true);
+                GrafoCiudades.addEdge(listaCiudades.getData(1), listaCiudades.getData(5), 5, true);
+                buttonCannon = new Canon(0,100, 100, 100, "car.png");
+                combustible = 16;
+                ciudadDestinoGrafos = listaCiudades.getData(4);
+                posicionActualGrafos = listaCiudades.getData(1);
+                break;
+            case 9:
+                addCiudad(0,100,80,80,0);
+                addCiudad(400,100,80,70,1);
+                addCiudad(200,200,80,70,2);
+                addCiudad(500,200,80,70,3);
+                addCiudad(700,175,80,70,4);
+                addCiudad(700,75,80,70,5);
+                GrafoCiudades.addEdge(listaCiudades.getData(0), listaCiudades.getData(1), 5, true);
+                GrafoCiudades.addEdge(listaCiudades.getData(0), listaCiudades.getData(2), 11, true);
+                GrafoCiudades.addEdge(listaCiudades.getData(1), listaCiudades.getData(3), 8, true);
+                GrafoCiudades.addEdge(listaCiudades.getData(2), listaCiudades.getData(3), 6, true);
+                GrafoCiudades.addEdge(listaCiudades.getData(3), listaCiudades.getData(4), 9, true);
+                GrafoCiudades.addEdge(listaCiudades.getData(5), listaCiudades.getData(4), 4, true);
+                GrafoCiudades.addEdge(listaCiudades.getData(1), listaCiudades.getData(5), 4, true);
+                buttonCannon = new Canon(0,100, 100, 100, "car.png");
+                combustible = 18;
+                ciudadDestinoGrafos = listaCiudades.getData(2);
+                posicionActualGrafos = listaCiudades.getData(5);
                 break;
         }
 
