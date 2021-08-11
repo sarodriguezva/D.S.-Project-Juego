@@ -1125,9 +1125,13 @@ public class MainLogic extends ApplicationAdapter {
                 sprite.setColor(1, 1, 1, 0.8f);
                 sprite.draw(batch);
 
-                batch.draw(buttonClose.buttonTexture, 600, 503);
-                batch.draw(buttonLevelLinearDS.buttonTexture, 220, 370);
-                font.draw(batch, "Volver al Menu", 290, 400);
+                buttonClose.buttonCollision.x = 600;
+                buttonClose.buttonCollision.y = 503;
+                batch.draw(buttonClose.buttonTexture, buttonClose.buttonCollision.x, buttonClose.buttonCollision.y);
+                
+                volverMenu.buttonCollision.x = 220;
+                volverMenu.buttonCollision.y = 370;
+                batch.draw(volverMenu.buttonTexture, 220, 370);
             }
 
             if (menu == true) {
@@ -1137,7 +1141,7 @@ public class MainLogic extends ApplicationAdapter {
                 pause = false;
                 info = false;
 
-                batch.draw(volverMenu.buttonTexture, 280, 400);
+                batch.draw(volverMenu.buttonTexture, volverMenu.buttonCollision.x, volverMenu.buttonCollision.y);
             }
 
             if (info == true) {
