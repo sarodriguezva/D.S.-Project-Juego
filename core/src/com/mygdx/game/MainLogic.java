@@ -404,7 +404,7 @@ public class MainLogic extends ApplicationAdapter {
                 }
             }
             // FIN CURRENT LEVEL = -100
-
+            
             // MENU PRINCIPAL
             if (currentLevel == -4) {
                 batch.enableBlending();
@@ -486,9 +486,11 @@ public class MainLogic extends ApplicationAdapter {
             // FIN CURRENT LEVEL =-3
         // ACA VAN LOS CREDITOS
             if (currentLevel==-5){
+                Texture creditos = new Texture(Gdx.files.internal("creditos.png"));
                 batch.enableBlending();
                 batch.begin();
                 batch.draw(buttonBack.buttonTexture, buttonBack.buttonCollision.x-32, buttonBack.buttonCollision.y-32);
+                batch.draw(creditos,0,100);
                 batch.end();
                 // CLICK BOTON BACK
                 if (waitTime == 0) {
