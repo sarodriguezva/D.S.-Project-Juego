@@ -353,6 +353,7 @@ public class MainLogic extends ApplicationAdapter {
         sprbc.draw(batch);
         batch.end();
 
+        
         //justTouched me dice si el mouse ha sido recientemente presionado, leftpressed si esta continuamente presionado
         justTouched = Gdx.input.justTouched();
         leftPressed = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
@@ -407,29 +408,29 @@ public class MainLogic extends ApplicationAdapter {
                 batch.end();
                 if (waitTime == 0) {
                 // CLICK BOTON PLAY
-                if (touchPos.x > buttonPlay.buttonCollision.x - buttonPlay.buttonCollision.width && touchPos.x < buttonPlay.buttonCollision.x + buttonPlay.buttonCollision.width) {
-                    if (touchPos.y > buttonPlay.buttonCollision.y - buttonPlay.buttonCollision.height && touchPos.y < buttonPlay.buttonCollision.y + buttonPlay.buttonCollision.height) {
+                if (touchPos.x > buttonPlay.buttonCollision.x && touchPos.x < buttonPlay.buttonCollision.x + buttonPlay.buttonCollision.width) {
+                    if (touchPos.y > buttonPlay.buttonCollision.y && touchPos.y < buttonPlay.buttonCollision.y + buttonPlay.buttonCollision.height) {
                         clearLevel();
                         initiateLevel(0);
                     }
                 }
 
                 //CLICK BOTON SCORE
-                if (touchPos.x > buttonScore.buttonCollision.x - buttonScore.buttonCollision.width && touchPos.x < buttonScore.buttonCollision.x + buttonScore.buttonCollision.width) {
-                    if (touchPos.y > buttonScore.buttonCollision.y - buttonScore.buttonCollision.height && touchPos.y < buttonScore.buttonCollision.y + buttonScore.buttonCollision.height) {
+                if (touchPos.x > buttonScore.buttonCollision.x && touchPos.x < buttonScore.buttonCollision.x + buttonScore.buttonCollision.width) {
+                    if (touchPos.y > buttonScore.buttonCollision.y && touchPos.y < buttonScore.buttonCollision.y + buttonScore.buttonCollision.height) {
                         clearLevel();
                         initiateLevel(-3);
                     }
                 }
                 // CLICK BOTON EXIT
-                if (touchPos.x > buttonExit.buttonCollision.x - buttonExit.buttonCollision.width && touchPos.x < buttonExit.buttonCollision.x + buttonExit.buttonCollision.width) {
-                    if (touchPos.y > buttonExit.buttonCollision.y - buttonExit.buttonCollision.height && touchPos.y < buttonExit.buttonCollision.y + buttonExit.buttonCollision.height) {
+                if (touchPos.x > buttonExit.buttonCollision.x && touchPos.x < buttonExit.buttonCollision.x + buttonExit.buttonCollision.width) {
+                    if (touchPos.y > buttonExit.buttonCollision.y && touchPos.y < buttonExit.buttonCollision.y + buttonExit.buttonCollision.height) {
                         Gdx.app.exit();
                     }
                 }
                 // CLICK BOTON CREDITOS
-                if (touchPos.x > buttonCredits.buttonCollision.x - buttonCredits.buttonCollision.width && touchPos.x < buttonCredits.buttonCollision.x + buttonCredits.buttonCollision.width) {
-                    if (touchPos.y > buttonCredits.buttonCollision.y - buttonCredits.buttonCollision.height && touchPos.y < buttonCredits.buttonCollision.y + buttonCredits.buttonCollision.height) {
+                if (touchPos.x > buttonCredits.buttonCollision.x && touchPos.x < buttonCredits.buttonCollision.x + buttonCredits.buttonCollision.width) {
+                    if (touchPos.y > buttonCredits.buttonCollision.y && touchPos.y < buttonCredits.buttonCollision.y + buttonCredits.buttonCollision.height) {
                         clearLevel();
                         initiateLevel(-5);
                     }
@@ -1277,7 +1278,7 @@ public class MainLogic extends ApplicationAdapter {
             case -3:
                 // ACA VA EL TEMA DE TOP PUNTAJSE //
                 backgroundTexture = new Texture(Gdx.files.internal("Fondo-Top.png"));
-                buttonBack = new GenericButton(800-32,600-32,64,64,"Re-Do.png");
+                buttonBack = new GenericButton(800-32,600-32,128,57,"Re-Do.png");
                 waitTime=15;
                 try{
                     scoreHeap = new BinaryHeap<>(false);
@@ -1304,10 +1305,10 @@ public class MainLogic extends ApplicationAdapter {
             case -4:
                 // ACA VA EL MENU PRINCIPAL
                 waitTime=15;
-                buttonPlay = new GenericButton(300,200,64,64,"Play-button.png");
-                buttonScore = new GenericButton(300,100,64,64,"Points.png");
-                buttonExit = new GenericButton(300,000,64,64,"Exit-button.png");
-                buttonCredits = new GenericButton(300,350,64,64,"Credits2.png");
+                buttonPlay = new GenericButton(300,200,128,60,"Play-button.png");
+                buttonScore = new GenericButton(300,100,128,57,"Points.png");
+                buttonExit = new GenericButton(300,000,128,57,"Exit-button.png");
+                buttonCredits = new GenericButton(300,350,128,57,"Credits2.png");
                 break;
             case -5:
                 // ACA VAN LOS CREDITOS
