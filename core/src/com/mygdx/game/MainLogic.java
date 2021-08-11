@@ -877,7 +877,7 @@ public class MainLogic extends ApplicationAdapter {
                                     canUndo = false;
 
                                 }
-                                volverMenu = new GenericButton(100, 100, 381, 44, "volverNiveles.jpg");
+                                volverMenu = new GenericButton(65, 300, 381, 44, "volverNiveles.jpg");
                             }
 
                         } else {
@@ -1001,7 +1001,7 @@ public class MainLogic extends ApplicationAdapter {
                                     lose = true;
                                     canUndo = false;
                                 }
-                                volverMenu = new GenericButton(100, 100, 381, 44, "volverNiveles.jpg");
+                                volverMenu = new GenericButton(65, 300, 381, 44, "volverNiveles.jpg");
                             }
 
                         }
@@ -1125,9 +1125,13 @@ public class MainLogic extends ApplicationAdapter {
                 sprite.setColor(1, 1, 1, 0.8f);
                 sprite.draw(batch);
 
-                batch.draw(buttonClose.buttonTexture, 600, 503);
-                batch.draw(buttonLevelLinearDS.buttonTexture, 220, 370);
-                font.draw(batch, "Volver al Menu", 290, 400);
+                buttonClose.buttonCollision.x = 600;
+                buttonClose.buttonCollision.y = 503;
+                batch.draw(buttonClose.buttonTexture, buttonClose.buttonCollision.x, buttonClose.buttonCollision.y);
+                
+                volverMenu.buttonCollision.x = 220;
+                volverMenu.buttonCollision.y = 370;
+                batch.draw(volverMenu.buttonTexture, 220, 370);
             }
 
             if (menu == true) {
@@ -1137,7 +1141,7 @@ public class MainLogic extends ApplicationAdapter {
                 pause = false;
                 info = false;
 
-                batch.draw(volverMenu.buttonTexture, 280, 400);
+                batch.draw(volverMenu.buttonTexture, volverMenu.buttonCollision.x, volverMenu.buttonCollision.y);
             }
 
             if (info == true) {
@@ -1288,7 +1292,7 @@ public class MainLogic extends ApplicationAdapter {
         if (level >0) {
             
             if(level != 10){
-            volverMenu = new GenericButton(280, 400, 381, 44, "volverNiveles.jpg");
+            volverMenu = new GenericButton(65, 300, 381, 44, "volverNiveles.jpg");
             buttonHelp = new GenericButton(175, 562, 32, 32, "Help.png");
             buttonPause = new GenericButton(47, 562, 32, 32, "Menu.png");
             
@@ -1304,7 +1308,7 @@ public class MainLogic extends ApplicationAdapter {
             buttonRestart = new GenericButton(109, 562, 32, 32, "Re-Try.png");
             buttonWin = new GenericButton(100, 100, 100, 100, "Win.png");
             buttonLose = new GenericButton(0, 0, 50, 50, "Lose.png");
-            buttonNextLevel = new GenericButton(250, 250, 128, 64, "buttonNextLevel.jpg");
+            buttonNextLevel = new GenericButton(65, 380, 128, 64, "buttonNextLevel.jpg");
             buttonRetry = new GenericButton(250, 250, 128, 64, "Re-Try.png");
 
             levelScore = 1000 * level;
