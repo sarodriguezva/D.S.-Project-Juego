@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -22,6 +23,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.mygdx.game.DataStructures.MyGraph;
 import com.mygdx.game.DataStructures.GraphNode;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.color;
 
 /**
  * Clase que contiene toda la logica del juego y su funcionamiento interno
@@ -60,6 +64,7 @@ public class MainLogic extends ApplicationAdapter {
     private Texture treeTexture;
     // TEXTURAS DE FONDO
     private SpriteBatch batch;
+    private ShapeRenderer shapeRenderer;
     Sprite sprbc;
     private Texture backgroundTexture;
     private OrthographicCamera camera;
@@ -606,6 +611,18 @@ public class MainLogic extends ApplicationAdapter {
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             camera.unproject(touchPos);
         }
+        
+        if(currentLevel == 10){
+            if (touchPos.x > volverMenu.buttonCollision.x && touchPos.x < volverMenu.buttonCollision.x + volverMenu.buttonCollision.width) {
+                    if (touchPos.y > volverMenu.buttonCollision.y && touchPos.y < volverMenu.buttonCollision.y + volverMenu.buttonCollision.height) {
+                            Gdx.app.log("E","Helo");
+                            clearLevel();
+                            initiateLevel(0);
+                        }
+
+                    }
+                }
+       
 
         if (currentLevel >0) {
             // Si ha sido recientemente presionado compruebe si ya esta arrastrando un objeto, si no hay objeto, busca el que el mouse presiona en esas coordenadas.
@@ -635,8 +652,8 @@ public class MainLogic extends ApplicationAdapter {
                     }
                 }
                 // CLICK BOTON VOLVER AL MENU
-                if (touchPos.x > volverMenu.buttonCollision.x - volverMenu.buttonCollision.width && touchPos.x < volverMenu.buttonCollision.x + volverMenu.buttonCollision.width) {
-                    if (touchPos.y > volverMenu.buttonCollision.y - volverMenu.buttonCollision.height && touchPos.y < volverMenu.buttonCollision.y + volverMenu.buttonCollision.height) {
+                if (touchPos.x > volverMenu.buttonCollision.x && touchPos.x < volverMenu.buttonCollision.x + volverMenu.buttonCollision.width) {
+                    if (touchPos.y > volverMenu.buttonCollision.y && touchPos.y < volverMenu.buttonCollision.y + volverMenu.buttonCollision.height) {
 
                         if (pause || win || lose) {
                             pause = false;
@@ -782,7 +799,7 @@ public class MainLogic extends ApplicationAdapter {
             if (!pause && !info) {
                 sec++;
             }
-            if (levelScore > minScore && sec >= 60 && !win && !lose) {
+            if (levelScore > minScore && sec >= 60 && !win && !lose && currentLevel != 10) {
                 levelScore -= 10;
                 sec = 0;
             }
@@ -823,8 +840,10 @@ public class MainLogic extends ApplicationAdapter {
             }
 
             // RENDERIZADO DE BOTONES
+            if(currentLevel != 10){
             batch.draw(buttonRestart.buttonTexture, buttonRestart.buttonCollision.x - 32, buttonRestart.buttonCollision.y - 32);
             batch.draw(buttonPause.buttonTexture, buttonPause.buttonCollision.x - 32, buttonPause.buttonCollision.y - 32);
+            }
             if("list".equals(tema) || "tree".equals(tema)){
             batch.draw(buttonCtrz.buttonTexture, buttonCtrz.buttonCollision.x - 32, buttonCtrz.buttonCollision.y - 32);
             }
@@ -1017,6 +1036,23 @@ public class MainLogic extends ApplicationAdapter {
                 }
             }
             if("graphs".equals(tema)){
+            batch.end();
+            for(int i= 0; i <listaCiudades.getSize(); i++){
+                ciudad auxCity = listaCiudades.getData(i);
+                MyDoubleLinkedList<GraphNode<ciudad>> listaConectadas = GrafoCiudades.getVertexList(listaCiudades.getData(i));
+                for(int j = 1; j <listaConectadas.getSize(); j++){
+                    ciudad objCity = listaConectadas.getData(j).getValue();
+                    camera.update();
+                    shapeRenderer.setProjectionMatrix(camera.combined);
+
+                    shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+                    shapeRenderer.setColor(Color.BLACK);
+                    shapeRenderer.rectLine((float) (auxCity.xpos + auxCity.collx/2),(float) auxCity.ypos + auxCity.colly/2, (float) objCity.xpos + objCity.collx/2,(float) objCity.ypos + objCity.colly/2, 2f);
+                    shapeRenderer.end();
+                }
+            }
+            batch.begin();
+                
                 if(posicionActualGrafos != null){
                 buttonCannon.cannonCollision.x = posicionActualGrafos.xpos;
                 buttonCannon.cannonCollision.y = posicionActualGrafos.ypos;
@@ -1034,7 +1070,7 @@ public class MainLogic extends ApplicationAdapter {
                     for(int j = 1; j <listaConectadas.getSize(); j++){
                         ciudad objCity = listaConectadas.getData(j).getValue();
                         int middleX = (auxCity.xpos + objCity.xpos)/2 - 20;
-                        int middleY = (auxCity.ypos + objCity.ypos)/2 + 50;
+                        int middleY = (auxCity.ypos + objCity.ypos)/2 + 65;
                         font.draw(batch, "Cost = " + GrafoCiudades.getCostOneWay(auxCity, objCity), middleX, middleY);
                     }
                 }
@@ -1076,9 +1112,10 @@ public class MainLogic extends ApplicationAdapter {
                 }
                 
             }
+            if(currentLevel != 10){
             fontScore.draw(batch, "Puntaje: " + Integer.toString(levelScore), 290, 585);
             batch.draw(buttonHelp.buttonTexture, buttonHelp.buttonCollision.x - 32, buttonHelp.buttonCollision.y - 32);
-
+            }
 
             if (pause == true) {
                 Sprite sprite = new Sprite(fondoPause);
@@ -1122,6 +1159,10 @@ public class MainLogic extends ApplicationAdapter {
             if (lose == true) {
                 batch.draw(buttonLose.buttonTexture, 53, 249);
                 batch.draw(buttonRetry.buttonTexture, buttonRetry.buttonCollision.x, buttonRetry.buttonCollision.y);
+                batch.draw(volverMenu.buttonTexture, volverMenu.buttonCollision.x, volverMenu.buttonCollision.y);
+            }
+            
+            if(currentLevel == 10){
                 batch.draw(volverMenu.buttonTexture, volverMenu.buttonCollision.x, volverMenu.buttonCollision.y);
             }
             batch.end();
@@ -1170,6 +1211,7 @@ public class MainLogic extends ApplicationAdapter {
      */
     public void clearLevel() {
         batch.dispose();
+        shapeRenderer.dispose();
         for (int i = 0; i < listPlank.getSize(); i++) {
             listPlank.getData(i).dispose();
         }
@@ -1223,6 +1265,7 @@ public class MainLogic extends ApplicationAdapter {
         Integer[] myArr2;
         //ACA VA LA INFO DE NIVELES. 0=MENU;
         batch = new SpriteBatch();
+        shapeRenderer = new ShapeRenderer();
         backgroundTexture = new Texture(Gdx.files.internal("Fondo_Principal.jpg"));
         fondoPause = new Texture(Gdx.files.internal("fondoPause.png"));
         if ("list".equals(tema)) {
@@ -1237,9 +1280,12 @@ public class MainLogic extends ApplicationAdapter {
             backgroundTexture = new Texture(Gdx.files.internal("Fondo_Grafos.jpg"));
         }
         if (level >0) {
+            
+            if(level != 10){
             volverMenu = new GenericButton(280, 400, 381, 44, "volverNiveles.jpg");
             buttonHelp = new GenericButton(175, 562, 32, 32, "Help.png");
             buttonPause = new GenericButton(47, 562, 32, 32, "Menu.png");
+            
             buttonCtrz = new GenericButton(200, 77, 32, 32, "Re-Do.png");
             if ("list".equals(tema)) {
                 buttonCtrz = new GenericButton(200, 77, 32, 32, "Re-Do.png");
@@ -1257,6 +1303,7 @@ public class MainLogic extends ApplicationAdapter {
 
             levelScore = 1000 * level;
             minScore = 100 * level;
+            }
         }
         currentLevel = level;
         switch (level) {
@@ -1485,7 +1532,7 @@ public class MainLogic extends ApplicationAdapter {
                 Shootingtime = 0;
 
                 break;
-            case 9:
+            case 7:
                 addCiudad(0,100,80,80,0);
                 addCiudad(500,50,80,70,1);
                 addCiudad(160,200,80,70,2);
@@ -1518,11 +1565,11 @@ public class MainLogic extends ApplicationAdapter {
                 ciudadDestinoGrafos = listaCiudades.getData(4);
                 posicionActualGrafos = listaCiudades.getData(1);
                 break;
-            case 7:
+            case 9:
                 addCiudad(0,75,80,80,0);
                 addCiudad(400,50,80,70,1);
                 addCiudad(160,200,80,70,2);
-                addCiudad(480,250,80,70,3);
+                addCiudad(460,250,80,70,3);
                 addCiudad(700,225,80,70,4);
                 addCiudad(700,50,80,70,5);
                 GrafoCiudades.addEdge(listaCiudades.getData(0), listaCiudades.getData(1), 5, true);
@@ -1539,6 +1586,8 @@ public class MainLogic extends ApplicationAdapter {
                 break;
             case 10:
                 tema = "gg";
+                backgroundTexture = new Texture(Gdx.files.internal("fondoplay2.jpg"));
+                volverMenu = new GenericButton(200, 100, 381, 44, "volverNiveles.jpg");
                 break;
         }
 
