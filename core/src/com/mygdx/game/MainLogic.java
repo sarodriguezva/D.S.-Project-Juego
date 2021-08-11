@@ -24,8 +24,8 @@ import java.util.logging.Logger;
 import com.mygdx.game.DataStructures.MyGraph;
 import com.mygdx.game.DataStructures.GraphNode;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.color;
+import java.util.concurrent.ExecutionException;
+
 
 /**
  * Clase que contiene toda la logica del juego y su funcionamiento interno
@@ -127,23 +127,23 @@ public class MainLogic extends ApplicationAdapter {
     private MyDoubleLinkedList<Integer> listLeafTreeOrder = new MyDoubleLinkedList<>();
     private Integer[] listLeafTreePlayerOrder = new Integer[1];
     // LISTA PARA PODER HACER UN-DO
-    private MyDoubleLinkedList<Leaf> LastDeleted = new MyDoubleLinkedList<>();
+    final private MyDoubleLinkedList<Leaf> LastDeleted = new MyDoubleLinkedList<>();
     //Lista posicionActualGrafoses posibles para las hojas
-    private MyDoubleLinkedList<MyTuple<Integer,Integer>> ListaPosicionesHojas = new MyDoubleLinkedList<>();
+    final private MyDoubleLinkedList<MyTuple<Integer,Integer>> ListaPosicionesHojas = new MyDoubleLinkedList<>();
     private int PrimeraPos = 8;
     
     //LISTA Y GRAFO CIUDADES PARA GRAFOS
-    private MyDoubleLinkedList<ciudad> listaCiudades = new MyDoubleLinkedList<>();
-    private MyGraph<ciudad> GrafoCiudades = new MyGraph<>();
+    final private MyDoubleLinkedList<ciudad> listaCiudades = new MyDoubleLinkedList<>();
+    final private MyGraph<ciudad> GrafoCiudades = new MyGraph<>();
     
     //VARIABLES PARA NIVELES DE GRAFOS 
     private int combustible = 0;
-    private ciudad ciudadDestinoGrafos = null;
+    private ciudad ciudadDestinoGrafos;
     private ciudad posicionActualGrafos = null;
     private int waitStart = 0;
             
     // Lista de scores
-    private MyDoubleLinkedList<ScoreButton> listButtonScore = new MyDoubleLinkedList<>();
+    private final MyDoubleLinkedList<ScoreButton> listButtonScore = new MyDoubleLinkedList<>();
     private MyDoubleLinkedList<MyTuple<String,String>> res =new MyDoubleLinkedList<>();
     hueco objetivoArboles = new hueco(0, 0, 0, 0, 0);
     hueco objetivoBorrar = new hueco(1, 1, 0, 64, 64);
@@ -154,6 +154,10 @@ public class MainLogic extends ApplicationAdapter {
     MyStack<Character> userNameStack = new MyStack<>();
     Firebase fbase;
     DocumentReference docRef;
+
+    public MainLogic() {
+        this.ciudadDestinoGrafos = null;
+    }
 
 
     // FUNCION PARA GUARDAR TEXTO EN UN ARCHIVO .TXT
@@ -166,11 +170,10 @@ public class MainLogic extends ApplicationAdapter {
      */
     public void appendStringToTxt(String str) throws IOException {
 
-        BufferedWriter writer = new BufferedWriter(new FileWriter("data.txt", true));
-        writer.append("\n\n\n\n\n");
-        writer.append(str);
-
-        writer.close();
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("data.txt", true))) {
+            writer.append("\n\n\n\n\n");
+            writer.append(str);
+        }
 
     }
 
@@ -266,15 +269,15 @@ public class MainLogic extends ApplicationAdapter {
         maxScoreLevel = new int[10];
         
         //Se crean las tuplas para la lista de posicionActualGrafoses para las hojas
-        ListaPosicionesHojas.add(new MyTuple<Integer,Integer>(500, 0));
-        ListaPosicionesHojas.add(new MyTuple<Integer,Integer>(600, 0));
-        ListaPosicionesHojas.add(new MyTuple<Integer,Integer>(700, 0));
-        ListaPosicionesHojas.add(new MyTuple<Integer,Integer>(500, 75));
-        ListaPosicionesHojas.add(new MyTuple<Integer,Integer>(600, 75));
-        ListaPosicionesHojas.add(new MyTuple<Integer,Integer>(700, 75));
-        ListaPosicionesHojas.add(new MyTuple<Integer,Integer>(500, 150));
-        ListaPosicionesHojas.add(new MyTuple<Integer,Integer>(600, 150));
-        ListaPosicionesHojas.add(new MyTuple<Integer,Integer>(700, 150));
+        ListaPosicionesHojas.add(new MyTuple<>(500, 0));
+        ListaPosicionesHojas.add(new MyTuple<>(600, 0));
+        ListaPosicionesHojas.add(new MyTuple<>(700, 0));
+        ListaPosicionesHojas.add(new MyTuple<>(500, 75));
+        ListaPosicionesHojas.add(new MyTuple<>(600, 75));
+        ListaPosicionesHojas.add(new MyTuple<>(700, 75));
+        ListaPosicionesHojas.add(new MyTuple<>(500, 150));
+        ListaPosicionesHojas.add(new MyTuple<>(600, 150));
+        ListaPosicionesHojas.add(new MyTuple<>(700, 150));
         if (debug == false) {
             initiateLevel(-100);
         } // PRUEBAS DE TIEMPOS Y MEMORIA PARA DISTINTAS ESTRUCTURAS
@@ -465,7 +468,7 @@ public class MainLogic extends ApplicationAdapter {
                         if (touchPos.x > bt.buttonCollision.x - bt.buttonCollision.width && touchPos.x < bt.buttonCollision.x + bt.buttonCollision.width) {
                             if (touchPos.y > bt.buttonCollision.y - bt.buttonCollision.height && touchPos.y < bt.buttonCollision.y + bt.buttonCollision.height) {
                                 clearLevel();
-                                selectedScore = res.getData(Integer.valueOf(bt.buttonTuple.key)).value;
+                                selectedScore = res.getData(bt.buttonTuple.key).value;
                                 initiateLevel(-6);
                             }
                         }
@@ -1093,10 +1096,10 @@ public class MainLogic extends ApplicationAdapter {
                                     buttonCannon.cannonCollision.y = auxc.ypos;
                                     combustible -= GrafoCiudades.getCostOneWay(posicionActualGrafos,auxc);
                                     posicionActualGrafos = auxc;
-                                    if(combustible >= 0){
-                                    if(posicionActualGrafos.xpos == ciudadDestinoGrafos.xpos && posicionActualGrafos.ypos == ciudadDestinoGrafos.ypos){
-                                        win = true;
-                                    }
+                                    if(combustible > -1){
+                                        if(posicionActualGrafos.xpos == ciudadDestinoGrafos.xpos && posicionActualGrafos.ypos == ciudadDestinoGrafos.ypos){
+                                            win = true;
+                                        }
                                     }
                                 }
                             }
@@ -1104,9 +1107,9 @@ public class MainLogic extends ApplicationAdapter {
 
                         }
                 }
-                } else if(combustible < 0){
+                } else if(combustible < -1){
                     lose = true;
-                } else if(combustible <= 0 && (posicionActualGrafos.xpos == ciudadDestinoGrafos.xpos && posicionActualGrafos.ypos == ciudadDestinoGrafos.ypos)){
+                } else if(combustible < -1 && (posicionActualGrafos.xpos == ciudadDestinoGrafos.xpos && posicionActualGrafos.ypos == ciudadDestinoGrafos.ypos)){
                     win = false;
                     lose = true;
                 }
@@ -1277,17 +1280,22 @@ public class MainLogic extends ApplicationAdapter {
         shapeRenderer = new ShapeRenderer();
         backgroundTexture = new Texture(Gdx.files.internal("Fondo_Principal.jpg"));
         fondoPause = new Texture(Gdx.files.internal("fondoPause.png"));
-        if ("list".equals(tema)) {
-            backgroundTexture = new Texture(Gdx.files.internal("Fondo Pilas-colas.jpg"));
-            infoTexture = new Texture(Gdx.files.internal("Info.png"));
-            buttonShooting = new GenericButton(47, 77, 32, 32, "shooting.png");
-        } else if ("tree".equals(tema)) {
-            backgroundTexture = new Texture(Gdx.files.internal("Fondo_Arboles.jpg"));
-            infoTexture = new Texture(Gdx.files.internal("Info_dos.png"));
-
-        } else if ("graphs".equals(tema)){
-            backgroundTexture = new Texture(Gdx.files.internal("Fondo_Grafos.jpg"));
-            infoTexture = new Texture(Gdx.files.internal("Info_tres.png"));
+        if (null != tema) switch (tema) {
+            case "list":
+                backgroundTexture = new Texture(Gdx.files.internal("Fondo Pilas-colas.jpg"));
+                infoTexture = new Texture(Gdx.files.internal("Info.png"));
+                buttonShooting = new GenericButton(47, 77, 32, 32, "shooting.png");
+                break;
+            case "tree":
+                backgroundTexture = new Texture(Gdx.files.internal("Fondo_Arboles.jpg"));
+                infoTexture = new Texture(Gdx.files.internal("Info_dos.png"));
+                break;
+            case "graphs":
+                backgroundTexture = new Texture(Gdx.files.internal("Fondo_Grafos.jpg"));
+                infoTexture = new Texture(Gdx.files.internal("Info_tres.png"));
+                break;
+            default:
+                break;
         }
         if (level >0) {
             
@@ -1356,7 +1364,7 @@ public class MainLogic extends ApplicationAdapter {
                         listButtonScore.add(buttonShowScore);
                     }
                 }
-                catch (Exception e){
+                catch (InterruptedException | ExecutionException e){
                 }
 
                 break;
