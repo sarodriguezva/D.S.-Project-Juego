@@ -652,8 +652,8 @@ public class MainLogic extends ApplicationAdapter {
                     }
                 }
                 // CLICK BOTON VOLVER AL MENU
-                if (touchPos.x > volverMenu.buttonCollision.x && touchPos.x < volverMenu.buttonCollision.x + volverMenu.buttonCollision.width) {
-                    if (touchPos.y > volverMenu.buttonCollision.y && touchPos.y < volverMenu.buttonCollision.y + volverMenu.buttonCollision.height) {
+                if (touchPos.x > volverMenu.buttonCollision.x - volverMenu.buttonCollision.width && touchPos.x < volverMenu.buttonCollision.x + volverMenu.buttonCollision.width) {
+                    if (touchPos.y > volverMenu.buttonCollision.y - volverMenu.buttonCollision.height && touchPos.y < volverMenu.buttonCollision.y + volverMenu.buttonCollision.height) {
 
                         if (pause || win || lose) {
                             pause = false;
