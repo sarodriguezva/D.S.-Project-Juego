@@ -144,10 +144,12 @@ public class MainLogic extends ApplicationAdapter {
     hueco objetivoBorrar = new hueco(1, 1, 0, 64, 64);
     private BitmapFont font;
     private BitmapFont fontScore;
+    private BitmapFont fontlvl1;
     String userName = "NoName";
     MyStack<Character> userNameStack = new MyStack<>();
     Firebase fbase;
     DocumentReference docRef;
+
 
     // FUNCION PARA GUARDAR TEXTO EN UN ARCHIVO .TXT
     /**
@@ -218,7 +220,7 @@ public class MainLogic extends ApplicationAdapter {
                     int key = Integer.valueOf(arg0);
                     if (key == 127 || key == 8) {
                         userNameStack.pop();
-                    } else if (userNameStack.getSize() < 11) {
+                    } else if (userNameStack.getSize() < 8) {
                         if (key > 31 && key < 123) {
                             userNameStack.add(arg0);
                         }
@@ -250,6 +252,7 @@ public class MainLogic extends ApplicationAdapter {
         //Se inicia el nivel y se pone la fuente que se va a usar
         font = new BitmapFont(Gdx.files.internal("segoeprint.fnt"));
         fontScore = new BitmapFont(Gdx.files.internal("test.fnt"));
+        fontlvl1 = new BitmapFont(Gdx.files.internal("lvl1.fnt"));
 
         // max ListLevel es donde cambia de tema. 0 pilas colas, 1 arboles, 2 grafos
         maxListLevel[0] = 0;
@@ -376,11 +379,8 @@ public class MainLogic extends ApplicationAdapter {
 
                 batch.enableBlending();
                 batch.begin();
-
-                font.draw(batch, userName, 500, 100);
-                font.draw(batch, "Su nombre de usuario: ", 100, 100);
-
-                batch.draw(buttonAcceptPlay.buttonTexture, buttonAcceptPlay.buttonCollision.x, buttonAcceptPlay.buttonCollision.y);
+                fontlvl1.draw(batch, "  Su nombre de usuario: " + userName, 80, 500);
+                batch.draw(buttonAcceptPlay.buttonTexture, buttonAcceptPlay.buttonCollision.x-64, buttonAcceptPlay.buttonCollision.y-64);
                 batch.end();
 
                 // Si le da al boton Jugar, isregistering = false. Queda el userName guardado, posiblemente la edad y lo manda al nivel 0 menu
@@ -1262,8 +1262,9 @@ public class MainLogic extends ApplicationAdapter {
         switch (level) {
              case -100:
                 // ACA EL TEMA DE REGISTRAR USUARIO //
+                 backgroundTexture = new Texture(Gdx.files.internal("fondoMenu.jpg"));
                 isRegistering = true;
-                buttonAcceptPlay = new GenericButton(300, 400, 64, 64, "Play-button.png");
+                buttonAcceptPlay = new GenericButton(380, 180, 128, 56, "Play-button.png");
                 waitTime=15;
                 break;
                 
@@ -1305,10 +1306,10 @@ public class MainLogic extends ApplicationAdapter {
             case -4:
                 // ACA VA EL MENU PRINCIPAL
                 waitTime=15;
-                buttonPlay = new GenericButton(300,200,128,60,"Play-button.png");
-                buttonScore = new GenericButton(300,100,128,57,"Points.png");
-                buttonExit = new GenericButton(300,000,128,57,"Exit-button.png");
-                buttonCredits = new GenericButton(300,350,128,57,"Credits2.png");
+                buttonPlay = new GenericButton(330,450,128,60,"Play-button.png");
+                buttonScore = new GenericButton(330,350,128,57,"Points.png");
+                buttonExit = new GenericButton(330,100,128,57,"Exit-button.png");
+                buttonCredits = new GenericButton(330,250,128,57,"Credits2.png");
                 break;
             case -5:
                 // ACA VAN LOS CREDITOS
