@@ -877,7 +877,7 @@ public class MainLogic extends ApplicationAdapter {
                                     canUndo = false;
 
                                 }
-                                volverMenu = new GenericButton(100, 100, 381, 44, "volverNiveles.jpg");
+                                volverMenu = new GenericButton(65, 300, 381, 44, "volverNiveles.jpg");
                             }
 
                         } else {
@@ -1001,7 +1001,7 @@ public class MainLogic extends ApplicationAdapter {
                                     lose = true;
                                     canUndo = false;
                                 }
-                                volverMenu = new GenericButton(100, 100, 381, 44, "volverNiveles.jpg");
+                                volverMenu = new GenericButton(65, 300, 381, 44, "volverNiveles.jpg");
                             }
 
                         }
@@ -1288,7 +1288,7 @@ public class MainLogic extends ApplicationAdapter {
         if (level >0) {
             
             if(level != 10){
-            volverMenu = new GenericButton(280, 400, 381, 44, "volverNiveles.jpg");
+            volverMenu = new GenericButton(65, 300, 381, 44, "volverNiveles.jpg");
             buttonHelp = new GenericButton(175, 562, 32, 32, "Help.png");
             buttonPause = new GenericButton(47, 562, 32, 32, "Menu.png");
             
@@ -1304,7 +1304,7 @@ public class MainLogic extends ApplicationAdapter {
             buttonRestart = new GenericButton(109, 562, 32, 32, "Re-Try.png");
             buttonWin = new GenericButton(100, 100, 100, 100, "Win.png");
             buttonLose = new GenericButton(0, 0, 50, 50, "Lose.png");
-            buttonNextLevel = new GenericButton(250, 250, 128, 64, "buttonNextLevel.jpg");
+            buttonNextLevel = new GenericButton(65, 380, 128, 64, "buttonNextLevel.jpg");
             buttonRetry = new GenericButton(250, 250, 128, 64, "Re-Try.png");
 
             levelScore = 1000 * level;
